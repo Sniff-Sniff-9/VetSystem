@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using VetSystemApi.Services;
 using VetSystemApi.Services.Interfaces;
 using VetSystemModels.DataBase;
@@ -11,8 +12,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<AppDbContext>();
-builder.Services.AddScoped<IUsersService, UsersService>(); 
-
+builder.Services.AddScoped<IUsersService, UsersService>();
+builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

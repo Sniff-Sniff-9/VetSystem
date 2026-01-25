@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace VetSystemModels.Dto
 {
-    public class CreateUserDto
+    public class UpdateUserDto
     {
         public string Username { get; set; } = null!;
         public string Email { get; set; } = null!;
-        public string Password { get; set; } = null!;
     }
 }

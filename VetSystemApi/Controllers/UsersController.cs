@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using VetSystemApi.Services.Interfaces;
+using VetSystemModels.Dto;
 
 namespace VetSystemApi.Controllers
 {
@@ -36,6 +37,50 @@ namespace VetSystemApi.Controllers
                 return NotFound();
             }
             return Ok(user);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateUserAsync([FromBody] CreateUserDto createUserDto)
+        {
+            try
+            {
+                var userDto = await _usersService.CreateUserAsync(createUserDto);
+                return Ok(userDto);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch(InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateUserAsync(int id, [FromBody] UpdateUserDto updateUserDto)
+        {
+            try
+            {
+                var userDto = await _usersService.UpdateUserAsync(id, updateUserDto);
+                return Ok(userDto);
+            }
+            catch (ArgumentNullException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
     }
 }

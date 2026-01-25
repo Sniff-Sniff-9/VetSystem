@@ -10,9 +10,9 @@ namespace VetSystemApi.Services
 {
     public class UsersService: IUsersService
     {
-        public readonly AppDbContext _context;
-        public readonly IPasswordHasher<User> _passwordHasher;
-        public readonly ILogger<UsersService> _logger;
+        private readonly AppDbContext _context;
+        private readonly IPasswordHasher<User> _passwordHasher;
+        private readonly ILogger<UsersService> _logger;
 
         private const string DEFAULT_ROLE = "Клиент";
         private static readonly Regex emailRegex = new Regex(@"^[a-zA-Z0-9._+\-%]+@[A-Za-z0-9.-]+\.[a-zA-Z]{2,}$");

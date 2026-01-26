@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using VetSystemApi.Services.Interfaces;
@@ -42,45 +43,33 @@ namespace VetSystemApi.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateUserAsync([FromBody] CreateUserDto createUserDto)
         {
-            try
+            var userDto = await _usersService.CreateUserAsync(createUserDto);
+            if (!ModelState.IsValid)
             {
-                var userDto = await _usersService.CreateUserAsync(createUserDto);
-                return Ok(userDto);
+                return BadRequest("Field is incorrect.");
             }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch(InvalidOperationException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch(Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+            return Ok(userDto);
+
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUserAsync(int id, [FromBody] UpdateUserDto updateUserDto)
         {
-            try
+
+            var user = await _usersService.UpdateUserAsync(id, updateUserDto);
+            if (!ModelState.IsValid)
             {
-                var userDto = await _usersService.UpdateUserAsync(id, updateUserDto);
-                return Ok(userDto);
+                return BadRequest("Field is incorrect.");
             }
-            catch (ArgumentNullException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+            return Ok(user);
+
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUserAsync(int id)
+        {
+            await _usersService.DeleteUserAsync(id);
+            return NoContent();
         }
     }
 }

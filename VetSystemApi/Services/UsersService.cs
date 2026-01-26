@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using System.ComponentModel.DataAnnotations;
+using System.Data;
 using System.Text.RegularExpressions;
+using VetSystemApi.Configuration;
 using VetSystemApi.Services.Interfaces;
-using VetSystemModels.DataBase;
+using VetSystemModels.Entities;
 using VetSystemModels.Dto;
 
 namespace VetSystemApi.Services
@@ -13,15 +16,16 @@ namespace VetSystemApi.Services
         private readonly AppDbContext _context;
         private readonly IPasswordHasher<User> _passwordHasher;
         private readonly ILogger<UsersService> _logger;
+        private readonly DefaultUserSettings _defaultUserSettings;
 
-        private const string DEFAULT_ROLE = "Клиент";
         private static readonly Regex emailRegex = new Regex(@"^[a-zA-Z0-9._+\-%]+@[A-Za-z0-9.-]+\.[a-zA-Z]{2,}$");
 
-        public UsersService(AppDbContext context, IPasswordHasher<User> passwordHasher, ILogger<UsersService> logger)
+        public UsersService(AppDbContext context, IPasswordHasher<User> passwordHasher, ILogger<UsersService> logger, IOptions<DefaultUserSettings> defaultUserOptions)
         {
             _context = context;
             _passwordHasher = passwordHasher;
             _logger = logger;
+            _defaultUserSettings = defaultUserOptions.Value;
         }
 
         public async Task<List<UserDto>> GetUsersAsync()
@@ -55,11 +59,11 @@ namespace VetSystemApi.Services
 
         public async Task<UserDto> CreateUserAsync(CreateUserDto createUserDto)
         {
-            var role = await _context.Roles.FirstOrDefaultAsync(r => r.RoleName == DEFAULT_ROLE);
+            var role = await _context.Roles.FirstOrDefaultAsync(r => r.RoleName == _defaultUserSettings.DefaultRole);
 
             if (role == null) 
             { 
-                throw new InvalidOperationException($"Default role {DEFAULT_ROLE} not found in data base."); 
+                throw new InvalidOperationException($"Default role {_defaultUserSettings.DefaultRole} not found in data base."); 
             }
 
             if (!emailRegex.IsMatch(createUserDto.Email))
@@ -78,7 +82,7 @@ namespace VetSystemApi.Services
 
             if (string.IsNullOrWhiteSpace(createUserDto.Password))
             {
-                throw new ArgumentException("Password is empty.");
+                throw new ArgumentNullException("Password is empty.");
             }
 
             user.PasswordHash = _passwordHasher.HashPassword(user, createUserDto.Password);
@@ -101,7 +105,7 @@ namespace VetSystemApi.Services
             }
         }
 
-        public async Task<UpdateUserDto> UpdateUserAsync(int id, UpdateUserDto updateUserDto)
+        public async Task<UserDto> UpdateUserAsync(int id, UpdateUserDto updateUserDto)
         {
             var user = await _context.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.UserId == id);
 
@@ -121,7 +125,12 @@ namespace VetSystemApi.Services
             try
             {
                 await _context.SaveChangesAsync();
-                return updateUserDto;
+                return new UserDto
+                {
+                    Username = user.Username,
+                    Email = user.Email,
+                    RoleName = user.Role?.RoleName ?? "undefined"
+                };
             }
             catch (Exception ex)
             {
@@ -130,5 +139,24 @@ namespace VetSystemApi.Services
             }
         }
 
+        public async Task DeleteUserAsync(int id)
+        {
+            var user = await _context.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.UserId == id);
+            if (user == null)
+            {
+                throw new ArgumentNullException("User not found.");
+            }
+            try
+            {
+                _context.Users.Remove(user);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "User can't be deleted.");
+                throw;
+            }
+
+        }
     }
 }

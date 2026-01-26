@@ -16,16 +16,17 @@ namespace VetSystemApi.Controllers
             _authService = authService;
         }
 
-        [HttpPost("login")]
+        [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
         {
-            var token = await _authService.AuthenticateAsync(loginDto.Email, loginDto.Password);
 
-            if (token == null)
-            {
-                return Unauthorized("Email or password is incorrect.");
-            }
-            return Ok (new {Token = token});
+                var token = await _authService.AuthenticateAsync(loginDto.Email, loginDto.Password);
+
+                if (token == null)
+                {
+                    return Unauthorized("Email or password is incorrect.");
+                }
+                return Ok(new { Token = token });
         }
     }
 }

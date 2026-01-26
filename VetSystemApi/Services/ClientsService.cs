@@ -4,6 +4,7 @@ using System.Net.Sockets;
 using VetSystemApi.Services.Interfaces;
 using VetSystemModels.Entities;
 using VetSystemModels.Dto;
+using VetSystemInfrastructure.Configuration;
 
 namespace VetSystemApi.Services
 {

@@ -18,7 +18,7 @@ namespace VetSystemWeb.Pages
         [BindProperty]
         public LoginInput Input { get; set; } = new();
 
-        public string ErrorMessage { get; set; }
+        public string ErrorMessage { get; set; } = null!;
 
         public void OnGet()
         {

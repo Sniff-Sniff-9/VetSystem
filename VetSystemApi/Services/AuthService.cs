@@ -5,7 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using VetSystemApi.Configuration;
+using VetSystemInfrastructure.Configuration;
 using VetSystemModels.Entities;
 using Microsoft.Extensions.Options;
 

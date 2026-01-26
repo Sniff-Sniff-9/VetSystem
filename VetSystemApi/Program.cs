@@ -5,7 +5,7 @@ using System.Text;
 using VetSystemApi.Services;
 using VetSystemApi.Services.Interfaces;
 using VetSystemModels.Entities;
-using VetSystemApi.Configuration;
+using VetSystemInfrastructure.Configuration;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);

@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using VetSystemModels.Entities;
 
-namespace VetSystemModels.Entities;
+namespace VetSystemInfrastructure.Configuration;
 
 public partial class AppDbContext : DbContext
 {

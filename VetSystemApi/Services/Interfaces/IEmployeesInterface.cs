@@ -2,7 +2,7 @@
 
 namespace VetSystemApi.Services.Interfaces
 {
-    public interface IEmployeesService
+    public interface IEmployeesInterface
     {
         public Task<List<EmployeeDto>> GetEmployeesAsync();
         public Task<EmployeeDto?> GetEmployeeByEmployeeIdAsync(int id);

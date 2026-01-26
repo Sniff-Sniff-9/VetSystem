@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Text.RegularExpressions;
-using VetSystemApi.Configuration;
+using VetSystemInfrastructure.Configuration;
 using VetSystemApi.Services.Interfaces;
 using VetSystemModels.Entities;
 using VetSystemModels.Dto;

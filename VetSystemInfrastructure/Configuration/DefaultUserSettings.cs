@@ -1,4 +1,4 @@
-﻿namespace VetSystemApi.Configuration
+﻿namespace VetSystemInfrastructure.Configuration
 {
     public class DefaultUserSettings
     {

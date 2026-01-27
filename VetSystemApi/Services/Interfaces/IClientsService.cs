@@ -2,13 +2,13 @@
 
 namespace VetSystemApi.Services.Interfaces
 {
-    public interface IEmployeesService
+    public interface IClientsService
     {
-        public Task<List<EmployeeDto>> GetEmployeesAsync();
-        public Task<EmployeeDto?> GetEmployeeByEmployeeIdAsync(int id);
-        public Task<EmployeeDto?> GetEmployeeByUserIdAsync(int id);
-        public Task<EmployeeDto> CreateEmployeeAsync(EmployeeDto EmployeeDto);
-        public Task<EmployeeDto> UpdateEmployeeAsync(int id, UpdateEmployeeDto updateEmployeeDto);
-        public Task DeleteEmployeeAsync(int id);
+        public Task<List<ClientDto>> GetClientsAsync();
+        public Task<ClientDto?> GetClientByClientIdAsync(int id);
+        public Task<ClientDto?> GetClientByUserIdAsync(int id);
+        public Task<ClientDto> CreateClientAsync(ClientDto ClientDto);
+        public Task<ClientDto> UpdateClientAsync(int id, UpdateClientDto updateClientDto);
+        public Task DeleteClientAsync(int id);
     }
 }

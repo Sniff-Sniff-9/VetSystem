@@ -24,6 +24,6 @@ namespace VetSystemModels.Dto
         [Required]
         public string Phone { get; set; } = null!;
         [Required]
-        public string SpecializationName { get; set; } = null!;
+        public int SpecializationId { get; set; }
     }
 }

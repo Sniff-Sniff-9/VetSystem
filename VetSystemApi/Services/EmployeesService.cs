@@ -44,22 +44,22 @@ namespace VetSystemApi.Services
             return ToEmployeeDto(employee);
         }
 
-        public async Task<EmployeeDto> CreateEmployeeAsync(EmployeeDto EmployeeDto)
+        public async Task<EmployeeDto> CreateEmployeeAsync(EmployeeDto employeeDto)
         {
 
-            if (EmployeeDto.BirthDate > DateOnly.FromDateTime(DateTime.UtcNow))
+            if (employeeDto.BirthDate > DateOnly.FromDateTime(DateTime.UtcNow))
             {
                 throw new ArgumentException($"Birth date can't be larger than {DateOnly.FromDateTime(DateTime.UtcNow)}");
             }
 
             var employee = new Employee
             {
-                LastName = EmployeeDto.LastName,
-                FirstName = EmployeeDto.FirstName,
-                MiddleName = EmployeeDto.MiddleName,
-                BirthDate = EmployeeDto.BirthDate,
-                Phone = EmployeeDto.Phone,
-                UserId = EmployeeDto.UserId
+                LastName = employeeDto.LastName,
+                FirstName = employeeDto.FirstName,
+                MiddleName = employeeDto.MiddleName,
+                BirthDate = employeeDto.BirthDate,
+                Phone = employeeDto.Phone,
+                UserId = employeeDto.UserId
             };
             try
             {
@@ -104,14 +104,14 @@ namespace VetSystemApi.Services
 
         public async Task DeleteEmployeeAsync(int id)
         {
-            var Employee = await _context.Employees.FirstOrDefaultAsync(u => u.UserId == id);
-            if (Employee == null)
+            var employee = await _context.Employees.FirstOrDefaultAsync(u => u.UserId == id);
+            if (employee == null)
             {
                 throw new ArgumentNullException("Employee not found.");
             }
             try
             {
-                _context.Employees.Remove(Employee);
+                employee.IsDeleted = true; 
                 await _context.SaveChangesAsync();
             }
             catch (Exception ex)

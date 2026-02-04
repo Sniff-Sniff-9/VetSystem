@@ -148,7 +148,7 @@ namespace VetSystemApi.Services
             }
             try
             {
-                _context.Users.Remove(user);
+                user.IsActive = false;
                 await _context.SaveChangesAsync();
             }
             catch (Exception ex)

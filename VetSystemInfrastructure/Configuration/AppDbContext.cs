@@ -76,6 +76,8 @@ public partial class AppDbContext : DbContext
             entity.HasKey(e => e.ClientId).HasName("PK__Clients__E67E1A240FBEDE4A");
 
             entity.HasOne(d => d.User).WithOne(p => p.Client).HasConstraintName("FK__Clients__UserId__440B1D61");
+
+            entity.HasQueryFilter(e => !e.IsDeleted);
         });
 
         modelBuilder.Entity<Employee>(entity =>
@@ -87,6 +89,9 @@ public partial class AppDbContext : DbContext
                 .HasConstraintName("FK__Employees__Speci__5AEE82B9");
 
             entity.HasOne(d => d.User).WithOne(p => p.Employee).HasConstraintName("FK__Employees__UserI__5629CD9C");
+
+            entity.HasQueryFilter(e => !e.IsDeleted);
+
         });
 
         modelBuilder.Entity<Gender>(entity =>
@@ -143,6 +148,8 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.Role).WithMany(p => p.Users)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Users_Role");
+
+            entity.HasQueryFilter(e => e.IsActive);
         });
 
         OnModelCreatingPartial(modelBuilder);

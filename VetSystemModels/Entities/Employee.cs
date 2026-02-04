@@ -29,6 +29,7 @@ public partial class Employee
     public int SpecializationId { get; set; }
 
     public int? UserId { get; set; }
+    public bool IsDeleted { get; set; } = false;
 
     [InverseProperty("Employee")]
     public virtual ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();

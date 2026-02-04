@@ -151,7 +151,7 @@ namespace VetSystemApi.Services
             }
             try
             {
-                _context.Clients.Remove(client);
+                client.IsDeleted = true;
                 await _context.SaveChangesAsync();
             }
             catch (Exception ex)

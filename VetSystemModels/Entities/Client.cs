@@ -27,6 +27,7 @@ public partial class Client
     public string Phone { get; set; } = null!;
 
     public int? UserId { get; set; }
+    public bool IsDeleted { get; set; } = false;
 
     [InverseProperty("Client")]
     public virtual ICollection<Pet> Pets { get; set; } = new List<Pet>();

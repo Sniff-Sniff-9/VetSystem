@@ -24,6 +24,7 @@ public partial class Pet
     public int GenderId { get; set; }
 
     public int ClientId { get; set; }
+    public bool IsDeleted { get; set; } = false;
 
     [InverseProperty("Pet")]
     public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();

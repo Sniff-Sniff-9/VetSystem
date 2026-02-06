@@ -64,6 +64,7 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.Service).WithMany(p => p.Appointments)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Appointme__Servi__5EBF139D");
+            entity.HasQueryFilter(a => !a.IsDeleted);
         });
 
         modelBuilder.Entity<AppointmentStatus>(entity =>
@@ -114,6 +115,9 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.Species).WithMany(p => p.Pets)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Pets__SpeciesId__5CD6CB2B");
+
+     
+            entity.HasQueryFilter(p => !p.IsDeleted && !p.Client.IsDeleted);
         });
 
         modelBuilder.Entity<Schedule>(entity =>
@@ -123,11 +127,13 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.Employee).WithMany(p => p.Schedules)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Schedules__Emplo__5FB337D6");
+            entity.HasQueryFilter(s => s.IsAvailable && !s.Employee.IsDeleted);
         });
 
         modelBuilder.Entity<Service>(entity =>
         {
             entity.HasKey(e => e.ServiceId).HasName("PK__Services__C51BB00AC6DAA85E");
+            entity.HasQueryFilter(p => !p.IsDeleted);
         });
 
         modelBuilder.Entity<Specialization>(entity =>

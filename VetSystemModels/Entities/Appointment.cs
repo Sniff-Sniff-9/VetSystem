@@ -21,6 +21,7 @@ public partial class Appointment
     public int AppointmentStatusId { get; set; }
 
     public int ScheduleId { get; set; }
+    public bool IsDeleted { get; set; } = false;
 
     [ForeignKey("AppointmentStatusId")]
     [InverseProperty("Appointments")]

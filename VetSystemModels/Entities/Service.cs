@@ -17,6 +17,7 @@ public partial class Service
 
     [Column(TypeName = "decimal(10, 2)")]
     public decimal Price { get; set; }
+    public bool IsDeleted { get; set; } = false;
 
     [InverseProperty("Service")]
     public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();

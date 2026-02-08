@@ -43,6 +43,9 @@ builder.Services.AddSwaggerGen(s =>
 builder.Services.AddDbContext<AppDbContext>();
 builder.Services.AddScoped<IUsersService, UsersService>();
 builder.Services.AddScoped<IClientsService, ClientsService>();
+builder.Services.AddScoped<IPetsService, PetsService>();
+builder.Services.AddScoped<IEmployeesService, EmployeesService>();
+
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");

@@ -1,12 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using VetSystemApi.Services.Interfaces;
-using VetSystemModels.Dto;
+using VetSystemModels.Dto.Employee;
 
 namespace VetSystemApi.Controllers
 {
-
-    //Add "IsDeleted" field for clients and employees
 
     [Route("api/[controller]")]
     [ApiController]
@@ -30,7 +28,7 @@ namespace VetSystemApi.Controllers
             return Ok(employees);
         }
 
-        [HttpGet("EmployeeId/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetEmployeeByEmployeeId(int id)
         {
             var employee = await _employeesService.GetEmployeeByEmployeeIdAsync(id);
@@ -41,10 +39,10 @@ namespace VetSystemApi.Controllers
             return Ok(employee);
         }
 
-        [HttpGet("UserId/{id}")]
-        public async Task<IActionResult> GetEmployeeByUserId(int id)
+        [HttpGet("User/{userId}")]
+        public async Task<IActionResult> GetEmployeeByUserId(int userId)
         {
-            var employee = await _employeesService.GetEmployeeByUserIdAsync(id);
+            var employee = await _employeesService.GetEmployeeByUserIdAsync(userId);
             if (employee == null)
             {
                 return NotFound();
@@ -53,31 +51,34 @@ namespace VetSystemApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateEmployeeAsync([FromBody] EmployeeDto EmployeeDto)
+        public async Task<IActionResult> CreateEmployeeAsync([FromBody] CreateEmployeeDto createEmployeeDto)
         {
-            var employee = await _employeesService.CreateEmployeeAsync(EmployeeDto);
             if (!ModelState.IsValid)
             {
                 return BadRequest("Field is incorrect.");
             }
+
+            var employee = await _employeesService.CreateEmployeeAsync(createEmployeeDto);
+            
             return Ok(employee);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateEmployeeAsync(int id, [FromBody] UpdateEmployeeDto updateEmployeeDto)
         {
-
-            var employee = await _employeesService.UpdateEmployeeAsync(id, updateEmployeeDto);
             if (!ModelState.IsValid)
             {
                 return BadRequest("Field is incorrect.");
             }
+
+            var employee = await _employeesService.UpdateEmployeeAsync(id, updateEmployeeDto);
+
             return Ok(employee);
 
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUserAsync(int id)
+        public async Task<IActionResult> DeleteEmployeeAsync(int id)
         {
             await _employeesService.DeleteEmployeeAsync(id);
             return NoContent();

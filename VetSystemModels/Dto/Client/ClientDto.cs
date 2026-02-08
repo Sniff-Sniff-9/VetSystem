@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VetSystemModels.Dto
+namespace VetSystemModels.Dto.Client
 {
     public class ClientDto
     {
@@ -23,7 +23,5 @@ namespace VetSystemModels.Dto
         [StringLength(20)]
         [Required]
         public string Phone { get; set; } = null!;
-        [Required]
-        public int? UserId { get; set; }
     }
 }

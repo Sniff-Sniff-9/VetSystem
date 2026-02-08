@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VetSystemModels.Dto
+namespace VetSystemModels.Dto.Login
 {
     public class LoginDto
     {

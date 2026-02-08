@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 using VetSystemInfrastructure.Configuration;
 using VetSystemApi.Services.Interfaces;
 using VetSystemModels.Entities;
-using VetSystemModels.Dto;
+using VetSystemModels.Dto.User;
 
 namespace VetSystemApi.Services
 {

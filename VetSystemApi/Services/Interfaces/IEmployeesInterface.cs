@@ -1,4 +1,4 @@
-﻿using VetSystemModels.Dto;
+﻿using VetSystemModels.Dto.Employee;
 
 namespace VetSystemApi.Services.Interfaces
 {
@@ -7,7 +7,7 @@ namespace VetSystemApi.Services.Interfaces
         public Task<List<EmployeeDto>> GetEmployeesAsync();
         public Task<EmployeeDto?> GetEmployeeByEmployeeIdAsync(int id);
         public Task<EmployeeDto?> GetEmployeeByUserIdAsync(int id);
-        public Task<EmployeeDto> CreateEmployeeAsync(EmployeeDto EmployeeDto);
+        public Task<EmployeeDto> CreateEmployeeAsync(CreateEmployeeDto createEmployeeDto);
         public Task<EmployeeDto> UpdateEmployeeAsync(int id, UpdateEmployeeDto updateEmployeeDto);
         public Task DeleteEmployeeAsync(int id);
     }

@@ -2,7 +2,7 @@
 using System.Reflection.Metadata.Ecma335;
 using VetSystemApi.Services.Interfaces;
 using VetSystemInfrastructure.Configuration;
-using VetSystemModels.Dto;
+using VetSystemModels.Dto.Employee;
 using VetSystemModels.Entities;
 
 namespace VetSystemApi.Services
@@ -44,22 +44,23 @@ namespace VetSystemApi.Services
             return ToEmployeeDto(employee);
         }
 
-        public async Task<EmployeeDto> CreateEmployeeAsync(EmployeeDto employeeDto)
+        public async Task<EmployeeDto> CreateEmployeeAsync(CreateEmployeeDto createEmployeeDto)
         {
 
-            if (employeeDto.BirthDate > DateOnly.FromDateTime(DateTime.UtcNow))
+            if (createEmployeeDto.BirthDate > DateOnly.FromDateTime(DateTime.UtcNow))
             {
                 throw new ArgumentException($"Birth date can't be larger than {DateOnly.FromDateTime(DateTime.UtcNow)}");
             }
 
             var employee = new Employee
             {
-                LastName = employeeDto.LastName,
-                FirstName = employeeDto.FirstName,
-                MiddleName = employeeDto.MiddleName,
-                BirthDate = employeeDto.BirthDate,
-                Phone = employeeDto.Phone,
-                UserId = employeeDto.UserId
+                LastName = createEmployeeDto.LastName,
+                FirstName = createEmployeeDto.FirstName,
+                MiddleName = createEmployeeDto.MiddleName,
+                BirthDate = createEmployeeDto.BirthDate,
+                SpecializationId = createEmployeeDto.SpecializationId,
+                Phone = createEmployeeDto.Phone,
+                UserId = createEmployeeDto.UserId
             };
             try
             {
@@ -104,7 +105,7 @@ namespace VetSystemApi.Services
 
         public async Task DeleteEmployeeAsync(int id)
         {
-            var employee = await _context.Employees.FirstOrDefaultAsync(u => u.UserId == id);
+            var employee = await _context.Employees.FirstOrDefaultAsync(e => e.EmployeeId == id);
             if (employee == null)
             {
                 throw new ArgumentNullException("Employee not found.");
@@ -130,8 +131,7 @@ namespace VetSystemApi.Services
                 MiddleName = employee.MiddleName,
                 BirthDate = employee.BirthDate,
                 Phone = employee.Phone,
-                SpecializationName = employee.Specialization?.SpecializationName ?? "undefined",
-                UserId = employee.UserId
+                SpecializationName = employee.Specialization?.SpecializationName ?? "undefined"
             };
         }
     }

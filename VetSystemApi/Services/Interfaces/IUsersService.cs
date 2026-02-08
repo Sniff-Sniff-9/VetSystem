@@ -1,4 +1,4 @@
-﻿using VetSystemModels.Dto;
+﻿using VetSystemModels.Dto.User;
 
 namespace VetSystemApi.Services.Interfaces
 {

@@ -2,9 +2,10 @@
 using Microsoft.EntityFrameworkCore;
 using System.Net.Sockets;
 using VetSystemApi.Services.Interfaces;
-using VetSystemModels.Entities;
-using VetSystemModels.Dto;
 using VetSystemInfrastructure.Configuration;
+using VetSystemModels.Dto.Client;
+using VetSystemModels.Dto.Employee;
+using VetSystemModels.Entities;
 
 namespace VetSystemApi.Services
 {
@@ -22,15 +23,7 @@ namespace VetSystemApi.Services
         public async Task<List<ClientDto>> GetClientsAsync()
         {
             var clients = await _context.Clients.ToListAsync();
-            return clients.Select(c => new ClientDto
-            {
-                FirstName = c.FirstName,
-                LastName = c.LastName,
-                MiddleName = c.MiddleName,
-                BirthDate = c.BirthDate,
-                Phone = c.Phone,
-                UserId = c.UserId
-            }).ToList();
+            return clients.Select(c => ToClientDto(c)).ToList();
         }
 
         public async Task<ClientDto?> GetClientByClientIdAsync(int id)
@@ -40,15 +33,7 @@ namespace VetSystemApi.Services
             {
                 return null!;
             }
-            return new ClientDto
-            {
-                FirstName = client.FirstName,
-                LastName = client.LastName,
-                MiddleName = client.MiddleName,
-                BirthDate = client.BirthDate,
-                Phone = client.Phone,
-                UserId = client.UserId
-            };
+            return ToClientDto(client);
         }
 
         public async Task<ClientDto?> GetClientByUserIdAsync(int id)
@@ -58,47 +43,31 @@ namespace VetSystemApi.Services
             {
                 return null!;
             }
-            return new ClientDto
-            {
-                FirstName = client.FirstName,
-                LastName = client.LastName,
-                MiddleName = client.MiddleName,
-                BirthDate = client.BirthDate,
-                Phone = client.Phone,
-                UserId = client.UserId
-            };
+            return ToClientDto(client);
         }
 
-        public async Task<ClientDto> CreateClientAsync(ClientDto clientDto)
+        public async Task<ClientDto> CreateClientAsync(CreateClientDto createClientDto)
         {
             
-            if (clientDto.BirthDate > DateOnly.FromDateTime(DateTime.UtcNow))
+            if (createClientDto.BirthDate > DateOnly.FromDateTime(DateTime.UtcNow))
             {
                 throw new ArgumentException($"Birth date can't be larger than {DateOnly.FromDateTime(DateTime.UtcNow)}");
             }
 
             var client = new Client
             {
-                LastName = clientDto.LastName,
-                FirstName = clientDto.FirstName,
-                MiddleName = clientDto.MiddleName,
-                BirthDate = clientDto.BirthDate,
-                Phone = clientDto.Phone,
-                UserId = clientDto.UserId
+                LastName = createClientDto.LastName,
+                FirstName = createClientDto.FirstName,
+                MiddleName = createClientDto.MiddleName,
+                BirthDate = createClientDto.BirthDate,
+                Phone = createClientDto.Phone,
+                UserId = createClientDto.UserId
             };
             try
             {
                 _context.Add(client);
                 await _context.SaveChangesAsync();
-                return new ClientDto
-                {
-                    FirstName = client.FirstName,
-                    LastName = client.LastName,
-                    MiddleName = client.MiddleName,
-                    BirthDate = client.BirthDate,
-                    Phone = client.Phone,
-                    UserId = client.UserId
-                };
+                return ToClientDto(client);
             }
             catch (Exception ex)
             {
@@ -125,29 +94,21 @@ namespace VetSystemApi.Services
             try
             {
                 await _context.SaveChangesAsync();
-                return new ClientDto
-                {
-                    FirstName = client.FirstName,
-                    LastName = client.LastName,
-                    MiddleName = client.MiddleName,
-                    BirthDate = client.BirthDate,
-                    Phone = client.Phone,
-                    UserId = client.UserId
-                };
+                return ToClientDto(client);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "User can't be updated.");
+                _logger.LogError(ex, "Client can't be updated.");
                 throw;
             }
         }
 
         public async Task DeleteClientAsync(int id)
         {
-            var client = await _context.Clients.FirstOrDefaultAsync(u => u.UserId == id);
+            var client = await _context.Clients.FirstOrDefaultAsync(c => c.ClientId == id);
             if (client == null)
             {
-                throw new ArgumentNullException("User not found.");
+                throw new ArgumentNullException("Client not found.");
             }
             try
             {
@@ -156,10 +117,22 @@ namespace VetSystemApi.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "User can't be deleted.");
+                _logger.LogError(ex, "Client can't be deleted.");
                 throw;
             }
+        }
 
+        private ClientDto ToClientDto(Client client)
+        {
+            return new ClientDto
+            {
+                FirstName = client.FirstName,
+                LastName = client.LastName,
+                MiddleName = client.MiddleName,
+                BirthDate = client.BirthDate,
+                Phone = client.Phone,
+                UserId = client.UserId
+            };
         }
     }
 }

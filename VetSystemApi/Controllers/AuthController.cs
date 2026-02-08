@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using VetSystemApi.Services;
-using VetSystemModels.Dto;
+using VetSystemModels.Dto.Login;
 
 namespace VetSystemApi.Controllers
 {

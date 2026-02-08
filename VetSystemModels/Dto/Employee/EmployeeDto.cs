@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VetSystemModels.Dto
+namespace VetSystemModels.Dto.Employee
 {
     public class EmployeeDto
     {
@@ -25,7 +25,5 @@ namespace VetSystemModels.Dto
         public string Phone { get; set; } = null!;
         [Required]
         public string SpecializationName { get; set; } = null!;
-        [Required]
-        public int? UserId { get; set; }
     }
 }

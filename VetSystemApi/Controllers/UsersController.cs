@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using VetSystemApi.Services.Interfaces;
-using VetSystemModels.Dto;
+using VetSystemModels.Dto.User;
 
 namespace VetSystemApi.Controllers
 {
@@ -43,11 +43,12 @@ namespace VetSystemApi.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateUserAsync([FromBody] CreateUserDto createUserDto)
         {
-            var userDto = await _usersService.CreateUserAsync(createUserDto);
             if (!ModelState.IsValid)
             {
                 return BadRequest("Field is incorrect.");
             }
+            var userDto = await _usersService.CreateUserAsync(createUserDto);
+            
             return Ok(userDto);
 
         }
@@ -55,12 +56,13 @@ namespace VetSystemApi.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUserAsync(int id, [FromBody] UpdateUserDto updateUserDto)
         {
-
-            var user = await _usersService.UpdateUserAsync(id, updateUserDto);
             if (!ModelState.IsValid)
             {
                 return BadRequest("Field is incorrect.");
             }
+
+            var user = await _usersService.UpdateUserAsync(id, updateUserDto);
+            
             return Ok(user);
 
         }

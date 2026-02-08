@@ -1,19 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VetSystemModels.Entities;
 
-namespace VetSystemModels.Dto
+namespace VetSystemModels.Dto.User
 {
-    public class UpdateUserDto
+    public class UserDto
     {
-        [StringLength(50)]
-        [Required]
         public string Username { get; set; } = null!;
-        [StringLength(100)]
-        [Required]
         public string Email { get; set; } = null!;
+        public string RoleName { get; set; } = null!;
     }
 }

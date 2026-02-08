@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using VetSystemApi.Services;
 using VetSystemApi.Services.Interfaces;
-using VetSystemModels.Dto;
+using VetSystemModels.Dto.Client;
 
 namespace VetSystemApi.Controllers
 {
@@ -28,7 +28,7 @@ namespace VetSystemApi.Controllers
             return Ok(clients);
         }
 
-        [HttpGet("ClientId/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetClientByClientId(int id)
         {
             var client = await _clientsService.GetClientByClientIdAsync(id);
@@ -39,10 +39,10 @@ namespace VetSystemApi.Controllers
             return Ok(client);
         }
 
-        [HttpGet("UserId/{id}")]
-        public async Task<IActionResult> GetClientByUserId(int id)
+        [HttpGet("User/{userId}")]
+        public async Task<IActionResult> GetClientByUserId(int userId)
         {
-            var client = await _clientsService.GetClientByUserIdAsync(id);
+            var client = await _clientsService.GetClientByUserIdAsync(userId);
             if (client == null)
             {
                 return NotFound();
@@ -51,31 +51,33 @@ namespace VetSystemApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateClientAsync([FromBody] ClientDto clientDto)
+        public async Task<IActionResult> CreateClientAsync([FromBody] CreateClientDto createClientDto)
         {
-            var client = await _clientsService.CreateClientAsync(clientDto);
             if (!ModelState.IsValid)
             {
                 return BadRequest("Field is incorrect.");
             }
+            var client = await _clientsService.CreateClientAsync(createClientDto);
+
             return Ok(client);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateClientAsync(int id, [FromBody] UpdateClientDto updateClientDto)
         {
-
-            var client = await _clientsService.UpdateClientAsync(id, updateClientDto);
             if (!ModelState.IsValid)
             {
                 return BadRequest("Field is incorrect.");
             }
+
+            var client = await _clientsService.UpdateClientAsync(id, updateClientDto);
+           
             return Ok(client);
 
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUserAsync(int id)
+        public async Task<IActionResult> DeleteCleintAsync(int id)
         {
             await _clientsService.DeleteClientAsync(id);
             return NoContent();

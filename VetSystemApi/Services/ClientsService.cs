@@ -130,8 +130,7 @@ namespace VetSystemApi.Services
                 LastName = client.LastName,
                 MiddleName = client.MiddleName,
                 BirthDate = client.BirthDate,
-                Phone = client.Phone,
-                UserId = client.UserId
+                Phone = client.Phone
             };
         }
     }

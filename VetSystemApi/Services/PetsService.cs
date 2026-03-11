@@ -81,10 +81,9 @@ namespace VetSystemApi.Services
         }
 
 
-        public async Task<PetDto> UpdatePetAsync(int id, PetDto petDto, int clientId)
+        public async Task<PetDto> UpdatePetAsync(int id, PetDto petDto)
         {
             var pet = await _context.Pets.FirstOrDefaultAsync(u => u.PetId == id);
-            var client = await _context.Clients.FirstOrDefaultAsync(c => c.ClientId == clientId);
             var species = await _context.Species.FirstOrDefaultAsync(s => s.SpeciesName == petDto.SpeciesName);
             var gender = await _context.Genders.FirstOrDefaultAsync(g => g.GenderName == petDto.GenderName);
 
@@ -96,10 +95,6 @@ namespace VetSystemApi.Services
             {
                 throw new ArgumentException("Species doesn't exist");
             }
-            if (client == null)
-            {
-                throw new ArgumentException("Client doesn't exist");
-            }
             if (pet == null)
             {
                 throw new ArgumentNullException("Pet not found.");
@@ -109,7 +104,6 @@ namespace VetSystemApi.Services
             pet.SpeciesId = species.SpeciesId;
             pet.GenderId = gender.GenderId;
             pet.Breed = petDto.Breed;
-            pet.ClientId = clientId;
             pet.BirthDate = petDto.BirthDate;
 
             try

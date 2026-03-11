@@ -21,10 +21,6 @@ namespace VetSystemApi.Controllers
         public async Task<IActionResult> GetPets()
         {
             var pets = await _petsService.GetPetsAsync();
-            if (pets == null)
-            {
-                return NotFound();
-            }
             return Ok(pets);
         }
 
@@ -37,22 +33,18 @@ namespace VetSystemApi.Controllers
             {
                 return NotFound();
             }
+
             return Ok(pet);
         }
 
-        [HttpGet("Client/{clientId}")]
+        [HttpGet("/api/Clients/{clientId}/Pets")]
         public async Task<IActionResult> GetPetsByClientId(int clientId)
         {
             var pet = await _petsService.GetPetsByClientIdAsync(clientId);
-
-            if (pet == null)
-            {
-                return NotFound();
-            }
             return Ok(pet);
         }
 
-        [HttpPost("Client/{id}")]
+        [HttpPost("/api/Clients/{clientId}/Pets")]
         public async Task<IActionResult> CreatePetAsync([FromBody] PetDto petDto, int clientId)
         {
             if (!ModelState.IsValid)
@@ -65,14 +57,14 @@ namespace VetSystemApi.Controllers
             return Ok(pet);
         }
 
-        [HttpPut("{id}/Client/{clientId}")]
-        public async Task<IActionResult> UpdatePetAsync(int id, [FromBody] PetDto updatePetDto, int clientId)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdatePetAsync(int id, [FromBody] PetDto updatePetDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest("Field is incorrect.");
             }
-            var pet = await _petsService.UpdatePetAsync(id, updatePetDto, clientId);
+            var pet = await _petsService.UpdatePetAsync(id, updatePetDto);
             
             return Ok(pet);
         }

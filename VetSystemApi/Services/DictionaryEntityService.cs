@@ -6,6 +6,11 @@ using VetSystemModels.Entities;
 
 namespace VetSystemApi.Services
 {
+
+    /// <summary>
+    /// Общий сервис для справочников
+    /// </summary>
+
     public class DictionaryEntityService<TEntity> where TEntity : class
     {
         private readonly AppDbContext _context;
@@ -15,9 +20,10 @@ namespace VetSystemApi.Services
             _context = context;
         }
 
+        //Контекст в методе GetAllAsync() не отслеживает результат запроса 
         public async Task<List<TEntity>> GetAllAsync()
         {
-            var entities = await _context.Set<TEntity>().ToListAsync();
+            var entities = await _context.Set<TEntity>().AsNoTracking().ToListAsync();
             return entities;
         }
 

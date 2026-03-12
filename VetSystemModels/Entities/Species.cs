@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 namespace VetSystemModels.Entities;
 
@@ -15,6 +16,7 @@ public partial class Species
     [StringLength(50)]
     public string SpeciesName { get; set; } = null!;
 
+    [JsonIgnore]
     [InverseProperty("Species")]
     public virtual ICollection<Pet> Pets { get; set; } = new List<Pet>();
 }

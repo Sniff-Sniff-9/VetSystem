@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 namespace VetSystemModels.Entities;
 
@@ -15,6 +16,7 @@ public partial class Specialization
     [StringLength(50)]
     public string SpecializationName { get; set; } = null!;
 
+    [JsonIgnore]
     [InverseProperty("Specialization")]
     public virtual ICollection<Employee> Employees { get; set; } = new List<Employee>();
 }

@@ -125,9 +125,9 @@ namespace VetSystemApi.Services
             {
                 throw new ArgumentNullException("Pet not found.");
             }
+            pet.IsDeleted = true;
             try
             {
-                pet.IsDeleted = true;
                 await _context.SaveChangesAsync();
             }
             catch (Exception ex)

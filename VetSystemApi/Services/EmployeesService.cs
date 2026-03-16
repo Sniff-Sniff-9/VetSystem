@@ -126,12 +126,15 @@ namespace VetSystemApi.Services
         {
             return new EmployeeDto
             {
+                EmployeeId = employee.EmployeeId,
                 FirstName = employee.FirstName,
                 LastName = employee.LastName,
                 MiddleName = employee.MiddleName,
                 BirthDate = employee.BirthDate,
                 Phone = employee.Phone,
-                SpecializationName = employee.Specialization?.SpecializationName ?? "undefined"
+                SpecializationName = employee.Specialization?.SpecializationName ?? "undefined",
+                SpecializationId = employee.SpecializationId,
+                UserId = employee.UserId
             };
         }
     }

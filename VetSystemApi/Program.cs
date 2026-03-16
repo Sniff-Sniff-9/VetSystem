@@ -7,6 +7,7 @@ using VetSystemApi.Services.Interfaces;
 using VetSystemModels.Entities;
 using VetSystemInfrastructure.Configuration;
 using Microsoft.OpenApi.Models;
+using VetSystemApi.Workdays;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,6 +48,7 @@ builder.Services.AddScoped<IPetsService, PetsService>();
 builder.Services.AddScoped<IEmployeesService, EmployeesService>();
 builder.Services.AddScoped(typeof(DictionaryEntityService<>));
 builder.Services.AddScoped<IServicesService, ServicesService>();
+builder.Services.AddScoped<IWorkdaysService, WorkdaysService>();
 
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 

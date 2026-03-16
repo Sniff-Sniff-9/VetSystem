@@ -36,7 +36,7 @@ namespace VetSystemApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateServiceAsync([FromBody] ServiceDto serviceDto)
+        public async Task<IActionResult> CreateServiceAsync([FromBody] CreateUpdateServiceDto serviceDto)
         {
             if (!ModelState.IsValid)
             {
@@ -47,7 +47,7 @@ namespace VetSystemApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateServiceAsync(int id, [FromBody] ServiceDto serviceDto)
+        public async Task<IActionResult> UpdateServiceAsync(int id, [FromBody] CreateUpdateServiceDto serviceDto)
         {
             if (!ModelState.IsValid)
             {

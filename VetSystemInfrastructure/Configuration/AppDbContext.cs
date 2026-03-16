@@ -119,9 +119,13 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.Species).WithMany(p => p.Pets)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Pets__SpeciesId__5CD6CB2B");
-
      
             entity.HasQueryFilter(p => !p.IsDeleted && !p.Client.IsDeleted);
+        });
+
+        modelBuilder.Entity<Workday>(entity =>
+        {
+            entity.HasQueryFilter(w => !w.IsDeleted && !w.Employee.IsDeleted);
         });
 
         modelBuilder.Entity<Schedule>(entity =>

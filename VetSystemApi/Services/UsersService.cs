@@ -4,10 +4,11 @@ using Microsoft.Extensions.Options;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Text.RegularExpressions;
-using VetSystemInfrastructure.Configuration;
 using VetSystemApi.Services.Interfaces;
-using VetSystemModels.Entities;
+using VetSystemInfrastructure.Configuration;
+using VetSystemModels.Dto.Service;
 using VetSystemModels.Dto.User;
+using VetSystemModels.Entities;
 
 namespace VetSystemApi.Services
 {
@@ -30,12 +31,7 @@ namespace VetSystemApi.Services
 
         public async Task<List<UserDto>> GetUsersAsync()
         {
-            var users = await _context.Users.Include(u => u.Role).Select(u => new UserDto
-            {
-                Username = u.Username,
-                Email = u.Email,
-                RoleName = u.Role != null ? u.Role.RoleName : "undefiend"
-            }
+            var users = await _context.Users.Include(u => u.Role).Select(u => ToUserDto(u)
             ).ToListAsync();
 
             return users;
@@ -48,13 +44,7 @@ namespace VetSystemApi.Services
             { 
                 return null; 
             }
-            var userDto = new UserDto
-            {
-                Username = user.Username,
-                Email = user.Email,
-                RoleName = user.Role != null ? user.Role.RoleName : "undefiend"
-            };
-            return userDto;
+            return ToUserDto(user);
         }
 
         public async Task<UserDto> CreateUserAsync(CreateUserDto createUserDto)
@@ -91,12 +81,7 @@ namespace VetSystemApi.Services
             {
                 _context.Users.Add(user);
                 await _context.SaveChangesAsync();
-                return new UserDto
-                {
-                    Username = user.Username,
-                    Email = user.Email,
-                    RoleName = role.RoleName
-                };
+                return ToUserDto(user);
             }
             catch (Exception ex)
             {
@@ -125,12 +110,7 @@ namespace VetSystemApi.Services
             try
             {
                 await _context.SaveChangesAsync();
-                return new UserDto
-                {
-                    Username = user.Username,
-                    Email = user.Email,
-                    RoleName = user.Role?.RoleName ?? "undefined"
-                };
+                return ToUserDto(user);
             }
             catch (Exception ex)
             {
@@ -157,6 +137,19 @@ namespace VetSystemApi.Services
                 throw;
             }
 
+        }
+
+        private UserDto ToUserDto(User user)
+        {
+            return new UserDto()
+            {
+               UserId = user.UserId,
+               Username = user.Username,
+               Email = user.Email,
+               RoleId = user.RoleId,
+               RoleName = user.Role.RoleName,
+               CreatedAt = user.CreatedAt
+            };
         }
     }
 }

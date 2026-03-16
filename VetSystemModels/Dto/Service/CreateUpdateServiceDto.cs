@@ -1,18 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace VetSystemModels.Dto.Service
 {
-    public class ServiceDto
+    public class CreateUpdateServiceDto
     {
-        public int ServiceId { get; set; }
+        [StringLength(50)]
+        [Required]
         public string ServiceName { get; set; } = null!;
+        [Required]
         public decimal Price { get; set; }
+        [Required]
         public int DurationMinutes { get; set; }
     }
 }

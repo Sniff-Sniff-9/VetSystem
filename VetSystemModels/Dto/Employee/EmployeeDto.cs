@@ -9,6 +9,8 @@ namespace VetSystemModels.Dto.Employee
 {
     public class EmployeeDto
     {
+        public int EmployeeId { get; set; }
+
         [StringLength(50)]
         [Required]
         public string LastName { get; set; } = null!;
@@ -24,6 +26,8 @@ namespace VetSystemModels.Dto.Employee
         [Required]
         public string Phone { get; set; } = null!;
         [Required]
+        public int SpecializationId { get; set; }
         public string SpecializationName { get; set; } = null!;
+        public int? UserId { get; set; }
     }
 }

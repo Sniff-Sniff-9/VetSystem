@@ -20,6 +20,7 @@ namespace VetSystemModels.Dto.Client
         public string MiddleName { get; set; } = null!;
         [Required]
         public DateOnly BirthDate { get; set; }
+
         [StringLength(20)]
         [Required]
         public string Phone { get; set; } = null!;

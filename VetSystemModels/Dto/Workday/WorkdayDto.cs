@@ -4,13 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VetSystemModels.Entities
+namespace VetSystemModels.Dto.Workday
 {
-    public partial class Workday
+    public partial class WorkdayDto
     {
         public int WorkdayId { get; set; }
 
         public int EmployeeId { get; set; }
+
+        public string EmployeeName { get; set; } = null!;
 
         public DateOnly WorkDate { get; set; }
 
@@ -23,8 +25,5 @@ namespace VetSystemModels.Entities
         public TimeOnly LunchEnd { get; set; }
 
         public int SlotDuration { get; set; }
-        public bool IsDeleted { get; set; } = false;
-
-        public Employee Employee { get; set; } = null!;
     }
 }

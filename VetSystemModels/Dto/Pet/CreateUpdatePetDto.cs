@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace VetSystemModels.Dto.Pet
 {
-    internal class CreateUpdatePetDto
+    public class CreateUpdatePetDto
     {
         [StringLength(50)]
         [Required]
@@ -22,5 +22,7 @@ namespace VetSystemModels.Dto.Pet
         public DateOnly BirthDate { get; set; }
         [Required]
         public int GenderId { get; set; }
+        [Required]
+        public int ClientId { get; set; }
     }
 }

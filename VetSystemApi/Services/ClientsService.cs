@@ -126,11 +126,13 @@ namespace VetSystemApi.Services
         {
             return new ClientDto
             {
+                ClientId = client.ClientId,
                 FirstName = client.FirstName,
                 LastName = client.LastName,
                 MiddleName = client.MiddleName,
                 BirthDate = client.BirthDate,
-                Phone = client.Phone
+                Phone = client.Phone,
+                UserId = client.UserId
             };
         }
     }

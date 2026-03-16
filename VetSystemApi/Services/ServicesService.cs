@@ -34,12 +34,13 @@ namespace VetSystemApi.Services
             return ToServiceDto(service);
         }
 
-        public async Task<ServiceDto> CreateServiceAsync(ServiceDto serviceDto)
+        public async Task<ServiceDto> CreateServiceAsync(CreateUpdateServiceDto serviceDto)
         {
             var service = new Service()
             {
                 ServiceName = serviceDto.ServiceName,
-                Price = serviceDto.Price
+                Price = serviceDto.Price,
+                DurationMinutes = serviceDto.DurationMinutes
             };
             try
             {
@@ -54,7 +55,7 @@ namespace VetSystemApi.Services
             }
         }
 
-        public async Task<ServiceDto> UpdateServiceAsync(int id, ServiceDto serviceDto)
+        public async Task<ServiceDto> UpdateServiceAsync(int id, CreateUpdateServiceDto serviceDto)
         {
             var service = _context.Services.FirstOrDefault(s => s.ServiceId == id);
             if (service == null)
@@ -63,6 +64,7 @@ namespace VetSystemApi.Services
             }
             service.ServiceName = serviceDto.ServiceName ?? "undefiend";
             service.Price = serviceDto.Price;
+            service.DurationMinutes = serviceDto.DurationMinutes;
             try
             {
                 await _context.SaveChangesAsync();
@@ -97,8 +99,10 @@ namespace VetSystemApi.Services
         {
             return new ServiceDto()
             {
+                ServiceId = service.ServiceId,
                 ServiceName = service.ServiceName,
-                Price = service.Price
+                Price = service.Price,
+                DurationMinutes = service.DurationMinutes
             };
         }
     }

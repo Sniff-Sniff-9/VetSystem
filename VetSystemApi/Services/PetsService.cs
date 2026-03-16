@@ -20,13 +20,13 @@ namespace VetSystemApi.Services
 
         public async Task<List<PetDto>> GetPetsAsync()
         { 
-            var pets = await _context.Pets.Include(p => p.Species).Include(p => p.Gender).ToListAsync();
+            var pets = await _context.Pets.Include(p => p.Species).Include(p => p.Gender).Include(p => p.Client).ToListAsync();
             return pets.Select(p => ToPetDto(p)).ToList();
         }
 
         public async Task<PetDto?> GetPetByIdAsync(int id)
         {
-            var pet = await _context.Pets.Include(p => p.Species).Include(p => p.Gender).FirstOrDefaultAsync(p => p.PetId == id);
+            var pet = await _context.Pets.Include(p => p.Species).Include(p => p.Gender).Include(p => p.Client).FirstOrDefaultAsync(p => p.PetId == id);
             if (pet == null)
             {
                 return null;
@@ -36,36 +36,42 @@ namespace VetSystemApi.Services
         
         public async Task<List<PetDto>> GetPetsByClientIdAsync(int id)
         {
-            var clientPets = await _context.Pets.Include(p => p.Species).Include(p => p.Gender).Where(p => p.ClientId == id).ToListAsync() ;
+            var clientPets = await _context.Pets.Include(p => p.Species).Include(p => p.Gender).Include(p => p.Client).Where(p => p.ClientId == id).ToListAsync() ;
             return clientPets.Select(p => ToPetDto(p)).ToList();
         }
 
-        public async Task<PetDto> CreatePetAsync(PetDto petDto, int clientId)
+        public async Task<PetDto> CreatePetAsync(CreateUpdatePetDto petDto, int clientId)
         {
             if (petDto.BirthDate > DateOnly.FromDateTime(DateTime.UtcNow))
             {
-                throw new ArgumentException($"Birth date can't be larger than {DateOnly.FromDateTime(DateTime.UtcNow)}");
+                throw new ArgumentException($"Birth date can't be larger than {DateOnly.FromDateTime(DateTime.UtcNow)}.");
             }
-            var species = await _context.Species.FirstOrDefaultAsync(s => s.SpeciesName == petDto.SpeciesName);
-            var gender = await _context.Genders.FirstOrDefaultAsync(g => g.GenderName == petDto.GenderName);
 
-            if (gender == null)
+            var speciesExists = await _context.Species.AnyAsync(s => s.SpeciesId == petDto.SpeciesId);
+            var genderExists = await _context.Genders.AnyAsync(g => g.GenderId == petDto.GenderId);
+            var clientExists = await _context.Clients.AnyAsync(c => c.ClientId == petDto.ClientId);
+
+            if (genderExists)
             {
-                throw new ArgumentException("Gender doesn't exist");
+                throw new ArgumentException("Gender doesn't exist.");
             }
-            if (species == null)
+            if (speciesExists)
             {
-                throw new ArgumentException("Species doesn't exist");
+                throw new ArgumentException("Species doesn't exist.");
+            }
+            if (clientExists)
+            {
+                throw new ArgumentException("Client doesn't exist.");
             }
 
             var pet = new Pet
             {
                 Name = petDto.Name,
-                SpeciesId = species.SpeciesId,
+                SpeciesId = petDto.SpeciesId,
                 Breed = petDto.Breed,
                 BirthDate = petDto.BirthDate,
-                GenderId = gender.GenderId,
-                ClientId = clientId
+                GenderId = petDto.GenderId,
+                ClientId = petDto.ClientId
             };
             try
             {
@@ -81,30 +87,38 @@ namespace VetSystemApi.Services
         }
 
 
-        public async Task<PetDto> UpdatePetAsync(int id, PetDto petDto)
+        public async Task<PetDto> UpdatePetAsync(int id, CreateUpdatePetDto petDto)
         {
             var pet = await _context.Pets.FirstOrDefaultAsync(u => u.PetId == id);
-            var species = await _context.Species.FirstOrDefaultAsync(s => s.SpeciesName == petDto.SpeciesName);
-            var gender = await _context.Genders.FirstOrDefaultAsync(g => g.GenderName == petDto.GenderName);
+            var speciesExists = await _context.Species.AnyAsync(s => s.SpeciesId == petDto.SpeciesId);
+            var genderExists = await _context.Genders.AnyAsync(g => g.GenderId == petDto.GenderId);
+            var clientExists = await _context.Clients.AnyAsync(c => c.ClientId == petDto.ClientId);
 
-            if (gender == null)
+            if (genderExists)
             {
-                throw new ArgumentException("Gender doesn't exist");
+                throw new ArgumentException("Gender doesn't exist.");
             }
-            if (species == null)
+            if (speciesExists)
             {
-                throw new ArgumentException("Species doesn't exist");
+                throw new ArgumentException("Species doesn't exist.");
             }
+            if (clientExists)
+            {
+                throw new ArgumentException("Client doesn't exist.");
+            }
+
+           
             if (pet == null)
             {
                 throw new ArgumentNullException("Pet not found.");
             }
 
             pet.Name = petDto.Name;
-            pet.SpeciesId = species.SpeciesId;
-            pet.GenderId = gender.GenderId;
+            pet.SpeciesId = petDto.SpeciesId;
+            pet.GenderId = petDto.GenderId;
             pet.Breed = petDto.Breed;
             pet.BirthDate = petDto.BirthDate;
+            pet.ClientId = petDto.ClientId;
 
             try
             {
@@ -141,11 +155,17 @@ namespace VetSystemApi.Services
         {
             return new PetDto
             {
+                PetId = pet.PetId,
                 Name = pet.Name,
+                SpeciesId = pet.SpeciesId,
                 SpeciesName = pet.Species?.SpeciesName ?? "undefined",
                 Breed = pet.Breed,
                 BirthDate = pet.BirthDate,
-                GenderName = pet.Gender?.GenderName ?? "undefined"
+                GenderId = pet.GenderId,
+                GenderName = pet.Gender?.GenderName ?? "undefined",
+                ClientId = pet.ClientId,
+                ClientName = pet.Client != null 
+                ? $"{pet.Client.LastName} {pet.Client.FirstName} {pet.Client.MiddleName}" : "undefined"
             };
         }
     }

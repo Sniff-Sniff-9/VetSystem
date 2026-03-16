@@ -9,20 +9,16 @@ namespace VetSystemModels.Dto.Pet
 {
     public class PetDto
     {
-        [StringLength(50)]
-        [Required]
+        public int PetId { get; set; }
         public string Name { get; set; } = null!;
-        [StringLength(50)]
-        [Required]
+        public int SpeciesId { get; set; }
         public string SpeciesName { get; set; } = null!;
-        [StringLength(50)]
-        [Required]
         public string Breed { get; set; } = null!;
-        [Required]
         public DateOnly BirthDate { get; set; }
-        [StringLength(10)]
-        [Required]
+        public int GenderId { get; set; }
         public string GenderName { get; set; } = null!;
+        public int ClientId { get; set; }
+        public string ClientName { get; set; } = null!;
 
     }
 }

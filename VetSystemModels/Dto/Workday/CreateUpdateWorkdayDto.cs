@@ -1,30 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VetSystemModels.Entities
+namespace VetSystemModels.Dto.Workday
 {
-    public partial class Workday
+    public class CreateUpdateWorkdayDto
     {
-        public int WorkdayId { get; set; }
-
+        [Required]
         public int EmployeeId { get; set; }
-
+        [Required]
         public DateOnly WorkDate { get; set; }
-
+        [Required]
         public TimeOnly StartTime { get; set; }
-
+        [Required]
         public TimeOnly EndTime { get; set; }
-
+        [Required]
         public TimeOnly LunchStart { get; set; }
-
+        [Required]
         public TimeOnly LunchEnd { get; set; }
-
+        [Required]
         public int SlotDuration { get; set; }
-        public bool IsDeleted { get; set; } = false;
-
-        public Employee Employee { get; set; } = null!;
     }
 }

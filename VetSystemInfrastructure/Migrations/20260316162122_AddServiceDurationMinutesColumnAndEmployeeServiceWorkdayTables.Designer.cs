@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VetSystemInfrastructure.Configuration;
 
@@ -11,9 +12,11 @@ using VetSystemInfrastructure.Configuration;
 namespace VetSystemInfrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260316162122_AddServiceDurationMinutesColumnAndEmployeeServiceWorkdayTables")]
+    partial class AddServiceDurationMinutesColumnAndEmployeeServiceWorkdayTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -466,8 +469,8 @@ namespace VetSystemInfrastructure.Migrations
                     b.Property<TimeOnly>("StartTime")
                         .HasColumnType("time");
 
-                    b.Property<DateOnly>("WorkDate")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("WorkDate")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("WorkdayId");
 

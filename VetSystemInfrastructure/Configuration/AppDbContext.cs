@@ -40,6 +40,10 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
+    public virtual DbSet<EmployeeService> EmployeeServices { get; set; }
+
+    public virtual DbSet<Workday> Workdays { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer("Server=DESKTOP-M8RKUTS;Database=VetDataBase;Trusted_Connection=True;TrustServerCertificate=True;");
 

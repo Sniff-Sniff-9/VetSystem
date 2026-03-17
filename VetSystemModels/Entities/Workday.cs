@@ -23,8 +23,11 @@ namespace VetSystemModels.Entities
         public TimeOnly LunchEnd { get; set; }
 
         public int SlotDuration { get; set; }
+
         public bool IsDeleted { get; set; } = false;
 
         public Employee Employee { get; set; } = null!;
+
+        public virtual ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();
     }
 }

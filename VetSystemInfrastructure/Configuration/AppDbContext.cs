@@ -132,10 +132,10 @@ public partial class AppDbContext : DbContext
         {
             entity.HasKey(e => e.ScheduleId).HasName("PK__Schedule__9C8A5B4938FBDC9D");
 
-            entity.HasOne(d => d.Employee).WithMany(p => p.Schedules)
+            entity.HasOne(d => d.Workday).WithMany(p => p.Schedules)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Schedules__Emplo__5FB337D6");
-            entity.HasQueryFilter(s => s.IsAvailable && !s.Employee.IsDeleted);
+            entity.HasQueryFilter(s => !s.Workday.IsDeleted);
         });
 
         modelBuilder.Entity<Service>(entity =>

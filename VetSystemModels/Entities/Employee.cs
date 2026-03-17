@@ -32,7 +32,6 @@ public partial class Employee
     public bool IsDeleted { get; set; } = false;
 
     [InverseProperty("Employee")]
-    public virtual ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();
     public virtual ICollection<Workday> Workdays { get; set; } = new List<Workday>();
     public virtual ICollection<EmployeeService> EmployeeServices { get; set; } = new List<EmployeeService>();
 

@@ -18,14 +18,14 @@ namespace VetSystemApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetPets()
+        public async Task<IActionResult> GetPetsAsync()
         {
             var pets = await _petsService.GetPetsAsync();
             return Ok(pets);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetPetById(int id)
+        public async Task<IActionResult> GetPetByIdAsync(int id)
         {
             var pet = await _petsService.GetPetByIdAsync(id);
 
@@ -38,7 +38,7 @@ namespace VetSystemApi.Controllers
         }
 
         [HttpGet("/api/Clients/{clientId}/Pets")]
-        public async Task<IActionResult> GetPetsByClientId(int clientId)
+        public async Task<IActionResult> GetPetsByClientIdAsync(int clientId)
         {
             var pet = await _petsService.GetPetsByClientIdAsync(clientId);
             return Ok(pet);

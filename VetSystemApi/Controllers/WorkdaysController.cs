@@ -17,14 +17,14 @@ namespace VetSystemApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetWorkdays()
+        public async Task<IActionResult> GetWorkdaysAsync()
         {
             var workdays = await _workdaysService.GetWorkdaysAsync();
             return Ok(workdays);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetWorkdayById(int id)
+        public async Task<IActionResult> GetWorkdayByIdAsync(int id)
         {
             var workday = await _workdaysService.GetWorkdayByIdAsync(id);
 
@@ -36,6 +36,12 @@ namespace VetSystemApi.Controllers
             return Ok(workday);
         }
 
+        [HttpGet("/api/Employees/{id}/Workdays")]
+        public async Task<IActionResult> GetWorkdaysByEmployeeIdAsync(int id)
+        {
+            var workday = await _workdaysService.GetWorkdaysByEmployeeIdAsync(id);
+            return Ok(workday);
+        }
 
         [HttpPost]
         public async Task<IActionResult> CreateWorkdayAsync([FromBody] CreateUpdateWorkdayDto workdayDto)

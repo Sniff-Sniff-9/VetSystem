@@ -35,6 +35,12 @@ namespace VetSystemApi.Workdays
             return ToWorkdayDto(workday);
         }
 
+        public async Task<List<WorkdayDto>> GetWorkdaysByEmployeeIdAsync(int id)
+        {
+            var workdays = await _context.Workdays.Include(w => w.Employee).Where(s => s.EmployeeId == id).ToListAsync();
+            return workdays.Select(w => ToWorkdayDto(w)).ToList();
+        }
+
         public async Task<WorkdayDto> CreateWorkdayAsync(CreateUpdateWorkdayDto workdayDto)
         {
             var employeeExists = await _context.Employees.AnyAsync(e => e.EmployeeId == workdayDto.EmployeeId);
@@ -71,6 +77,9 @@ namespace VetSystemApi.Workdays
             {
                 _context.Add(workday);
                 await _context.SaveChangesAsync();
+
+                var employee = await _context.Employees.FirstOrDefaultAsync(e => e.EmployeeId == workday.EmployeeId);
+
                 return ToWorkdayDto(workday);
             }
             catch (Exception ex)
@@ -143,11 +152,11 @@ namespace VetSystemApi.Workdays
 
         private bool IsWorkdayTimeValid(CreateUpdateWorkdayDto workdayDto)
         {
-            if (workdayDto.StartTime <= workdayDto.EndTime)
+            if (workdayDto.StartTime >= workdayDto.EndTime)
             {
                 return false;
             }
-            if (workdayDto.LunchStart  <= workdayDto.LunchEnd)
+            if (workdayDto.LunchStart  >= workdayDto.LunchEnd)
             {
                 return false;
             }

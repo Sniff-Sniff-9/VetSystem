@@ -128,6 +128,11 @@ public partial class AppDbContext : DbContext
             entity.HasQueryFilter(w => !w.IsDeleted && !w.Employee.IsDeleted);
         });
 
+        modelBuilder.Entity<EmployeeService>(entity =>
+        {
+            entity.HasQueryFilter(es => !es.IsDeleted && !es.Employee.IsDeleted! && !es.Service.IsDeleted);
+        });
+
         modelBuilder.Entity<Schedule>(entity =>
         {
             entity.HasKey(e => e.ScheduleId).HasName("PK__Schedule__9C8A5B4938FBDC9D");

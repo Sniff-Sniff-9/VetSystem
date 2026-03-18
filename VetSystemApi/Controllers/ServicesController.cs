@@ -11,10 +11,12 @@ namespace VetSystemApi.Controllers
     public class ServicesController : ControllerBase
     {
         private readonly IServicesService _servicesService;
-        
-        public ServicesController(IServicesService servicesService)
+        private readonly IEmployeeServicesService _employeeServicesService;
+
+        public ServicesController(IServicesService servicesService, IEmployeeServicesService employeeServicesService)
         {
             _servicesService = servicesService;
+            _employeeServicesService = employeeServicesService;
         }
 
         [HttpGet]
@@ -33,6 +35,13 @@ namespace VetSystemApi.Controllers
                 return NotFound();
             }
             return Ok(service);
+        }
+
+        [HttpGet("{id}/Employees")]
+        public async Task<IActionResult> GetEmployeesByServiceIdAsync(int id)
+        {
+            var employees = await _employeeServicesService.GetEmployeesByServiceIdAsync(id);
+            return Ok(employees);
         }
 
         [HttpPost]

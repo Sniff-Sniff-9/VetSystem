@@ -18,7 +18,7 @@ namespace VetSystemApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetClients()
+        public async Task<IActionResult> GetClientsAsync()
         {
             var clients = await _clientsService.GetClientsAsync();
             if (clients == null)
@@ -29,7 +29,7 @@ namespace VetSystemApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetClientByClientId(int id)
+        public async Task<IActionResult> GetClientByClientIdAsync(int id)
         {
             var client = await _clientsService.GetClientByClientIdAsync(id);
             if (client == null)
@@ -39,8 +39,8 @@ namespace VetSystemApi.Controllers
             return Ok(client);
         }
 
-        [HttpGet("User/{userId}")]
-        public async Task<IActionResult> GetClientByUserId(int userId)
+        [HttpGet("/api/Users/{userId}/Client")]
+        public async Task<IActionResult> GetClientByUserIdAsync(int userId)
         {
             var client = await _clientsService.GetClientByUserIdAsync(userId);
             if (client == null)

@@ -11,14 +11,16 @@ namespace VetSystemApi.Controllers
     public class EmployeesController : ControllerBase
     {
         private readonly IEmployeesService _employeesService;
+        private readonly IEmployeeServicesService _employeeServicesService;
 
-        public EmployeesController(IEmployeesService employeesService)
+        public EmployeesController(IEmployeesService employeesService, IEmployeeServicesService employeeServicesService)
         {
             _employeesService = employeesService;
+            _employeeServicesService = employeeServicesService;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetEmployees()
+        public async Task<IActionResult> GetEmployeesAsync()
         {
             var employees = await _employeesService.GetEmployeesAsync();
             if (employees == null)
@@ -29,7 +31,7 @@ namespace VetSystemApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetEmployeeByEmployeeId(int id)
+        public async Task<IActionResult> GetEmployeeByEmployeeIdAsync(int id)
         {
             var employee = await _employeesService.GetEmployeeByEmployeeIdAsync(id);
             if (employee == null)
@@ -39,8 +41,8 @@ namespace VetSystemApi.Controllers
             return Ok(employee);
         }
 
-        [HttpGet("User/{userId}")]
-        public async Task<IActionResult> GetEmployeeByUserId(int userId)
+        [HttpGet("/api/Users/{userId}/Employee")]
+        public async Task<IActionResult> GetEmployeeByUserIdAsync(int userId)
         {
             var employee = await _employeesService.GetEmployeeByUserIdAsync(userId);
             if (employee == null)
@@ -48,6 +50,13 @@ namespace VetSystemApi.Controllers
                 return NotFound();
             }
             return Ok(employee);
+        }
+
+        [HttpGet("{id}/Services")]
+        public async Task<IActionResult> GetServicesByEmployeeIdAsync(int id)
+        {
+            var services = await _employeeServicesService.GetServicesByEmployeeIdAsync(id);
+            return Ok(services);
         }
 
         [HttpPost]

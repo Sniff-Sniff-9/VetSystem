@@ -4,18 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VetSystemModels.Entities
+namespace VetSystemModels.Dto.EmployeeService
 {
-    public partial class EmployeeService
+    public class EmployeeServiceDto
     {
         public int EmployeeServiceId { get; set; }
 
         public int EmployeeId { get; set; }
         public int ServiceId { get; set; }
-
-        public bool IsDeleted { get; set; } = false;
-
-        public Employee Employee { get; set; } = null!;
-        public Service Service { get; set; } = null!;
     }
 }

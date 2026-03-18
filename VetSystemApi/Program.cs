@@ -50,6 +50,7 @@ builder.Services.AddScoped(typeof(DictionaryEntityService<>));
 builder.Services.AddScoped<IServicesService, ServicesService>();
 builder.Services.AddScoped<IWorkdaysService, WorkdaysService>();
 builder.Services.AddScoped<ISchedulesService, SchedulesService>();
+builder.Services.AddScoped<IEmployeeServicesService, EmployeeServicesService>();
 
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 

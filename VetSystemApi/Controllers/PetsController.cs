@@ -44,15 +44,15 @@ namespace VetSystemApi.Controllers
             return Ok(pet);
         }
 
-        [HttpPost("/api/Clients/{clientId}/Pets")]
-        public async Task<IActionResult> CreatePetAsync([FromBody] CreateUpdatePetDto petDto, int clientId)
+        [HttpPost]
+        public async Task<IActionResult> CreatePetAsync([FromBody] CreateUpdatePetDto petDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest("Field is incorrect.");
             }
 
-            var pet = await _petsService.CreatePetAsync(petDto, clientId);
+            var pet = await _petsService.CreatePetAsync(petDto);
             
             return Ok(pet);
         }

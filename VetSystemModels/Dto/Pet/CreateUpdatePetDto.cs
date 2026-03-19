@@ -12,7 +12,6 @@ namespace VetSystemModels.Dto.Pet
         [StringLength(50)]
         [Required]
         public string Name { get; set; } = null!;
-        [StringLength(50)]
         [Required]
         public int SpeciesId { get; set; }
         [StringLength(50)]

@@ -40,7 +40,7 @@ namespace VetSystemApi.Services
             return clientPets.Select(p => ToPetDto(p)).ToList();
         }
 
-        public async Task<PetDto> CreatePetAsync(CreateUpdatePetDto petDto, int clientId)
+        public async Task<PetDto> CreatePetAsync(CreateUpdatePetDto petDto)
         {
             if (petDto.BirthDate > DateOnly.FromDateTime(DateTime.UtcNow))
             {
@@ -51,15 +51,15 @@ namespace VetSystemApi.Services
             var genderExists = await _context.Genders.AnyAsync(g => g.GenderId == petDto.GenderId);
             var clientExists = await _context.Clients.AnyAsync(c => c.ClientId == petDto.ClientId);
 
-            if (genderExists)
+            if (!genderExists)
             {
                 throw new ArgumentException("Gender doesn't exist.");
             }
-            if (speciesExists)
+            if (!speciesExists)
             {
                 throw new ArgumentException("Species doesn't exist.");
             }
-            if (clientExists)
+            if (!clientExists)
             {
                 throw new ArgumentException("Client doesn't exist.");
             }
@@ -77,7 +77,8 @@ namespace VetSystemApi.Services
             {
                 _context.Add(pet);
                 await _context.SaveChangesAsync();
-                return ToPetDto(pet);
+                var result = await _context.Pets.Include(p => p.Species).Include(p => p.Gender).Include(p => p.Client).FirstAsync(p => p.PetId == pet.PetId);
+                return ToPetDto(result);
             }
             catch (Exception ex)
             {
@@ -123,7 +124,8 @@ namespace VetSystemApi.Services
             try
             {
                 await _context.SaveChangesAsync();
-                return ToPetDto(pet);
+                var result = await _context.Pets.Include(p => p.Species).Include(p => p.Gender).Include(p => p.Client).FirstAsync(p => p.PetId == pet.PetId);
+                return ToPetDto(result);
             }
             catch (Exception ex)
             {

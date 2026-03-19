@@ -37,12 +37,12 @@ namespace VetSystemApi.Services
             return employees.Select(e => ToEmployeeDto(e)).ToList();
         }
 
-        public async Task<EmployeeServiceDto> GetEmployeeServiceByIdAsync(int id)
+        public async Task<EmployeeServiceDto?> GetEmployeeServiceByIdAsync(int id)
         {
             var employeeService = await _context.EmployeeServices.FirstOrDefaultAsync(es => es.EmployeeServiceId == id);
             if (employeeService == null)
             {
-                return null!;
+                return null;
             }
             return ToEmployeeServiceDto(employeeService);
         }

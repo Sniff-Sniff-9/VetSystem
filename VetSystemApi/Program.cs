@@ -52,6 +52,7 @@ builder.Services.AddScoped<IWorkdaysService, WorkdaysService>();
 builder.Services.AddScoped<ISchedulesService, SchedulesService>();
 builder.Services.AddScoped<IEmployeeServicesService, EmployeeServicesService>();
 builder.Services.AddScoped<IAppointmentsService, AppointmentsService>();
+builder.Services.AddScoped<IAppointmentServicesService, AppointmentServicesService>();
 
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 

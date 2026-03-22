@@ -8,6 +8,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using VetSystemWpfDesktop.Pages;
 
 namespace VetSystemWpfDesktop
 {
@@ -19,6 +20,41 @@ namespace VetSystemWpfDesktop
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void Dashboard_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Patients_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new PetsPage());
+        }
+
+        private void Appointments_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Doctors_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Settings_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Services_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Clients_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

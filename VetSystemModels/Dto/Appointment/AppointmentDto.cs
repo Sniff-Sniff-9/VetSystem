@@ -20,7 +20,7 @@ namespace VetSystemModels.Dto.Appointment
 
         public string PetName { get; set; } = null!;
 
-        public decimal PriceAtMoment { get; set; }
+        public decimal TotalPriceAtMoment { get; set; }
 
         public int AppointmentStatusId { get; set; }
 

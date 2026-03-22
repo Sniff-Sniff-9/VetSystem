@@ -79,7 +79,7 @@ namespace VetSystemApi.Services
                 ServiceId = appointmentDto.ServiceId,
                 ScheduleId = appointmentDto.ScheduleId,   
                 PetId = appointmentDto.PetId,
-                PriceAtMoment = service.Price,
+                TotalPriceAtMoment = service.Price,
                 AppointmentStatusId = appointmentDto.AppointmentStatusId,
             };
             try
@@ -169,7 +169,7 @@ namespace VetSystemApi.Services
                 SсheduleTimeEnd = appointment.Schedule?.EndTime ?? TimeOnly.MinValue,
                 PetId = appointment.PetId,
                 PetName = appointment.Pet?.Name ?? "undefiend",
-                PriceAtMoment = appointment.PriceAtMoment,
+                TotalPriceAtMoment = appointment.TotalPriceAtMoment,
                 AppointmentStatusId = appointment.AppointmentStatusId,
                 AppointmentStatusName = appointment.AppointmentStatus?.AppointmentStatusName ?? "undefined"
             };

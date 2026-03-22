@@ -18,6 +18,8 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<Appointment> Appointments { get; set; }
 
+    public virtual DbSet<AppointmentService> AppointmentServices { get; set; }
+
     public virtual DbSet<AppointmentStatus> AppointmentStatuses { get; set; }
 
     public virtual DbSet<Client> Clients { get; set; }
@@ -74,6 +76,11 @@ public partial class AppDbContext : DbContext
         modelBuilder.Entity<AppointmentStatus>(entity =>
         {
             entity.HasKey(e => e.AppointmentStatusId).HasName("PK__Appointm__A619B6607CCDB414");
+        });
+
+        modelBuilder.Entity<AppointmentService>(entity =>
+        {
+            entity.HasQueryFilter(aps => !aps.IsDeleted && !aps.Appointment.IsDeleted && !aps.Service.IsDeleted);
         });
 
         modelBuilder.Entity<Client>(entity =>
@@ -140,7 +147,7 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.Workday).WithMany(p => p.Schedules)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Schedules__Emplo__5FB337D6");
-            entity.HasQueryFilter(s => !s.Workday.IsDeleted);
+            entity.HasQueryFilter(s => !s.IsDeleted && !s.Workday.IsDeleted);
         });
 
         modelBuilder.Entity<Service>(entity =>

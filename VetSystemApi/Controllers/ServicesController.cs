@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using VetSystemApi.Services;
 using VetSystemApi.Services.Interfaces;
 using VetSystemModels.Dto;
 using VetSystemModels.Dto.Service;
@@ -12,11 +13,13 @@ namespace VetSystemApi.Controllers
     {
         private readonly IServicesService _servicesService;
         private readonly IEmployeeServicesService _employeeServicesService;
+        private readonly IAppointmentServicesService _appointmentServicesService;
 
-        public ServicesController(IServicesService servicesService, IEmployeeServicesService employeeServicesService)
+        public ServicesController(IServicesService servicesService, IEmployeeServicesService employeeServicesService, IAppointmentServicesService appointmentServicesService)
         {
             _servicesService = servicesService;
             _employeeServicesService = employeeServicesService;
+            _appointmentServicesService = appointmentServicesService;
         }
 
         [HttpGet]
@@ -24,6 +27,13 @@ namespace VetSystemApi.Controllers
         {
             var services = await _servicesService.GetServicesAsync();
             return Ok(services);
+        }
+
+        [HttpGet("{id}/Appointments")]
+        public async Task<IActionResult> GetAppointmentsByServiceIdAsync(int id)
+        {
+            var appointments = await _appointmentServicesService.GetAppointmentsByServiceIdAsync(id);
+            return Ok(appointments);
         }
 
         [HttpGet("{id}")]

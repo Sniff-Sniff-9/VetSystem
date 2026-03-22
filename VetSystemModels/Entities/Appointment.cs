@@ -16,7 +16,7 @@ public partial class Appointment
     public int PetId { get; set; }
 
     [Column(TypeName = "decimal(10, 2)")]
-    public decimal PriceAtMoment { get; set; }
+    public decimal TotalPriceAtMoment { get; set; }
 
     public int AppointmentStatusId { get; set; }
 

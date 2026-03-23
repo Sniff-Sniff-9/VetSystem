@@ -24,7 +24,6 @@ namespace VetSystemModels.Dto.Client
         [StringLength(20)]
         [Required]
         public string Phone { get; set; } = null!;
-        [Required]
         public int? UserId { get; set; }
     }
 }

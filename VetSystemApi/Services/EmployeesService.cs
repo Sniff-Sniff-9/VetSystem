@@ -36,7 +36,7 @@ namespace VetSystemApi.Services
 
         public async Task<EmployeeDto?> GetEmployeeByUserIdAsync(int id)
         {
-            var employee = await _context.Employees.FirstOrDefaultAsync(c => c.UserId == id);
+            var employee = await _context.Employees.Include(e => e.Specialization).FirstOrDefaultAsync(c => c.UserId == id);
             if (employee == null)
             {
                 return null!;
@@ -46,6 +46,18 @@ namespace VetSystemApi.Services
 
         public async Task<EmployeeDto> CreateEmployeeAsync(CreateEmployeeDto createEmployeeDto)
         {
+
+            var specializationExists = await _context.Specializations.AnyAsync(s => s.SpecializationId == createEmployeeDto.SpecializationId);
+            if (!specializationExists)
+            {
+                throw new ArgumentNullException("Specialization doesn't exist.");
+            }
+
+            var userAvailable = await _context.Employees.AnyAsync(e => e.UserId == createEmployeeDto.UserId);
+            if (userAvailable)
+            {
+                throw new ArgumentNullException("Employee already created.");
+            }
 
             if (createEmployeeDto.BirthDate > DateOnly.FromDateTime(DateTime.UtcNow))
             {
@@ -66,7 +78,8 @@ namespace VetSystemApi.Services
             {
                 _context.Add(employee);
                 await _context.SaveChangesAsync();
-                return ToEmployeeDto(employee);
+                var result = await _context.Employees.Include(e => e.Specialization).FirstAsync(e => e.EmployeeId == employee.EmployeeId);
+                return ToEmployeeDto(result);
             }
             catch (Exception ex)
             {
@@ -77,11 +90,22 @@ namespace VetSystemApi.Services
 
         public async Task<EmployeeDto> UpdateEmployeeAsync(int id, UpdateEmployeeDto updateEmployeeDto)
         {
+            var specializationExists = await _context.Specializations.AnyAsync(s => s.SpecializationId == updateEmployeeDto.SpecializationId);
+            if (!specializationExists)
+            {
+                throw new ArgumentNullException("Specialization doesn't exist.");
+            }
+
             var employee = await _context.Employees.Include(e => e.Specialization).FirstOrDefaultAsync(u => u.EmployeeId == id);
 
             if (employee == null)
             {
                 throw new ArgumentNullException("Employee not found.");
+            }
+
+            if (updateEmployeeDto.BirthDate > DateOnly.FromDateTime(DateTime.UtcNow))
+            {
+                throw new ArgumentException($"Birth date can't be larger than {DateOnly.FromDateTime(DateTime.UtcNow)}");
             }
 
             employee.FirstName = updateEmployeeDto.FirstName;
@@ -94,7 +118,8 @@ namespace VetSystemApi.Services
             try
             {
                 await _context.SaveChangesAsync();
-                return ToEmployeeDto(employee);
+                var result = await _context.Employees.Include(e => e.Specialization).FirstAsync(e => e.EmployeeId == employee.EmployeeId);
+                return ToEmployeeDto(result);
             }
             catch (Exception ex)
             {

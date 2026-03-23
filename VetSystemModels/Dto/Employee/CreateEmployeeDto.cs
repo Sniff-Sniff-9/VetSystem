@@ -25,7 +25,6 @@ namespace VetSystemModels.Dto.Employee
         public string Phone { get; set; } = null!;
         [Required]
         public int SpecializationId { get; set; }
-        [Required]
         public int? UserId { get; set; }
     }
 }

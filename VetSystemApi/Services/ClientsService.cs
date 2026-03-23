@@ -48,7 +48,13 @@ namespace VetSystemApi.Services
 
         public async Task<ClientDto> CreateClientAsync(CreateClientDto createClientDto)
         {
-            
+
+            var userAvailable = await _context.Clients.AnyAsync(c => c.UserId == createClientDto.UserId);
+            if (userAvailable)
+            {
+                throw new ArgumentNullException("Client already created.");
+            }
+
             if (createClientDto.BirthDate > DateOnly.FromDateTime(DateTime.UtcNow))
             {
                 throw new ArgumentException($"Birth date can't be larger than {DateOnly.FromDateTime(DateTime.UtcNow)}");
@@ -78,11 +84,17 @@ namespace VetSystemApi.Services
 
         public async Task<ClientDto> UpdateClientAsync(int id, UpdateClientDto updateClientDto)
         {
+
             var client = await _context.Clients.FirstOrDefaultAsync(u => u.ClientId == id);
 
             if (client == null)
             {
                 throw new ArgumentNullException("Client not found.");
+            }
+
+            if (updateClientDto.BirthDate > DateOnly.FromDateTime(DateTime.UtcNow))
+            {
+                throw new ArgumentException($"Birth date can't be larger than {DateOnly.FromDateTime(DateTime.UtcNow)}");
             }
 
             client.FirstName = updateClientDto.FirstName;

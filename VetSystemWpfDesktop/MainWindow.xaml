@@ -6,11 +6,15 @@
         WindowStartupLocation="CenterScreen"
         WindowState="Maximized"
         MinWidth="900"
-        MinHeight="550"
-        Style="{StaticResource MaterialDesignWindow}"
-        Background="{DynamicResource MaterialDesign.Brush.Background}">
+        MinHeight="550">
+    <Window.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#E3F2FD" Offset="0"/>
+            <GradientStop Color="#BBDEFB" Offset="1"/>
+        </LinearGradientBrush>
+    </Window.Background>
 
-    <Grid>
+    <Grid Margin="10">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -19,16 +23,9 @@
 
         <Grid Grid.Row="0">
 
-            <Grid.Background>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                    <GradientStop Color="#E3F2FD" Offset="0"/>
-                    <GradientStop Color="#BBDEFB" Offset="1"/>
-                </LinearGradientBrush>
-            </Grid.Background>
-
             <StackPanel Orientation="Horizontal"
                         VerticalAlignment="Center"
-                        Margin="20,10">
+                        Margin="20,16">
 
                 <materialDesign:PackIcon Kind="Paw"
                                          Width="48"
@@ -63,7 +60,7 @@
                                  Margin="12"
                                  Padding="10"
                                  UniformCornerRadius="16"
-                                 materialDesign:ElevationAssist.Elevation="Dp4">
+                                 materialDesign:ElevationAssist.Elevation="Dp2">
 
                 <DockPanel>
 
@@ -79,6 +76,7 @@
 
                             <Button Style="{StaticResource MaterialDesignOutlinedButton}"
                                     Margin="6"
+                                    Height="60"
                                     Click="Dashboard_Click">
 
                                 <StackPanel Orientation="Horizontal">
@@ -91,6 +89,7 @@
 
                             <Button Style="{StaticResource MaterialDesignOutlinedButton}"
                                     Margin="6"
+                                    Height="60"
                                     Click="Patients_Click">
 
                                 <StackPanel Orientation="Horizontal">
@@ -103,10 +102,11 @@
 
                             <Button Style="{StaticResource MaterialDesignOutlinedButton}"
                                     Margin="6"
+                                    Height="60"
                                     Click="Clients_Click">
 
                                 <StackPanel Orientation="Horizontal">
-                                    <materialDesign:PackIcon Kind="Face"
+                                    <materialDesign:PackIcon Kind="Account"
                                                              Margin="0,0,8,0"/>
                                     <TextBlock Text="Клиенты"/>
                                 </StackPanel>
@@ -115,6 +115,7 @@
 
                             <Button Style="{StaticResource MaterialDesignOutlinedButton}"
                                     Margin="6"
+                                    Height="60"
                                     Click="Appointments_Click">
 
                                 <StackPanel Orientation="Horizontal">
@@ -127,6 +128,7 @@
 
                             <Button Style="{StaticResource MaterialDesignOutlinedButton}"
                                     Margin="6"
+                                    Height="60"
                                     Click="Doctors_Click">
 
                                 <StackPanel Orientation="Horizontal">
@@ -136,9 +138,22 @@
                                 </StackPanel>
 
                             </Button>
+                            <Button Style="{StaticResource MaterialDesignOutlinedButton}"
+                                    Margin="6"
+                                    Height="60"
+                                    Click="Shifts_Click">
+
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="ClockOutline"
+                                                             Margin="0,0,8,0"/>
+                                    <TextBlock Text="Расписание"/>
+                                </StackPanel>
+
+                            </Button>
 
                             <Button Style="{StaticResource MaterialDesignOutlinedButton}"
                                     Margin="6"
+                                    Height="60"
                                     Click="Services_Click">
 
                                 <StackPanel Orientation="Horizontal">
@@ -151,6 +166,7 @@
 
                             <Button Style="{StaticResource MaterialDesignOutlinedButton}"
                                     Margin="6"
+                                    Height="60"
                                     Click="Settings_Click">
 
                                 <StackPanel Orientation="Horizontal">
@@ -220,14 +236,23 @@
                 </materialDesign:Card>
 
                 <materialDesign:Card Grid.Row="1"
-                                     Margin="12,6,12,12"
-                                     Padding="16"
-                                     UniformCornerRadius="16"
-                                     materialDesign:ElevationAssist.Elevation="Dp2">
+                     Margin="12,6,12,12"
+                     Padding="26"
+                     UniformCornerRadius="16"
+                     materialDesign:ElevationAssist.Elevation="Dp2">
 
-                    <Frame x:Name="MainFrame"
-                           NavigationUIVisibility="Hidden"/>
+                    <!-- Внутренняя карточка для имитации скругления -->
+                    <materialDesign:Card Margin="4"
+                         Padding="0"
+                         UniformCornerRadius="14"
+                         Background="#E3F2FD"
+                         materialDesign:ElevationAssist.Elevation="Dp0">
 
+                        <Frame x:Name="MainFrame"
+               NavigationUIVisibility="Hidden"
+               Background="{DynamicResource MaterialDesign.Brush.Background}"/>
+
+                    </materialDesign:Card>
                 </materialDesign:Card>
 
             </Grid>

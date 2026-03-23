@@ -34,7 +34,7 @@ namespace VetSystemWpfDesktop
 
         private void Appointments_Click(object sender, RoutedEventArgs e)
         {
-
+            MainFrame.Navigate (new AppointmentsPage());
         }
 
         private void Doctors_Click(object sender, RoutedEventArgs e)
@@ -53,6 +53,11 @@ namespace VetSystemWpfDesktop
         }
 
         private void Clients_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new ClientsPage());
+        }
+
+        private void Shifts_Click(object sender, RoutedEventArgs e)
         {
 
         }

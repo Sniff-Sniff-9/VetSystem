@@ -35,7 +35,12 @@ namespace VetSystemWpfDesktop.Pages
         public async void LoadPetsAsync()
         {
             var pets = await _petsService.GetPetsAsync();
-            PetsDataGrid.ItemsSource = pets;
+            PetsListView.ItemsSource = pets;
+        }
+
+        private void AddPetButton_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new PetEditPage());
         }
     }
 }

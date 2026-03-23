@@ -20,6 +20,10 @@ namespace VetSystemModels.Dto.Appointment
 
         public string PetName { get; set; } = null!;
 
+        public int ClientId { get; set; }
+
+        public string ClientName { get; set; } = null!;
+
         public decimal TotalPriceAtMoment { get; set; }
 
         public int AppointmentStatusId { get; set; }
@@ -31,5 +35,7 @@ namespace VetSystemModels.Dto.Appointment
         public TimeOnly SсheduleTimeStart { get; set; }
 
         public TimeOnly SсheduleTimeEnd { get; set; }
+
+        public DateOnly AppointmentDate { get; set; }
     }
 }

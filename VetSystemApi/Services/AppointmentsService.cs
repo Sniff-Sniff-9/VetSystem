@@ -20,13 +20,27 @@ namespace VetSystemApi.Services
 
         public async Task<List<AppointmentDto>> GetAppointmentsAsync()
         {
-            var appointments = await _context.Appointments.ToListAsync();
+            var appointments = await _context.Appointments.Include(a => a.Pet).Include(a => a.Pet.Client).Include(a => a.Schedule.Workday)
+                .Include(a => a.AppointmentStatus).Include(a => a.Schedule)
+                .Include(a => a.Service).ToListAsync();
             return appointments.Select(s => ToAppointmentDto(s)).ToList();
         }
 
+        public async Task<List<AppointmentDto>> GetAppointmentsByPetIdAsync(int id)
+        {
+            var appointments = await _context.Appointments.Include(a => a.Pet).Include(a => a.Schedule.Workday)
+                .Include(a => a.Pet.Client).Include(a => a.AppointmentStatus).Include(a => a.Schedule)
+                .Include(a => a.Service)
+                .Where(s => s.PetId == id).ToListAsync();
+            return appointments.Select(s => ToAppointmentDto(s)).ToList();
+        }
+
+
         public async Task<AppointmentDto?> GetAppointmentByIdAsync(int id)
         {
-            var appointment = await _context.Appointments.Include(a => a.Pet).Include(a => a.AppointmentStatus).FirstOrDefaultAsync(s => s.AppointmentId == id);
+            var appointment = await _context.Appointments.Include(a => a.Pet).Include(a => a.Pet.Client).Include(a => a.Schedule.Workday)
+                .Include(a => a.AppointmentStatus).Include(a => a.Schedule)
+                .Include(a => a.Service).FirstOrDefaultAsync(s => s.AppointmentId == id);
             if (appointment == null)
             {
                 return null;
@@ -86,7 +100,10 @@ namespace VetSystemApi.Services
             {
                 _context.Add(appointment);
                 await _context.SaveChangesAsync();
-                return ToAppointmentDto(appointment);
+                var result = await _context.Appointments.Include(a => a.Pet).Include(a => a.Pet.Client).Include(a => a.Schedule.Workday)
+                    .Include(a => a.AppointmentStatus).Include(a => a.Schedule)
+                    .FirstAsync(a => a.AppointmentId == appointment.AppointmentId);
+                return ToAppointmentDto(result);
             }
             catch (Exception ex)
             {
@@ -106,15 +123,15 @@ namespace VetSystemApi.Services
             {
                 throw new ArgumentException("Service doesn't exist.");
             }
-            if (scheduleExists)
+            if (!scheduleExists)
             {
                 throw new ArgumentException("Schedule doesn't exist.");
             }
-            if (petExists)
+            if (!petExists)
             {
                 throw new ArgumentException("Pet doesn't exist.");
             }
-            if (appointmentStatusExists)
+            if (!appointmentStatusExists)
             {
                 throw new ArgumentException("Appointment's status doesn't exist.");
             }
@@ -130,7 +147,10 @@ namespace VetSystemApi.Services
             try
             {
                 await _context.SaveChangesAsync();
-                return ToAppointmentDto(appointment);
+                var result = await _context.Appointments.Include(a => a.Pet).Include(a => a.Pet.Client).Include(a => a.Schedule.Workday)
+                    .Include(a => a.AppointmentStatus).Include(a => a.Schedule)
+                    .FirstAsync(a => a.AppointmentId == appointment.AppointmentId);
+                return ToAppointmentDto(result);
             }
             catch (Exception ex)
             {
@@ -169,9 +189,13 @@ namespace VetSystemApi.Services
                 SсheduleTimeEnd = appointment.Schedule?.EndTime ?? TimeOnly.MinValue,
                 PetId = appointment.PetId,
                 PetName = appointment.Pet?.Name ?? "undefiend",
+                ClientId = appointment.Pet?.ClientId ?? 0,
+                ClientName = appointment.Pet?.Client != null
+                ? $"{appointment.Pet.Client.LastName} {appointment.Pet.Client.FirstName} {appointment.Pet.Client.MiddleName}" : "undefined",
                 TotalPriceAtMoment = appointment.TotalPriceAtMoment,
                 AppointmentStatusId = appointment.AppointmentStatusId,
-                AppointmentStatusName = appointment.AppointmentStatus?.AppointmentStatusName ?? "undefined"
+                AppointmentStatusName = appointment.AppointmentStatus?.AppointmentStatusName ?? "undefined",
+                AppointmentDate = appointment.Schedule?.Workday != null ? appointment.Schedule.Workday.WorkDate : DateOnly.MinValue
             };
         }
     }

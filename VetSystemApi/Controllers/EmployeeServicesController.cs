@@ -53,7 +53,7 @@ namespace VetSystemApi.Controllers
             {
                 return BadRequest("Field is incorrect.");
             }
-            var employeeService = await _employeeServicesService.CreateEmployeeServiceAsync(employeeServiceDto);
+            var employeeService = await _employeeServicesService.UpdateEmployeeServiceAsync(id, employeeServiceDto);
             return Ok(employeeService);
         }
 

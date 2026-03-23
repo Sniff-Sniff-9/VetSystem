@@ -1,0 +1,127 @@
+﻿<Page x:Class="VetSystemWpfDesktop.Pages.PetEditPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" Background="#E3F2FD" Title="Питомец">
+    <Grid Margin="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <!-- HEADER -->
+        <StackPanel Orientation="Horizontal" Margin="8,8,8,18">
+            <materialDesign:PackIcon Kind="Dog" Width="40" Height="40" Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
+            <TextBlock Text="Питомец" FontSize="30" FontWeight="SemiBold" Margin="10,0,0,0" VerticalAlignment="Center" Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
+        </StackPanel>
+        <!-- MAIN CARD -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <materialDesign:Card Grid.Row="1" Padding="18" Margin="0,0,0,10" UniformCornerRadius="16" materialDesign:ElevationAssist.Elevation="Dp2">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <!-- BLOCK: Основная информация -->
+                    <TextBlock Text="Основная информация" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,16"/>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <!-- Имя -->
+                        <materialDesign:Card Grid.Row="0" Grid.Column="0" Margin="8" Padding="16" UniformCornerRadius="10" materialDesign:ElevationAssist.Elevation="Dp0">
+                            <StackPanel>
+                                <TextBlock Text="Имя питомца" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                                <TextBox Height="36" materialDesign:HintAssist.Hint="Введите имя"/>
+                            </StackPanel>
+                        </materialDesign:Card>
+                        <!-- Вид -->
+                        <materialDesign:Card Grid.Row="0" Grid.Column="1" Margin="8" Padding="16" UniformCornerRadius="10" materialDesign:ElevationAssist.Elevation="Dp0">
+                            <StackPanel>
+                                <TextBlock Text="Вид" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                                <ComboBox Height="36" materialDesign:HintAssist.Hint="Выберите вид"/>
+                            </StackPanel>
+                        </materialDesign:Card>
+                        <!-- Порода -->
+                        <materialDesign:Card Grid.Row="1" Grid.Column="0" Margin="8" Padding="16" UniformCornerRadius="10" materialDesign:ElevationAssist.Elevation="Dp0">
+                            <StackPanel>
+                                <TextBlock Text="Порода" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                                <TextBox Height="36" materialDesign:HintAssist.Hint="Введите породу"/>
+                            </StackPanel>
+                        </materialDesign:Card>
+                        <!-- Пол -->
+                        <materialDesign:Card Grid.Row="1" Grid.Column="1" Margin="8" Padding="16" UniformCornerRadius="10" materialDesign:ElevationAssist.Elevation="Dp0">
+                            <StackPanel>
+                                <TextBlock Text="Пол" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                                <ComboBox Height="36" materialDesign:HintAssist.Hint="Выберите пол"/>
+                            </StackPanel>
+                        </materialDesign:Card>
+                        <!-- Дата рождения -->
+                        <materialDesign:Card Grid.Row="2" Grid.ColumnSpan="2" Margin="8" Padding="16" UniformCornerRadius="10" materialDesign:ElevationAssist.Elevation="Dp0">
+                            <StackPanel>
+                                <TextBlock Text="Дата рождения" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                                <DatePicker Height="36"/>
+                            </StackPanel>
+                        </materialDesign:Card>
+                    </Grid>
+                    <!-- BLOCK: Информация о владельце -->
+                    <TextBlock Grid.Row="2" Text="Информация о владельце" FontSize="18" FontWeight="SemiBold" Margin="0,20,0,16"/>
+                    <Grid Grid.Row="3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <!-- Список владельцев -->
+                            <ColumnDefinition Width="3*"/>
+                            <!-- Детали владельца -->
+                        </Grid.ColumnDefinitions>
+
+                        <!-- SEARCH / LIST -->
+                        <materialDesign:Card Margin="8" Padding="12" UniformCornerRadius="10" materialDesign:ElevationAssist.Elevation="Dp0">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="Search" Width="24" Height="24" Margin="0,0,10,0" VerticalAlignment="Center" Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
+                                    <TextBox Height="36" Width="200" materialDesign:HintAssist.Hint="Поиск..." Margin="0,0,0,10"/>
+                                </StackPanel>
+                                <ListBox x:Name="OwnerListBox" Height="Auto"
+                                        SelectedItem="{Binding SelectedOwner, Mode=TwoWay}" SelectionChanged="OwnerListBox_SelectionChanged">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="{Binding LastName}" FontWeight="SemiBold" Margin="0,0,4,0"/>
+                                                <TextBlock Text="{Binding FirstName}" Margin="0,0,4,0"/>
+                                                <TextBlock Text="{Binding MiddleName}"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </StackPanel>
+                        </materialDesign:Card>
+
+                        <!-- DETAILS -->
+                        <materialDesign:Card Grid.Column="1" Margin="8" Padding="16" UniformCornerRadius="10" materialDesign:ElevationAssist.Elevation="Dp0">
+                            <StackPanel>
+                                <TextBlock Text="Фамилия:" FontWeight="SemiBold" Margin="0,4,0,0"/>
+                                <TextBox x:Name="OwnerLastNameTextBox" Height="30" IsReadOnly="True"/>
+                                <TextBlock Text="Имя:" FontWeight="SemiBold" Margin="0,8,0,0"/>
+                                <TextBox x:Name="OwnerFirstNameTextBox" Height="30" IsReadOnly="True"/>
+                                <TextBlock Text="Отчество:" FontWeight="SemiBold" Margin="0,8,0,0"/>
+                                <TextBox x:Name="OwnerMiddleNameTextBox" Height="30" IsReadOnly="True"/>
+                                <TextBlock Text="Телефон:" FontWeight="SemiBold" Margin="0,8,0,0"/>
+                                <TextBox x:Name="OwnerPhoneTextBox" Height="30" IsReadOnly="True"/>
+                            </StackPanel>
+                        </materialDesign:Card>
+                    </Grid>
+                    <!-- BUTTONS -->
+                    <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+                        <Button Style="{StaticResource MaterialDesignOutlinedButton}" Margin="0,0,10,0" Width="120" Click="CancelButton_Click">Отмена</Button>
+                        <Button Style="{StaticResource MaterialDesignRaisedButton}" Foreground="White" Width="140" Click="SaveButton_Click">Сохранить</Button>
+                    </StackPanel>
+                </Grid>
+            </materialDesign:Card>
+        </ScrollViewer>
+    </Grid>
+</Page>

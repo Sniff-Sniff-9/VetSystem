@@ -41,10 +41,10 @@ namespace VetSystemApi.Controllers
             return Ok(employee);
         }
 
-        [HttpGet("/api/Users/{userId}/Employee")]
-        public async Task<IActionResult> GetEmployeeByUserIdAsync(int userId)
+        [HttpGet("/api/Users/{id}/Employee")]
+        public async Task<IActionResult> GetEmployeeByUserIdAsync(int id)
         {
-            var employee = await _employeesService.GetEmployeeByUserIdAsync(userId);
+            var employee = await _employeesService.GetEmployeeByUserIdAsync(id);
             if (employee == null)
             {
                 return NotFound();

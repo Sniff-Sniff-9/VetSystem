@@ -82,7 +82,7 @@
                                 <StackPanel Orientation="Horizontal">
                                     <materialDesign:PackIcon Kind="ViewDashboardOutline"
                                                              Margin="0,0,8,0"/>
-                                    <TextBlock Text="Dashboard"/>
+                                    <TextBlock Text="Главная"/>
                                 </StackPanel>
 
                             </Button>
@@ -134,7 +134,7 @@
                                 <StackPanel Orientation="Horizontal">
                                     <materialDesign:PackIcon Kind="Doctor"
                                                              Margin="0,0,8,0"/>
-                                    <TextBlock Text="Врачи"/>
+                                    <TextBlock Text="Специалисты"/>
                                 </StackPanel>
 
                             </Button>

@@ -167,7 +167,8 @@ namespace VetSystemApi.Services
                 GenderName = pet.Gender?.GenderName ?? "undefined",
                 ClientId = pet.ClientId,
                 ClientName = pet.Client != null 
-                ? $"{pet.Client.LastName} {pet.Client.FirstName} {pet.Client.MiddleName}" : "undefined"
+                ? $"{pet.Client.LastName} {pet.Client.FirstName} {pet.Client.MiddleName}" : "undefined",
+                ClientUserId = pet.Client?.UserId ?? 0
             };
         }
     }

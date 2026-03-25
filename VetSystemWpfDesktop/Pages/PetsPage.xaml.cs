@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using VetSystemModels.Dto.Pet;
 using VetSystemWpfDesktop.Services;
 
 namespace VetSystemWpfDesktop.Pages
@@ -40,7 +41,28 @@ namespace VetSystemWpfDesktop.Pages
 
         private void AddPetButton_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new PetEditPage());
+            NavigationService.Navigate(new PetEditPage(null, "create"));
+        }
+
+        private void EditPetButton_Click(object sender, RoutedEventArgs e)
+        {
+            if ((sender as Button)?.DataContext is PetDto pet)
+            {
+                NavigationService.Navigate(new PetEditPage(pet, "edit"));
+            }
+        }
+
+        private void DeletePetButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void CheckPetButton_Click(object sender, RoutedEventArgs e)
+        {
+            if ((sender as Button)?.DataContext is PetDto pet)
+            {
+                NavigationService.Navigate(new PetEditPage(pet, "check"));
+            }
         }
     }
 }

@@ -18,6 +18,7 @@ namespace VetSystemModels.Dto.Pet
         public int GenderId { get; set; }
         public string GenderName { get; set; } = null!;
         public int ClientId { get; set; }
+        public int? ClientUserId { get; set; }
         public string ClientName { get; set; } = null!;
 
     }

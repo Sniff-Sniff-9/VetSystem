@@ -71,7 +71,7 @@
 
         <!-- HEADER -->
         <StackPanel Orientation="Horizontal" Margin="8">
-            <materialDesign:PackIcon Kind="CalendarCheck" Width="40" Height="40" Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
+            <materialDesign:PackIcon Kind="CalendarClock" Width="40" Height="40" Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
             <TextBlock Text="Приемы" FontSize="30" FontWeight="SemiBold" Margin="10,0,0,0" VerticalAlignment="Center" Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
         </StackPanel>
 
@@ -108,7 +108,8 @@
                 <!-- TOOLBAR -->
                 <DockPanel Margin="0,0,0,14">
                     <!-- ADD BUTTON -->
-                    <Button DockPanel.Dock="Right" Style="{StaticResource MaterialDesignRaisedButton}" Foreground="White" Height="36" Click="AddAppointmentButton_Click">
+                    <Button DockPanel.Dock="Right" Style="{StaticResource MaterialDesignRaisedButton}" 
+                            Foreground="White" Height="36" Click="AddAppointmentButton_Click">
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="Plus"/>
                             <TextBlock Text="Создать запись" Margin="6,0,0,0"/>
@@ -253,7 +254,10 @@
                                             <ColumnDefinition Width="220"/>
                                         </Grid.ColumnDefinitions>
 
-                                        <TextBlock Text="{Binding AppointmentDate, StringFormat=dd.MM.yyyy}" VerticalAlignment="Center"/>
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="CalendarClock" Margin="0,0,6,0" Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
+                                            <TextBlock Text="{Binding AppointmentDate, StringFormat=dd.MM.yyyy}" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                                        </StackPanel>
                                         <TextBlock Grid.Column="1" Text="{Binding SсheduleTimeStart, StringFormat=HH:mm}" VerticalAlignment="Center"/>
                                         <TextBlock Grid.Column="2" Text="{Binding SсheduleTimeEnd, StringFormat=HH:mm}" VerticalAlignment="Center"/>
                                         <TextBlock Grid.Column="3" Text="{Binding ServiceName}" VerticalAlignment="Center"/>
@@ -272,6 +276,9 @@
 
                                         <!-- ACTIONS -->
                                         <StackPanel Grid.Column="8" Orientation="Horizontal" HorizontalAlignment="Center">
+                                            <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="Просмотреть">
+                                                <materialDesign:PackIcon Kind="EyeOutline"/>
+                                            </Button>
                                             <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="Редактировать">
                                                 <materialDesign:PackIcon Kind="Pencil"/>
                                             </Button>

@@ -39,7 +39,7 @@ namespace VetSystemWpfDesktop.Pages
 
         private void AddClientButton_Click(object sender, RoutedEventArgs e)
         {
-
+            NavigationService.Navigate(new ClientEditPage());
         }
     }
 }

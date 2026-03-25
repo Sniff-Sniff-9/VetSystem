@@ -22,5 +22,9 @@ namespace VetSystemWpfDesktop.Services
         {
             return await _httpClient.GetFromJsonAsync<List<ClientDto>>("Clients");
         }
+        public async Task<ClientDto?> GetClientAsync(int id)
+        {
+            return await _httpClient.GetFromJsonAsync<ClientDto?>($"Clients/{id}");
+        }
     }
 }

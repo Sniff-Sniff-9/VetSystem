@@ -40,7 +40,7 @@ namespace VetSystemWpfDesktop.Pages
 
         private void AddAppointmentButton_Click(object sender, RoutedEventArgs e)
         {
-
+            NavigationService.Navigate(new AppointmentEditPage());
         }
     }
 }

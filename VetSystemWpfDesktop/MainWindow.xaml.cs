@@ -20,11 +20,12 @@ namespace VetSystemWpfDesktop
         public MainWindow()
         {
             InitializeComponent();
+            MainFrame.Navigate(new DashboardPage());
         }
 
         private void Dashboard_Click(object sender, RoutedEventArgs e)
         {
-
+            MainFrame.Navigate(new DashboardPage());
         }
 
         private void Patients_Click(object sender, RoutedEventArgs e)

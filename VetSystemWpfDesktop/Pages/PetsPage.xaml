@@ -18,16 +18,16 @@
             </Grid.ColumnDefinitions>
             <materialDesign:Card Margin="4" Padding="16" UniformCornerRadius="12">
                 <StackPanel HorizontalAlignment="Center">
-                    <materialDesign:PackIcon Kind="Dog" Width="32" Height="32" Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
-                    <TextBlock Text="Всего питомцев" Margin="0,6" FontWeight="SemiBold"/>
-                    <TextBlock Text="128" FontSize="22" FontWeight="Bold"/>
+                    <materialDesign:PackIcon Kind="Dog" Width="32" Height="32" HorizontalAlignment="Center" Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
+                    <TextBlock Text="Всего питомцев" Margin="0,6" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+                    <TextBlock Text="128" FontSize="22" FontWeight="Bold" HorizontalAlignment="Center"/>
                 </StackPanel>
             </materialDesign:Card>
             <materialDesign:Card Grid.Column="1" Margin="4" Padding="16" UniformCornerRadius="12">
                 <StackPanel HorizontalAlignment="Center">
-                    <materialDesign:PackIcon Kind="Calendar" Width="32" Height="32" Foreground="Green"/>
-                    <TextBlock Text="Новые за месяц" Margin="0,6" FontWeight="SemiBold"/>
-                    <TextBlock Text="12" FontSize="22" FontWeight="Bold"/>
+                    <materialDesign:PackIcon Kind="CalendarPlus" Width="32" Height="32" Foreground="Green"  HorizontalAlignment="Center"/>
+                    <TextBlock Text="Новые за месяц" Margin="0,6" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+                    <TextBlock Text="12" FontSize="22" FontWeight="Bold" HorizontalAlignment="Center"/>
                 </StackPanel>
             </materialDesign:Card>
         </Grid>
@@ -47,8 +47,11 @@
                         </StackPanel>
                     </Button>
                     <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="Search" Width="24" Height="24" Margin="0,0,10,0" VerticalAlignment="Center" Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
-                        <TextBox Width="300" Height="36" materialDesign:HintAssist.Hint="Поиск..."/>
+                        <materialDesign:PackIcon Kind="Search" Width="24" Height="24" VerticalAlignment="Center" Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
+                        <TextBox Width="200" Height="36" materialDesign:HintAssist.Hint="Поиск..."/>
+                        <ComboBox Width="140" Height="36" materialDesign:HintAssist.Hint="Вид" Margin="10,0,0,0"/>
+                        <ComboBox Width="140" Height="36" materialDesign:HintAssist.Hint="Пол" Margin="10,0,0,0"/>
+                        <ComboBox Width="140" Height="36" materialDesign:HintAssist.Hint="Возраст" Margin="10,0,0,0"/>
                     </StackPanel>
                 </DockPanel>
                 <!-- TABLE -->
@@ -123,8 +126,50 @@
                                         <TextBlock Grid.Column="5" Text="{Binding ClientName}" VerticalAlignment="Center"/>
                                         <!-- ACTIONS -->
                                         <StackPanel Grid.Column="6" Orientation="Horizontal" HorizontalAlignment="Center">
-                                            <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="Редактировать">
+                                            <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="Просмотреть" 
+                                                    Name="CheckPetButton" Click="CheckPetButton_Click">
+                                                <materialDesign:PackIcon Kind="EyeOutline"/>
+                                            </Button>
+                                            <Button Name="EditPetButton" Click="EditPetButton_Click">
+
+                                                <Button.Style>
+                                                    <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignIconButton}">
+
+                                                        <!-- по умолчанию запрещено -->
+                                                        <Setter Property="IsEnabled" Value="False"/>
+
+                                                        <Style.Triggers>
+                                                            <!-- если питомец создан админом -->
+                                                            <DataTrigger Binding="{Binding ClientUserId}" Value="{x:Null}">
+                                                                <Setter Property="IsEnabled" Value="True"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+
+                                                    </Style>
+                                                </Button.Style>
+
                                                 <materialDesign:PackIcon Kind="Pencil"/>
+
+                                            </Button>
+                                            <Button Name="DeletePetButton" Click="DeletePetButton_Click">
+
+                                                <Button.Style>
+                                                    <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignIconButton}">
+
+                                                        <Setter Property="IsEnabled" Value="False"/>
+
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding ClientUserId}" Value="{x:Null}">
+                                                                <Setter Property="IsEnabled" Value="True"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+
+                                                    </Style>
+
+                                                </Button.Style>
+
+                                                <materialDesign:PackIcon Kind="Delete"/>
+
                                             </Button>
                                             <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="История">
                                                 <materialDesign:PackIcon Kind="History"/>

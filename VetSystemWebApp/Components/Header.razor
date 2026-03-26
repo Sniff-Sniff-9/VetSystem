@@ -1,0 +1,34 @@
+﻿<MudAppBar Elevation="1"
+           Class="d-flex align-center"
+           Style="background: linear-gradient(109.6deg, #E3F2FD 0%, #BBDEFB 100%);
+                  height: 80px;
+                  box-shadow: 0 2px 4px rgba(0,0,0,0.1); z-index=0;">
+
+    <MudContainer MaxWidth="MaxWidth.False" Class="d-flex align-center justify-between w-100 px-4 px-md-6">
+
+        <MudIconButton Icon="@Icons.Material.Filled.Menu"
+                       Color="Color.Primary"
+                       Class="d-flex d-md-none"
+                       OnClick="@ToggleDrawer" />
+
+        <!-- Логотип + текст -->
+        <div class="d-flex align-center mx-auto gap-2">
+            <MudIcon Icon="@Icons.Material.Filled.Pets" Style="@LogoSize" />
+            <MudText Typo="@TextTypo" Style="font-weight:600;">@Text</MudText>
+        </div>
+
+    </MudContainer>
+
+</MudAppBar>
+
+@code {
+    [Parameter] public EventCallback ToggleDrawer { get; set; }
+
+    private string Text { get; set; } = "Ветеринарная Система";
+
+    private string LogoSize => IsMobile ? "width:32px;height:32px;" : "width:48px;height:48px;";
+
+    private Typo TextTypo => IsMobile ? Typo.h6 : Typo.h4;
+
+    [Parameter] public bool IsMobile { get; set; }
+}

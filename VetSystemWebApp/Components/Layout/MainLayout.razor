@@ -1,0 +1,73 @@
+﻿@inherits LayoutComponentBase
+@using MudBlazor
+@inject IJSRuntime JS
+
+<MudThemeProvider Theme="@MyTheme" />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<MudLayout Style="background: linear-gradient(109.6deg, #E3F2FD 0%, #BBDEFB 100%); min-height:100vh;">
+
+    <!-- AppBar только на мобильном -->
+    @if (IsMobile)
+    {
+        <MudAppBar Elevation="4" Class="d-flex align-center px-4" Style="background:#03A9F4; color:white; z-index:1500;">
+            <MudIconButton Icon="@Icons.Material.Filled.Menu"
+                           Color="Color.Inherit"
+                           OnClick="@ToggleDrawer" />
+            <MudText Typo="Typo.h6" Class="ml-2">Ветеринарная Система</MudText>
+        </MudAppBar>
+    }
+
+    <!-- SideMenu -->
+    <SideMenu @bind-Open="_drawerOpen"
+              DrawerVariant="@DrawerVariant" IsMobile="@IsMobile" />
+
+    <!-- Main Content -->
+    <MudMainContent Style="@MainContentStyle">
+        @Body
+    </MudMainContent>
+
+</MudLayout>
+
+@code {
+    private MudTheme MyTheme => Themes.VetSystemTheme.Default;
+
+    private bool _drawerOpen = true;
+
+    private static int _windowWidth = 1024;
+
+    private bool IsMobile => _windowWidth < 768;
+
+    private DrawerVariant DrawerVariant => IsMobile ? DrawerVariant.Temporary : DrawerVariant.Persistent;
+
+    private string MainContentStyle =>
+        $"min-height:100vh; " +
+        $"padding:16px; " +
+        $"padding-top:{(IsMobile ? "84px" : "0")}; " +
+        $"transition: margin 0.3s;";
+
+    private void ToggleDrawer()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+
+    [JSInvokable]
+    public void UpdateWidth(int width)
+    {
+        _windowWidth = width;
+
+        // Десктоп — открыто, мобильный — закрыто
+        _drawerOpen = !IsMobile;
+
+        StateHasChanged();
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            JS.InvokeVoidAsync("resizeObserver.register", DotNetObjectReference.Create(this));
+        }
+    }
+}

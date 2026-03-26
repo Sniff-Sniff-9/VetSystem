@@ -71,7 +71,7 @@
 
         <!-- HEADER -->
         <StackPanel Orientation="Horizontal" Margin="8">
-            <materialDesign:PackIcon Kind="CalendarClock" Width="40" Height="40" Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
+            <materialDesign:PackIcon Kind="CalendarClock" Width="40" Height="40" Foreground="#FF03A9F4"/>
             <TextBlock Text="Приемы" FontSize="30" FontWeight="SemiBold" Margin="10,0,0,0" VerticalAlignment="Center" Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
         </StackPanel>
 

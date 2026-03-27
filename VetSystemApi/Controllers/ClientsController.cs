@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using VetSystemApi.Services;
 using VetSystemApi.Services.Interfaces;
 using VetSystemModels.Dto.Client;
@@ -21,10 +23,6 @@ namespace VetSystemApi.Controllers
         public async Task<IActionResult> GetClientsAsync()
         {
             var clients = await _clientsService.GetClientsAsync();
-            if (clients == null)
-            {
-                return NotFound();
-            }
             return Ok(clients);
         }
 
@@ -39,9 +37,11 @@ namespace VetSystemApi.Controllers
             return Ok(client);
         }
 
-        [HttpGet("/api/Users/{id}/Client")]
-        public async Task<IActionResult> GetClientByUserIdAsync(int id)
+        [Authorize]
+        [HttpGet("/api/Users/Client")]
+        public async Task<IActionResult> GetClientByUserIdAsync()
         {
+            var id = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
             var client = await _clientsService.GetClientByUserIdAsync(id);
             if (client == null)
             {

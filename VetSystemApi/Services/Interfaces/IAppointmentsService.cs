@@ -8,6 +8,7 @@ namespace VetSystemApi.Services.Interfaces
     {
         public Task<List<AppointmentDto>> GetAppointmentsAsync();
         public Task<List<AppointmentDto>> GetAppointmentsByPetIdAsync(int id);
+        public Task<List<AppointmentDto>> GetAppointmentsByClientIdAsync(int id);
         public Task<AppointmentDto?> GetAppointmentByIdAsync(int id);
         public Task<AppointmentDto> CreateAppointmentAsync(CreateUpdateAppointmentDto employeeServiceDto);
         public Task<AppointmentDto> UpdateAppointmentAsync(int id, CreateUpdateAppointmentDto employeeServiceDto);

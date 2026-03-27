@@ -1,0 +1,152 @@
+﻿@page "/"
+@layout Layout.EmptyLayout
+
+@using System.Text
+@using System.Text.Json
+
+@inject HttpClient Http
+@inject NavigationManager Navigation
+@inject ILocalStorageService LocalStorage
+
+<PageTitle>Вход в систему - Ветеринарная Система</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.ExtraSmall" Class="mt-8 mt-md-12">
+    <MudPaper Elevation="3" Class="pa-8 pa-md-12">
+
+        <!-- Заголовок -->
+        <div class="d-flex flex-column align-center mb-8">
+            <MudText Typo="Typo.h4"
+                     Color="Color.Primary"
+                     Style="font-weight:700; text-align:center;">
+                Вход в аккаунт
+            </MudText>
+        </div>
+
+        <!-- Форма -->
+        <MudForm @ref="_form" @bind-IsValid="_isValid">
+            <MudTextField T="string"
+                          @bind-Value="model.Email"
+                          Label="Email"
+                          Variant="Variant.Outlined"
+                          Required="true"
+                          RequiredError="Email обязателен"
+                          AdornmentIcon="@Icons.Material.Filled.Email"
+                          Adornment="Adornment.Start"
+                          Class="mb-6" />
+
+            <MudTextField T="string"
+                          @bind-Value="model.Password"
+                          Label="Пароль"
+                          Variant="Variant.Outlined"
+                          InputType="InputType.Password"
+                          AdornmentIcon="@Icons.Material.Filled.Lock"
+                          Adornment="Adornment.Start"
+                          Required="true"
+                          RequiredError="Пароль обязателен"
+                          Class="mb-6" />
+
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       Size="Size.Large"
+                       FullWidth="true"
+                       Disabled="_isLoading"
+                       OnClick="SubmitForm"
+                       Class="mt-2 mb-3">
+                Войти
+            </MudButton>
+        </MudForm>
+
+        <!-- Ошибки -->
+        @if (!string.IsNullOrEmpty(ErrorMessage))
+        {
+            <MudAlert Severity="Severity.Error" Class="mt-4">
+                @ErrorMessage
+            </MudAlert>
+        }
+
+        <!-- Ссылка на регистрацию -->
+        <div class="d-flex justify-center mt-6">
+            <MudText Typo="Typo.body2">
+                Нет аккаунта?
+                <MudLink Href="/register" Color="Color.Primary">
+                    Зарегистрироваться
+                </MudLink>
+            </MudText>
+        </div>
+
+    </MudPaper>
+</MudContainer>
+
+@code {
+    private MudForm? _form;
+    private bool _isValid;
+    private bool _isLoading;
+
+    private LoginModel model = new();
+    private string? ErrorMessage;
+
+    // Обработка клика кнопки "Войти"
+    private async Task SubmitForm()
+    {
+        if (_form is null) return;
+
+        // Валидируем форму
+        await _form.Validate();
+        if (!_form.IsValid) return;
+
+        await HandleLogin();
+    }
+
+    // Метод логина
+    private async Task HandleLogin()
+    {
+        _isLoading = true;
+        ErrorMessage = null;
+
+        try
+        {
+            var json = JsonSerializer.Serialize(model);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await Http.PostAsync("https://localhost:7146/api/Auth/Login", content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var resultJson = await response.Content.ReadAsStringAsync();
+
+                var tokenObj = JsonSerializer.Deserialize<TokenResponse>(resultJson,
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                if (tokenObj != null)
+                {
+                    LocalStorage.SetItem("jwtToken", tokenObj.Token);
+                }
+
+                Navigation.NavigateTo("/dashboard", true);
+            }
+            else
+            {
+                ErrorMessage = "Неверная эл. почта или пароль";
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = "Ошибка сервера: " + ex.Message;
+        }
+
+        _isLoading = false;
+    }
+
+    // Модель логина
+    public class LoginModel
+    {
+        public string Email { get; set; } = "";
+        public string Password { get; set; } = "";
+    }
+
+    // Ответ от API
+    public class TokenResponse
+    {
+        public string Token { get; set; } = "";
+    }
+}

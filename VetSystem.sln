@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VetSystemWpfDesktop", "VetS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VetSystemInfrastructure", "VetSystemInfrastructure\VetSystemInfrastructure.csproj", "{596A5121-BE39-4981-9148-7478AF5DD53C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VetSystemWebApp", "VetSystemWebApp\VetSystemWebApp.csproj", "{C7CB6AB8-6277-4885-BF06-923AB0E9A720}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VetSystemWebApplication", "VetSystemWebApplication\VetSystemWebApplication.csproj", "{47CC571C-D30E-4DAD-A990-1AD873E40DBC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +35,10 @@ Global
 		{596A5121-BE39-4981-9148-7478AF5DD53C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{596A5121-BE39-4981-9148-7478AF5DD53C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{596A5121-BE39-4981-9148-7478AF5DD53C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C7CB6AB8-6277-4885-BF06-923AB0E9A720}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C7CB6AB8-6277-4885-BF06-923AB0E9A720}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C7CB6AB8-6277-4885-BF06-923AB0E9A720}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C7CB6AB8-6277-4885-BF06-923AB0E9A720}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47CC571C-D30E-4DAD-A990-1AD873E40DBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47CC571C-D30E-4DAD-A990-1AD873E40DBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47CC571C-D30E-4DAD-A990-1AD873E40DBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47CC571C-D30E-4DAD-A990-1AD873E40DBC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

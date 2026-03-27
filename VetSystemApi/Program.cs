@@ -56,6 +56,17 @@ builder.Services.AddScoped<IAppointmentServicesService, AppointmentServicesServi
 
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowBlazorClient", policy =>
+    {
+        policy.WithOrigins("https://localhost:7120") // фронтенд
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials(); // важно для cookie или авторизации
+    });
+});
+
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 builder.Services.Configure<JwtSettings>(jwtSettings);
 
@@ -88,6 +99,7 @@ builder.Services.AddAuthentication(options =>
 
 });
 
+
 builder.Services.AddAuthorization();
 builder.Services.AddScoped<AuthService>();
 
@@ -103,6 +115,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseCors("AllowBlazorClient");
 app.UseAuthentication();
 
 app.UseAuthorization();

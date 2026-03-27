@@ -35,6 +35,15 @@ namespace VetSystemApi.Services
             return appointments.Select(s => ToAppointmentDto(s)).ToList();
         }
 
+        public async Task<List<AppointmentDto>> GetAppointmentsByClientIdAsync(int id)
+        {
+            var appointments = await _context.Appointments.Include(a => a.Pet).Include(a => a.Schedule.Workday)
+                .Include(a => a.Pet.Client).Include(a => a.AppointmentStatus).Include(a => a.Schedule)
+                .Include(a => a.Service)
+                .Where(s => s.Pet.Client.UserId == id).ToListAsync();
+            return appointments.Select(s => ToAppointmentDto(s)).ToList();
+        }
+
 
         public async Task<AppointmentDto?> GetAppointmentByIdAsync(int id)
         {

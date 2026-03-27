@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using VetSystemApi.Services.Interfaces;
 using VetSystemModels.Dto.User;
@@ -29,9 +30,11 @@ namespace VetSystemApi.Controllers
             return Ok(users);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetUserByIdAsync(int id)
+        [Authorize]
+        [HttpGet("/api/User")]
+        public async Task<IActionResult> GetUserByIdAsync()
         {
+            var id = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
             var user = await _usersService.GetUserByIdAsync(id);
             if (user == null)
             {

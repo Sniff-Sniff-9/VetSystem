@@ -1,0 +1,89 @@
+﻿@page "/profile"
+@using MudBlazor
+@inject NavigationManager NavigationManager
+@using VetSystemModels.Dto.Client
+@using VetSystemModels.Dto.User
+@inject Services.ClientsService ClientsService
+
+<MudContainer MaxWidth="MaxWidth.False"
+              Class="pt-4 px-3 px-md-6"
+              Style="background: linear-gradient(109.6deg, #E3F2FD 0%, #BBDEFB 100%); min-height:100vh;">
+
+    <MudCard Elevation="3" Class="mt-1" Style="border-radius:16px;">
+        <MudStack Spacing="2" Class="p-4">
+
+            <!-- Большая иконка профиля -->
+            <div class="d-flex justify-center">
+                <MudAvatar Size="Size.Large" Color="Color.Primary">
+                    <MudIcon Icon="@Icons.Material.Filled.Person" Color="Color.Surface" Size="Size.Large"></MudIcon>
+                </MudAvatar>
+            </div>
+
+            <!-- ФИО -->
+            <MudText Typo="Typo.h5" Align="Align.Center" Class="fw-bold">
+                @Client.LastName @Client.FirstName @Client.MiddleName
+            </MudText>
+
+            <!-- Username -->
+            <MudText Typo="Typo.subtitle1" Align="Align.Center" Color="Color.Secondary">
+                @User.Username
+            </MudText>
+
+            <MudDivider Class="my-2" />
+
+            <!-- Остальная информация -->
+            <MudStack Spacing="1" Class="px-2 px-md-4">
+
+                <MudText Typo="Typo.body1">
+                    <b>Email:</b> @User.Email
+                </MudText>
+
+                <MudText Typo="Typo.body1">
+                    <b>Телефон:</b> @Client.Phone
+                </MudText>
+
+                <MudText Typo="Typo.body1">
+                    <b>Дата рождения:</b> @Client.BirthDate.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("ru-RU"))
+                </MudText>
+
+
+
+            </MudStack>
+
+            <!-- Кнопка редактирования -->
+            <div class="d-flex justify-center mt-3">
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           StartIcon="@Icons.Material.Filled.Edit"
+                           OnClick="@EditProfile">
+                    Редактировать профиль
+                </MudButton>
+            </div>
+
+        </MudStack>
+    </MudCard>
+
+</MudContainer>
+
+@code {
+    private UserDto User = new();
+    private ClientDto Client = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            User = await ClientsService.GetUserAsync() ?? new();
+            Client = await ClientsService.GetClientByUserIdAsync() ?? new();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+
+    private void EditProfile()
+    {
+        NavigationManager.NavigateTo("/profile/edit");
+    }
+}

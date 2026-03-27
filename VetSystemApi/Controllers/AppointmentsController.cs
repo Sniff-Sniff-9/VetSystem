@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using VetSystemApi.Services.Interfaces;
 using VetSystemModels.Dto.Appointment;
 
@@ -22,6 +24,15 @@ namespace VetSystemApi.Controllers
         public async Task<IActionResult> GetAppointmentsAsync()
         {
             var appointments = await _appointmentsService.GetAppointmentsAsync();
+            return Ok(appointments);
+        }
+
+        [Authorize]
+        [HttpGet("/api/Client/Appointments")]
+        public async Task<IActionResult> GetAppointmentsByClientIdAsync()
+        {
+            var id = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+            var appointments = await _appointmentsService.GetAppointmentsByClientIdAsync(id);
             return Ok(appointments);
         }
 

@@ -46,10 +46,10 @@ namespace VetSystemApi.Controllers
             return Ok(pet);
         }
 
-        [HttpGet("/api/Clients/{clientId}/Pets")]
-        public async Task<IActionResult> GetPetsByClientIdAsync(int clientId)
+        [HttpGet("/api/Clients/{id}/Pets")]
+        public async Task<IActionResult> GetPetsByClientIdAsync(int id)
         {
-            var pet = await _petsService.GetPetsByClientIdAsync(clientId);
+            var pet = await _petsService.GetPetsByClientIdAsync(id);
             return Ok(pet);
         }
 

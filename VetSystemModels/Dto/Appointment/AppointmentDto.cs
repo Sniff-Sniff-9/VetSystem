@@ -24,6 +24,10 @@ namespace VetSystemModels.Dto.Appointment
 
         public string ClientName { get; set; } = null!;
 
+        public int EmployeeId { get; set; }
+
+        public string EmployeeName { get; set; } = null!;
+
         public decimal TotalPriceAtMoment { get; set; }
 
         public int AppointmentStatusId { get; set; }

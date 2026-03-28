@@ -40,7 +40,7 @@ namespace VetSystemWpfDesktop
 
         private void Doctors_Click(object sender, RoutedEventArgs e)
         {
-
+            MainFrame.Navigate(new EmployeesPage());
         }
 
         private void Settings_Click(object sender, RoutedEventArgs e)

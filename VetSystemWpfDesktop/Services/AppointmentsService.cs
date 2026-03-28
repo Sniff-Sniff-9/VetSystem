@@ -11,7 +11,7 @@ using VetSystemModels.Dto.Pet;
 
 namespace VetSystemWpfDesktop.Services
 {
-    class AppointmentsService
+    public class AppointmentsService
     {
         private readonly HttpClient _httpClient;
 
@@ -23,6 +23,11 @@ namespace VetSystemWpfDesktop.Services
         public async Task<List<AppointmentDto>?> GetAppointmentsAsync()
         {
             return await _httpClient.GetFromJsonAsync<List<AppointmentDto>>("Appointments");
+        }
+
+        public async Task<List<AppointmentDto>?> GetAppointmentsByEmployeeIdAsync(int id)
+        {
+            return await _httpClient.GetFromJsonAsync<List<AppointmentDto>>($"Employees/{id}/Appointments");
         }
 
     }

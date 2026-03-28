@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <PackageReference Include="MaterialDesignThemes" Version="5.3.1" />
+    <PackageReference Include="Syncfusion.SfScheduler.WPF" Version="33.1.45" />
   </ItemGroup>
 
   <ItemGroup>

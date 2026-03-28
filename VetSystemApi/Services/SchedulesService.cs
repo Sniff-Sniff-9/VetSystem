@@ -58,7 +58,8 @@ namespace VetSystemApi.Services
             {
                 _context.Add(schedule);
                 await _context.SaveChangesAsync();
-                return ToScheduleDto(schedule);
+                var result = await _context.Schedules.Include(s => s.Workday).FirstAsync(c => c.ScheduleId == schedule.ScheduleId);
+                return ToScheduleDto(result);
             }
             catch (Exception ex)
             {
@@ -156,6 +157,7 @@ namespace VetSystemApi.Services
             {
                 return false;
             }
+
             return true;
         }
     }

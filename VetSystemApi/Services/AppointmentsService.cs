@@ -21,7 +21,7 @@ namespace VetSystemApi.Services
         public async Task<List<AppointmentDto>> GetAppointmentsAsync()
         {
             var appointments = await _context.Appointments.Include(a => a.Pet).Include(a => a.Pet.Client).Include(a => a.Schedule.Workday)
-                .Include(a => a.AppointmentStatus).Include(a => a.Schedule)
+                .Include(a => a.AppointmentStatus).Include(a => a.Schedule).Include(a => a.Schedule.Workday.Employee)
                 .Include(a => a.Service).ToListAsync();
             return appointments.Select(s => ToAppointmentDto(s)).ToList();
         }
@@ -30,7 +30,7 @@ namespace VetSystemApi.Services
         {
             var appointments = await _context.Appointments.Include(a => a.Pet).Include(a => a.Schedule.Workday)
                 .Include(a => a.Pet.Client).Include(a => a.AppointmentStatus).Include(a => a.Schedule)
-                .Include(a => a.Service)
+                .Include(a => a.Service).Include(a => a.Schedule.Workday.Employee)
                 .Where(s => s.PetId == id).ToListAsync();
             return appointments.Select(s => ToAppointmentDto(s)).ToList();
         }
@@ -39,8 +39,17 @@ namespace VetSystemApi.Services
         {
             var appointments = await _context.Appointments.Include(a => a.Pet).Include(a => a.Schedule.Workday)
                 .Include(a => a.Pet.Client).Include(a => a.AppointmentStatus).Include(a => a.Schedule)
-                .Include(a => a.Service)
+                .Include(a => a.Service).Include(a => a.Schedule.Workday.Employee)
                 .Where(s => s.Pet.Client.UserId == id).ToListAsync();
+            return appointments.Select(s => ToAppointmentDto(s)).ToList();
+        }
+
+        public async Task<List<AppointmentDto>> GetAppointmentsByEmployeeIdAsync(int id)
+        {
+            var appointments = await _context.Appointments.Include(a => a.Pet).Include(a => a.Schedule.Workday)
+                .Include(a => a.Pet.Client).Include(a => a.AppointmentStatus).Include(a => a.Schedule)
+                .Include(a => a.Service).Include(a => a.Schedule.Workday.Employee)
+                .Where(s => s.Schedule.Workday.EmployeeId == id).ToListAsync();
             return appointments.Select(s => ToAppointmentDto(s)).ToList();
         }
 
@@ -48,7 +57,7 @@ namespace VetSystemApi.Services
         public async Task<AppointmentDto?> GetAppointmentByIdAsync(int id)
         {
             var appointment = await _context.Appointments.Include(a => a.Pet).Include(a => a.Pet.Client).Include(a => a.Schedule.Workday)
-                .Include(a => a.AppointmentStatus).Include(a => a.Schedule)
+                .Include(a => a.AppointmentStatus).Include(a => a.Schedule).Include(a => a.Schedule.Workday.Employee)
                 .Include(a => a.Service).FirstOrDefaultAsync(s => s.AppointmentId == id);
             if (appointment == null)
             {
@@ -110,7 +119,7 @@ namespace VetSystemApi.Services
                 _context.Add(appointment);
                 await _context.SaveChangesAsync();
                 var result = await _context.Appointments.Include(a => a.Pet).Include(a => a.Pet.Client).Include(a => a.Schedule.Workday)
-                    .Include(a => a.AppointmentStatus).Include(a => a.Schedule)
+                    .Include(a => a.AppointmentStatus).Include(a => a.Schedule).Include(a => a.Schedule.Workday.Employee)
                     .FirstAsync(a => a.AppointmentId == appointment.AppointmentId);
                 return ToAppointmentDto(result);
             }
@@ -157,7 +166,7 @@ namespace VetSystemApi.Services
             {
                 await _context.SaveChangesAsync();
                 var result = await _context.Appointments.Include(a => a.Pet).Include(a => a.Pet.Client).Include(a => a.Schedule.Workday)
-                    .Include(a => a.AppointmentStatus).Include(a => a.Schedule)
+                    .Include(a => a.AppointmentStatus).Include(a => a.Schedule).Include(a => a.Schedule.Workday.Employee)
                     .FirstAsync(a => a.AppointmentId == appointment.AppointmentId);
                 return ToAppointmentDto(result);
             }
@@ -201,6 +210,10 @@ namespace VetSystemApi.Services
                 ClientId = appointment.Pet?.ClientId ?? 0,
                 ClientName = appointment.Pet?.Client != null
                 ? $"{appointment.Pet.Client.LastName} {appointment.Pet.Client.FirstName} {appointment.Pet.Client.MiddleName}" : "undefined",
+                EmployeeId = appointment.Schedule?.Workday?.EmployeeId ?? 0,
+                EmployeeName = appointment.Schedule?.Workday?.Employee != null
+                ? $"{appointment.Schedule.Workday.Employee.LastName} {appointment.Schedule.Workday.Employee.FirstName} " +
+                $"{appointment.Schedule.Workday.Employee.MiddleName}" : "undefined",
                 TotalPriceAtMoment = appointment.TotalPriceAtMoment,
                 AppointmentStatusId = appointment.AppointmentStatusId,
                 AppointmentStatusName = appointment.AppointmentStatus?.AppointmentStatusName ?? "undefined",

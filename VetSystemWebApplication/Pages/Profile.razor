@@ -12,22 +12,16 @@
     <MudCard Elevation="3" Class="mt-1" Style="border-radius:16px;">
         <MudStack Spacing="2" Class="p-4">
 
-            <!-- Большая иконка профиля -->
-            <div class="d-flex justify-center">
-                <MudAvatar Size="Size.Large" Color="Color.Primary">
-                    <MudIcon Icon="@Icons.Material.Filled.Person" Color="Color.Surface" Size="Size.Large"></MudIcon>
-                </MudAvatar>
-            </div>
-
-            <!-- ФИО -->
-            <MudText Typo="Typo.h5" Align="Align.Center" Class="fw-bold">
-                @Client.LastName @Client.FirstName @Client.MiddleName
-            </MudText>
+            <MudStack Direction="Row" Spacing="1" AlignItems="AlignItems.Center">
+                <MudIcon Icon="@Icons.Material.Filled.AccountCircle" Size="Size.Large" Color="Color.Primary" />
+                <MudText Typo="Typo.h6" Class="ml-2">@Client.LastName @Client.FirstName @Client.MiddleName</MudText>
+                <MudText Typo="Typo.subtitle1" Align="Align.Center" Color="Color.Secondary">
+                    @@@User.Username
+                </MudText>
+            </MudStack>
 
             <!-- Username -->
-            <MudText Typo="Typo.subtitle1" Align="Align.Center" Color="Color.Secondary">
-                @User.Username
-            </MudText>
+            
 
             <MudDivider Class="my-2" />
 

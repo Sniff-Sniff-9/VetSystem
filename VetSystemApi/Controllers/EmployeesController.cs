@@ -12,11 +12,14 @@ namespace VetSystemApi.Controllers
     {
         private readonly IEmployeesService _employeesService;
         private readonly IEmployeeServicesService _employeeServicesService;
+        private readonly IAppointmentsService _appointmentsService;
 
-        public EmployeesController(IEmployeesService employeesService, IEmployeeServicesService employeeServicesService)
+        public EmployeesController(IEmployeesService employeesService, IEmployeeServicesService employeeServicesService, 
+            IAppointmentsService appointmentsService)
         {
             _employeesService = employeesService;
             _employeeServicesService = employeeServicesService;
+            _appointmentsService = appointmentsService;
         }
 
         [HttpGet]
@@ -57,6 +60,13 @@ namespace VetSystemApi.Controllers
         {
             var services = await _employeeServicesService.GetServicesByEmployeeIdAsync(id);
             return Ok(services);
+        }
+
+        [HttpGet("{id}/Appointments")]
+        public async Task<IActionResult> GetAppointmentsByEmployeeIdAsync(int id)
+        {
+            var appointments = await _appointmentsService.GetAppointmentsByEmployeeIdAsync(id);
+            return Ok(appointments);
         }
 
         [HttpPost]

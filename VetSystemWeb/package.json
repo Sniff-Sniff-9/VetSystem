@@ -1,7 +1,0 @@
-{
-  "name": "vetsystemweb",
-  "version": "1.0.0",
-  "dependencies": {
-    "@material/web": "latest"
-  }
-}

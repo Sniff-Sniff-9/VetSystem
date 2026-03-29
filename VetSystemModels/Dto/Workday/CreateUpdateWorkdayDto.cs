@@ -12,7 +12,8 @@ namespace VetSystemModels.Dto.Workday
         [Required]
         public int EmployeeId { get; set; }
         [Required]
-        public DateOnly WorkDate { get; set; }
+        [StringLength(20)]
+        public string DayOfWeek { get; set; } = null!;
         [Required]
         public TimeOnly StartTime { get; set; }
         [Required]

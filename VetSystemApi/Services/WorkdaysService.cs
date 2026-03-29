@@ -51,7 +51,7 @@ namespace VetSystemApi.Workdays
 
             var workdayExists = await _context.Workdays
                                 .AnyAsync(w => w.EmployeeId == workdayDto.EmployeeId &&
-                                w.WorkDate == workdayDto.WorkDate);
+                                w.DayOfWeek == workdayDto.DayOfWeek);
 
             if (workdayExists)
             {
@@ -66,7 +66,7 @@ namespace VetSystemApi.Workdays
             var workday = new Workday()
             {
                 EmployeeId = workdayDto.EmployeeId,
-                WorkDate = workdayDto.WorkDate,
+                DayOfWeek = workdayDto.DayOfWeek,
                 StartTime = workdayDto.StartTime,
                 EndTime = workdayDto.EndTime,
                 LunchStart = workdayDto.LunchStart,
@@ -98,7 +98,7 @@ namespace VetSystemApi.Workdays
                 throw new ArgumentNullException("Workday not found.");
             }
             workday.EmployeeId = workdayDto.EmployeeId;
-            workday.WorkDate = workdayDto.WorkDate;
+            workday.DayOfWeek = workdayDto.DayOfWeek;
             workday.StartTime = workdayDto.StartTime;
             workday.EndTime = workdayDto.EndTime;
             workday.LunchEnd = workdayDto.LunchEnd;
@@ -141,7 +141,7 @@ namespace VetSystemApi.Workdays
                 WorkdayId = workday.WorkdayId,
                 EmployeeId = workday.EmployeeId,
                 EmployeeName = workday.Employee != null ? $"{workday.Employee.LastName} {workday.Employee.FirstName} {workday.Employee.MiddleName}" : "undefiend",
-                WorkDate = workday.WorkDate,
+                DayOfWeek = workday.DayOfWeek,
                 StartTime = workday.StartTime,
                 EndTime = workday.EndTime,
                 LunchEnd = workday.LunchEnd,

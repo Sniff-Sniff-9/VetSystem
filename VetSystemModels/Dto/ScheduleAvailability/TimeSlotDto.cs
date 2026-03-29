@@ -4,18 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VetSystemModels.Dto.Schedule
+namespace VetSystemModels.Dto.TimeSlot
 {
-    public class ScheduleDto
+    public class TimeSlotDto
     {
-        public int ScheduleId { get; set; }
-
         public TimeOnly StartTime { get; set; }
 
         public TimeOnly EndTime { get; set; }
-
-        public int WorkdayId { get; set; }
-
-        public DateOnly WorkDate { get; set; }
     }
 }

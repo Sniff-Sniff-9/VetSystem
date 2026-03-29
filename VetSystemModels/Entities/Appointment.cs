@@ -11,7 +11,7 @@ public partial class Appointment
     [Key]
     public int AppointmentId { get; set; }
 
-    public int ServiceId { get; set; }
+    public int EmployeeId { get; set; }
 
     public int PetId { get; set; }
 
@@ -20,7 +20,12 @@ public partial class Appointment
 
     public int AppointmentStatusId { get; set; }
 
-    public int ScheduleId { get; set; }
+    public DateOnly AppointmentDate {  get; set; }
+
+    public TimeOnly StartTime { get; set; }
+
+    public TimeOnly EndTime { get; set; }
+
     public bool IsDeleted { get; set; } = false;
 
     [ForeignKey("AppointmentStatusId")]
@@ -31,11 +36,7 @@ public partial class Appointment
     [InverseProperty("Appointments")]
     public virtual Pet Pet { get; set; } = null!;
 
-    [ForeignKey("ScheduleId")]
-    [InverseProperty("Appointments")]
-    public virtual Schedule Schedule { get; set; } = null!;
+    public virtual Employee Employee { get; set; } = null!;
 
-    [ForeignKey("ServiceId")]
-    [InverseProperty("Appointments")]
-    public virtual Service Service { get; set; } = null!;
+    public virtual ICollection<AppointmentService> AppointmentServices { get; set; } = new List<AppointmentService>();
 }

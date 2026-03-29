@@ -34,11 +34,9 @@ namespace VetSystemModels.Dto.Appointment
 
         public string AppointmentStatusName { get; set; } = null!;
 
-        public int ScheduleId { get; set; }
+        public TimeOnly StartTime { get; set; }
 
-        public TimeOnly SсheduleTimeStart { get; set; }
-
-        public TimeOnly SсheduleTimeEnd { get; set; }
+        public TimeOnly EndTime { get; set; }
 
         public DateOnly AppointmentDate { get; set; }
     }

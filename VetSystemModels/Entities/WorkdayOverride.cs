@@ -7,24 +7,17 @@ using System.Threading.Tasks;
 
 namespace VetSystemModels.Entities
 {
-    public partial class Workday
+    public partial class WorkdayOverride
     {
-        public int WorkdayId { get; set; }
+        public int WorkdayOverrideId { get; set; }
 
         public int EmployeeId { get; set; }
 
-        [StringLength(20)]
-        public string DayOfWeek { get; set; } = null!;
+        public DateOnly WorkdayOverrideDate {  get; set; }
 
         public TimeOnly StartTime { get; set; }
 
         public TimeOnly EndTime { get; set; }
-
-        public TimeOnly LunchStart { get; set; }
-
-        public TimeOnly LunchEnd { get; set; }
-
-        public int SlotDuration { get; set; }
 
         public bool IsDeleted { get; set; } = false;
 

@@ -11,5 +11,7 @@ namespace VetSystemModels.Dto.AppointmentService
         public int AppointmentId { get; set; }
 
         public int ServiceId { get; set; }
+
+        public bool IsMain { get; set; }
     }
 }

@@ -74,7 +74,8 @@ namespace VetSystemApi.Services
             {
                 AppointmentId = AppointmentServiceDto.AppointmentId,
                 ServiceId = service.ServiceId,
-                PriceAtMoment = service.Price
+                PriceAtMoment = service.Price,
+                IsMain = AppointmentServiceDto.IsMain
             };
             try
             {
@@ -123,17 +124,17 @@ namespace VetSystemApi.Services
         {
             return new AppointmentDto()
             {
-                AppointmentId = appointment.AppointmentId,
-                ServiceId = appointment.ServiceId,
-                ServiceName = appointment.Service?.ServiceName ?? "undefined",
-                ScheduleId = appointment.ScheduleId,
-                SсheduleTimeStart = appointment.Schedule?.StartTime ?? TimeOnly.MinValue,
-                SсheduleTimeEnd = appointment.Schedule?.EndTime ?? TimeOnly.MinValue,
-                PetId = appointment.PetId,
-                PetName = appointment.Pet?.Name ?? "undefiend",
-                TotalPriceAtMoment = appointment.TotalPriceAtMoment,
-                AppointmentStatusId = appointment.AppointmentStatusId,
-                AppointmentStatusName = appointment.AppointmentStatus?.AppointmentStatusName ?? "undefined"
+                //AppointmentId = appointment.AppointmentId,
+                //ServiceId = appointment.ServiceId,
+                //ServiceName = appointment.Service?.ServiceName ?? "undefined",
+                //ScheduleId = appointment.ScheduleId,
+                //SсheduleTimeStart = appointment.Schedule?.StartTime ?? TimeOnly.MinValue,
+                //SсheduleTimeEnd = appointment.Schedule?.EndTime ?? TimeOnly.MinValue,
+                //PetId = appointment.PetId,
+                //PetName = appointment.Pet?.Name ?? "undefiend",
+                //TotalPriceAtMoment = appointment.TotalPriceAtMoment,
+                //AppointmentStatusId = appointment.AppointmentStatusId,
+                //AppointmentStatusName = appointment.AppointmentStatus?.AppointmentStatusName ?? "undefined"
             };
         }
 

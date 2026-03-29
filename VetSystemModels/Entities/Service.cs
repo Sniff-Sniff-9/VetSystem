@@ -20,6 +20,7 @@ public partial class Service
     public int DurationMinutes { get; set; }
     public bool IsDeleted { get; set; } = false;
 
-    [InverseProperty("Service")]
-    public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
+    public virtual ICollection<EmployeeService> EmployeeServices { get; set; } = new List<EmployeeService>();
+
+    public virtual ICollection<AppointmentService> AppointmentServices { get; set; } = new List<AppointmentService>();
 }

@@ -32,8 +32,6 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<Role> Roles { get; set; }
 
-    public virtual DbSet<Schedule> Schedules { get; set; }
-
     public virtual DbSet<Service> Services { get; set; }
 
     public virtual DbSet<Specialization> Specializations { get; set; }
@@ -45,6 +43,8 @@ public partial class AppDbContext : DbContext
     public virtual DbSet<EmployeeService> EmployeeServices { get; set; }
 
     public virtual DbSet<Workday> Workdays { get; set; }
+
+    public virtual DbSet<WorkdayOverride> WorkdayOverrides { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer("Server=DESKTOP-M8RKUTS;Database=VetDataBase;Trusted_Connection=True;TrustServerCertificate=True;");
@@ -63,13 +63,7 @@ public partial class AppDbContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Appointme__PetId__60A75C0F");
 
-            entity.HasOne(d => d.Schedule).WithMany(p => p.Appointments)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Appointments_Schedules");
-
-            entity.HasOne(d => d.Service).WithMany(p => p.Appointments)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Appointme__Servi__5EBF139D");
+      
             entity.HasQueryFilter(a => !a.IsDeleted);
         });
 
@@ -135,19 +129,14 @@ public partial class AppDbContext : DbContext
             entity.HasQueryFilter(w => !w.IsDeleted && !w.Employee.IsDeleted);
         });
 
+        modelBuilder.Entity<WorkdayOverride>(entity =>
+        {
+            entity.HasQueryFilter(w => !w.IsDeleted && !w.Employee.IsDeleted);
+        });
+
         modelBuilder.Entity<EmployeeService>(entity =>
         {
             entity.HasQueryFilter(es => !es.IsDeleted && !es.Employee.IsDeleted! && !es.Service.IsDeleted);
-        });
-
-        modelBuilder.Entity<Schedule>(entity =>
-        {
-            entity.HasKey(e => e.ScheduleId).HasName("PK__Schedule__9C8A5B4938FBDC9D");
-
-            entity.HasOne(d => d.Workday).WithMany(p => p.Schedules)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Schedules__Emplo__5FB337D6");
-            entity.HasQueryFilter(s => !s.IsDeleted && !s.Workday.IsDeleted);
         });
 
         modelBuilder.Entity<Service>(entity =>

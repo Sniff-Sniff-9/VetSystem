@@ -45,8 +45,8 @@ namespace VetSystemWpfDesktop.ViewModels
 
             foreach (var dto in appointmentsDto)
             {
-                var startTime = dto.AppointmentDate.ToDateTime(dto.SсheduleTimeStart);
-                var endTime = dto.AppointmentDate.ToDateTime(dto.SсheduleTimeEnd);
+                var startTime = dto.AppointmentDate.ToDateTime(dto.StartTime);
+                var endTime = dto.AppointmentDate.ToDateTime(dto.EndTime);
 
                 // Защита от некорректного времени
                 if (endTime <= startTime)

@@ -2,7 +2,9 @@
 using VetSystemApi.Services.Interfaces;
 using VetSystemInfrastructure.Configuration;
 using VetSystemModels.Dto.Appointment;
+using VetSystemModels.Dto.AppointmentService;
 using VetSystemModels.Dto.Pet;
+using VetSystemModels.Dto.ScheduleAvailability;
 using VetSystemModels.Entities;
 
 namespace VetSystemApi.Services
@@ -11,54 +13,52 @@ namespace VetSystemApi.Services
     {
         private readonly AppDbContext _context;
         private readonly ILogger<AppointmentsService> _logger;
+        private readonly IScheduleAvailabilityService _scheduleAvailabilityService;
+        private readonly IAppointmentServicesService _appointmentServicesService;
 
-        public AppointmentsService(AppDbContext context, ILogger<AppointmentsService> logger)
+        public AppointmentsService(AppDbContext context, ILogger<AppointmentsService> logger, 
+            IScheduleAvailabilityService scheduleAvailabilityService, IAppointmentServicesService appointmentServicesService)
         {
             _context = context;
             _logger = logger;
+            _scheduleAvailabilityService = scheduleAvailabilityService;
+            _appointmentServicesService = appointmentServicesService;
         }
 
         public async Task<List<AppointmentDto>> GetAppointmentsAsync()
         {
-            var appointments = await _context.Appointments.Include(a => a.Pet).Include(a => a.Pet.Client).Include(a => a.Schedule.Workday)
-                .Include(a => a.AppointmentStatus).Include(a => a.Schedule).Include(a => a.Schedule.Workday.Employee)
-                .Include(a => a.Service).ToListAsync();
+            var appointments = await _context.Appointments.Include(a => a.Pet).Include(a => a.Pet.Client)
+                .Include(a => a.AppointmentStatus).Include(a => a.AppointmentServices).ThenInclude(aps => aps.Service).ToListAsync();
             return appointments.Select(s => ToAppointmentDto(s)).ToList();
         }
 
         public async Task<List<AppointmentDto>> GetAppointmentsByPetIdAsync(int id)
         {
-            var appointments = await _context.Appointments.Include(a => a.Pet).Include(a => a.Schedule.Workday)
-                .Include(a => a.Pet.Client).Include(a => a.AppointmentStatus).Include(a => a.Schedule)
-                .Include(a => a.Service).Include(a => a.Schedule.Workday.Employee)
-                .Where(s => s.PetId == id).ToListAsync();
+            var appointments = await _context.Appointments.Include(a => a.Pet).Include(a => a.Pet.Client)
+                .Include(a => a.AppointmentStatus).Include(a => a.AppointmentServices).ThenInclude(aps => aps.Service).ToListAsync();
             return appointments.Select(s => ToAppointmentDto(s)).ToList();
         }
 
         public async Task<List<AppointmentDto>> GetAppointmentsByClientIdAsync(int id)
         {
-            var appointments = await _context.Appointments.Include(a => a.Pet).Include(a => a.Schedule.Workday)
-                .Include(a => a.Pet.Client).Include(a => a.AppointmentStatus).Include(a => a.Schedule)
-                .Include(a => a.Service).Include(a => a.Schedule.Workday.Employee)
-                .Where(s => s.Pet.Client.UserId == id).ToListAsync();
+            var appointments = await _context.Appointments.Include(a => a.Pet).Include(a => a.Pet.Client)
+                .Include(a => a.AppointmentStatus).Include(a => a.AppointmentServices).ThenInclude(aps => aps.Service).ToListAsync();
             return appointments.Select(s => ToAppointmentDto(s)).ToList();
         }
 
         public async Task<List<AppointmentDto>> GetAppointmentsByEmployeeIdAsync(int id)
         {
-            var appointments = await _context.Appointments.Include(a => a.Pet).Include(a => a.Schedule.Workday)
-                .Include(a => a.Pet.Client).Include(a => a.AppointmentStatus).Include(a => a.Schedule)
-                .Include(a => a.Service).Include(a => a.Schedule.Workday.Employee)
-                .Where(s => s.Schedule.Workday.EmployeeId == id).ToListAsync();
+            var appointments = await _context.Appointments.Include(a => a.Pet).Include(a => a.Pet.Client)
+                .Include(a => a.AppointmentStatus).Include(a => a.AppointmentServices).ThenInclude(aps => aps.Service).ToListAsync();
             return appointments.Select(s => ToAppointmentDto(s)).ToList();
         }
 
 
         public async Task<AppointmentDto?> GetAppointmentByIdAsync(int id)
         {
-            var appointment = await _context.Appointments.Include(a => a.Pet).Include(a => a.Pet.Client).Include(a => a.Schedule.Workday)
-                .Include(a => a.AppointmentStatus).Include(a => a.Schedule).Include(a => a.Schedule.Workday.Employee)
-                .Include(a => a.Service).FirstOrDefaultAsync(s => s.AppointmentId == id);
+            var appointment = await _context.Appointments.Include(a => a.Pet).Include(a => a.Pet.Client)
+                .Include(a => a.AppointmentStatus).Include(a => a.AppointmentServices).ThenInclude(aps => aps.Service)
+                .FirstOrDefaultAsync(s => s.AppointmentId == id);
             if (appointment == null)
             {
                 return null;
@@ -68,58 +68,56 @@ namespace VetSystemApi.Services
 
         public async Task<AppointmentDto> CreateAppointmentAsync(CreateUpdateAppointmentDto appointmentDto)
         {
-            var service = await _context.Services.FirstOrDefaultAsync(s => s.ServiceId == appointmentDto.ServiceId);
-            var schedule = await _context.Schedules.Include(sch => sch.Workday).FirstOrDefaultAsync(sch => sch.ScheduleId == appointmentDto.ScheduleId);
             var petExists = await _context.Pets.AnyAsync(p => p.PetId == appointmentDto.PetId);
-            var appointmentStatusExists = await _context.AppointmentStatuses.AnyAsync(aps => aps.AppointmentStatusId == appointmentDto.AppointmentStatusId);
-
-            if (service == null)
-            {
-                throw new ArgumentException("Service doesn't exist.");
-            }
-
-            if (schedule == null)
-            {
-                throw new ArgumentException("Schedule doesn't exist.");
-            }
-
-            var employeeCanDoService = await _context.EmployeeServices.AnyAsync(es => es.EmployeeId == schedule.Workday.EmployeeId &&
-                                       es.ServiceId == appointmentDto.ServiceId);
-
-            if (!employeeCanDoService)
-            {
-                throw new ArgumentException("Selected employee doesn't provide this service.");
-            }
-
-            var availabilitySchedule = await _context.Appointments.AnyAsync(a => a.ScheduleId == appointmentDto.ScheduleId);
-            if (availabilitySchedule)
-            {
-                throw new ArgumentException("Schedule doesn't available.");
-            }
-
             if (!petExists)
-            {
                 throw new ArgumentException("Pet doesn't exist.");
-            }
-            if (!appointmentStatusExists)
-            {
-                throw new ArgumentException("Appointment's status doesn't exist.");
-            }
 
-            var appointment = new Appointment()
+            var employeeService = await _context.EmployeeServices
+                .Include(es => es.Service)
+                .FirstOrDefaultAsync(es => es.EmployeeServiceId == appointmentDto.EmployeeServiceId);
+
+            if (employeeService == null)
+                throw new ArgumentException("Invalid EmployeeService.");
+
+            var scheduleAvailabilityDto = new ScheduleAvailabilityDto
             {
-                ServiceId = appointmentDto.ServiceId,
-                ScheduleId = appointmentDto.ScheduleId,   
-                PetId = appointmentDto.PetId,
-                TotalPriceAtMoment = service.Price,
-                AppointmentStatusId = appointmentDto.AppointmentStatusId,
+                EmployeeId = employeeService.EmployeeId,
+                ScheduleAvailabilityDate = appointmentDto.AppointmentDate
             };
+
+            var availableSlots = await _scheduleAvailabilityService.GetAvailableSlotsAsync(scheduleAvailabilityDto);
+
+            if (!availableSlots.Contains(appointmentDto.StartTime))
+                throw new ArgumentException("Selected time is not available.");
+
+            var appointment = new Appointment
+            {
+                EmployeeId = employeeService.EmployeeId,
+                PetId = appointmentDto.PetId,
+                AppointmentDate = appointmentDto.AppointmentDate,
+                StartTime = appointmentDto.StartTime,
+                EndTime = appointmentDto.StartTime.Add(
+                    TimeSpan.FromMinutes(employeeService.Service.DurationMinutes)),
+                AppointmentStatusId = appointmentDto.AppointmentStatusId
+            };
+
             try
             {
                 _context.Add(appointment);
                 await _context.SaveChangesAsync();
-                var result = await _context.Appointments.Include(a => a.Pet).Include(a => a.Pet.Client).Include(a => a.Schedule.Workday)
-                    .Include(a => a.AppointmentStatus).Include(a => a.Schedule).Include(a => a.Schedule.Workday.Employee)
+
+                var appointmentServiceDto = new CreateAppointmentServiceDto
+                {
+                    AppointmentId = appointment.AppointmentId,
+                    ServiceId = employeeService.ServiceId,
+                    IsMain = true
+                };
+
+                var appointmentService = await _appointmentServicesService.CreateAppointmentServiceAsync(appointmentServiceDto);
+                appointment.TotalPriceAtMoment = appointmentService.PriceAtMoment;
+
+                var result = await _context.Appointments.Include(a => a.Pet).Include(a => a.Pet.Client)
+                .Include(a => a.AppointmentStatus).Include(a => a.AppointmentServices)
                     .FirstAsync(a => a.AppointmentId == appointment.AppointmentId);
                 return ToAppointmentDto(result);
             }
@@ -132,41 +130,46 @@ namespace VetSystemApi.Services
 
         public async Task<AppointmentDto> UpdateAppointmentAsync(int id, CreateUpdateAppointmentDto appointmentDto)
         {
-            var service = await _context.Services.FirstOrDefaultAsync(s => s.ServiceId == appointmentDto.ServiceId);
-            var scheduleExists = await _context.Schedules.AnyAsync(sch => sch.ScheduleId == appointmentDto.ScheduleId);
-            var petExists = await _context.Pets.AnyAsync(p => p.PetId == appointmentDto.PetId);
-            var appointmentStatusExists = await _context.AppointmentStatuses.AnyAsync(aps => aps.AppointmentStatusId == appointmentDto.AppointmentStatusId);
+            var appointment = await _context.Appointments.Include(a => a.AppointmentServices)
+                .FirstOrDefaultAsync(a => a.AppointmentId == id);
 
-            if (service == null)
-            {
-                throw new ArgumentException("Service doesn't exist.");
-            }
-            if (!scheduleExists)
-            {
-                throw new ArgumentException("Schedule doesn't exist.");
-            }
-            if (!petExists)
-            {
-                throw new ArgumentException("Pet doesn't exist.");
-            }
-            if (!appointmentStatusExists)
-            {
-                throw new ArgumentException("Appointment's status doesn't exist.");
-            }
-            var appointment = _context.Appointments.FirstOrDefault(s => s.AppointmentId == id);
             if (appointment == null)
+                throw new ArgumentException("Appointment not found.");
+
+            var employeeService = await _context.EmployeeServices
+                .Include(es => es.Service)
+                .FirstOrDefaultAsync(es => es.EmployeeServiceId == appointmentDto.EmployeeServiceId);
+
+            if (employeeService == null)
+                throw new ArgumentException("Invalid EmployeeService.");
+
+            var scheduleAvailabilityDto = new ScheduleAvailabilityDto
             {
-                throw new ArgumentNullException("Appointment not found.");
-            }
-            appointment.ServiceId = appointmentDto.ServiceId;
-            appointment.ScheduleId = appointmentDto.ScheduleId;
+                EmployeeId = employeeService.EmployeeId,
+                ScheduleAvailabilityDate = appointmentDto.AppointmentDate
+            };
+
+            var availableSlots = await _scheduleAvailabilityService.GetAvailableSlotsAsync(scheduleAvailabilityDto);
+
+            if (!availableSlots.Contains(appointmentDto.StartTime))
+                throw new ArgumentException("Selected time is not available.");
+
             appointment.PetId = appointmentDto.PetId;
+            appointment.EmployeeId = employeeService.EmployeeId;
+            appointment.AppointmentDate = appointmentDto.AppointmentDate;
+            appointment.StartTime = appointmentDto.StartTime;
+            appointment.EndTime = appointmentDto.StartTime.Add(
+                TimeSpan.FromMinutes(employeeService.Service.DurationMinutes));
             appointment.AppointmentStatusId = appointmentDto.AppointmentStatusId;
+
+            appointment.TotalPriceAtMoment = appointment.AppointmentServices
+                .Sum(s => s.PriceAtMoment);
+
             try
             {
                 await _context.SaveChangesAsync();
-                var result = await _context.Appointments.Include(a => a.Pet).Include(a => a.Pet.Client).Include(a => a.Schedule.Workday)
-                    .Include(a => a.AppointmentStatus).Include(a => a.Schedule).Include(a => a.Schedule.Workday.Employee)
+                var result = await _context.Appointments.Include(a => a.Pet).Include(a => a.Pet.Client)
+                .Include(a => a.AppointmentStatus).Include(a => a.AppointmentServices)
                     .FirstAsync(a => a.AppointmentId == appointment.AppointmentId);
                 return ToAppointmentDto(result);
             }
@@ -200,24 +203,23 @@ namespace VetSystemApi.Services
             return new AppointmentDto()
             {
                 AppointmentId = appointment.AppointmentId,
-                ServiceId = appointment.ServiceId,
-                ServiceName = appointment.Service?.ServiceName ?? "undefined",
-                ScheduleId = appointment.ScheduleId,
-                SсheduleTimeStart = appointment.Schedule?.StartTime ?? TimeOnly.MinValue,
-                SсheduleTimeEnd = appointment.Schedule?.EndTime ?? TimeOnly.MinValue,
+                ServiceId = appointment.AppointmentServices?.FirstOrDefault(s => s.IsMain)?.ServiceId ?? 0,
+                ServiceName = appointment.AppointmentServices?.FirstOrDefault(s => s.IsMain)?.Service?.ServiceName ?? "undefined",
+                StartTime = appointment.StartTime,
+                EndTime = appointment.EndTime,
                 PetId = appointment.PetId,
                 PetName = appointment.Pet?.Name ?? "undefiend",
                 ClientId = appointment.Pet?.ClientId ?? 0,
                 ClientName = appointment.Pet?.Client != null
                 ? $"{appointment.Pet.Client.LastName} {appointment.Pet.Client.FirstName} {appointment.Pet.Client.MiddleName}" : "undefined",
-                EmployeeId = appointment.Schedule?.Workday?.EmployeeId ?? 0,
-                EmployeeName = appointment.Schedule?.Workday?.Employee != null
-                ? $"{appointment.Schedule.Workday.Employee.LastName} {appointment.Schedule.Workday.Employee.FirstName} " +
-                $"{appointment.Schedule.Workday.Employee.MiddleName}" : "undefined",
+                EmployeeId = appointment.EmployeeId,
+                EmployeeName = appointment.Employee != null
+                ? $"{appointment.Employee.LastName} {appointment.Employee.FirstName} " +
+                $"{appointment.Employee.MiddleName}" : "undefined",
                 TotalPriceAtMoment = appointment.TotalPriceAtMoment,
                 AppointmentStatusId = appointment.AppointmentStatusId,
                 AppointmentStatusName = appointment.AppointmentStatus?.AppointmentStatusName ?? "undefined",
-                AppointmentDate = appointment.Schedule?.Workday != null ? appointment.Schedule.Workday.WorkDate : DateOnly.MinValue
+                AppointmentDate = appointment.AppointmentDate
             };
         }
     }

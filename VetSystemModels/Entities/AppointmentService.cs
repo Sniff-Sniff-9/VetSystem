@@ -16,6 +16,8 @@ namespace VetSystemModels.Entities
 
         public decimal PriceAtMoment { get; set; }
 
+        public bool IsMain { get; set; } = false;
+
         public bool IsDeleted { get; set; } = false;
 
         public Appointment Appointment { get; set; } = null!;

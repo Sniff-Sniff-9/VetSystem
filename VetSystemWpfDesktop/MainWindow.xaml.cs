@@ -45,7 +45,7 @@ namespace VetSystemWpfDesktop
 
         private void Settings_Click(object sender, RoutedEventArgs e)
         {
-
+           
         }
 
         private void Services_Click(object sender, RoutedEventArgs e)
@@ -60,7 +60,7 @@ namespace VetSystemWpfDesktop
 
         private void Shifts_Click(object sender, RoutedEventArgs e)
         {
-
+            MainFrame.Navigate(new SchedulePage());
         }
     }
 }

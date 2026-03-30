@@ -5,18 +5,18 @@ using VetSystemModels.Dto.Appointment;
 
 namespace VetSystemWebApplication.Services
 {
-    public class AppointmentsService
+    public class VetServicesService
     {
         private readonly HttpClient _httpClient;
         private readonly ILocalStorageService _localStorage;
 
-        public AppointmentsService(HttpClient httpClient, IJSRuntime js, ILocalStorageService localStorage)
+        public VetServicesService(HttpClient httpClient, IJSRuntime js, ILocalStorageService localStorage)
         {
             _httpClient = httpClient;
             _localStorage = localStorage;
         }
 
-        public async Task<List<AppointmentDto>> GetAppointmentsByClientIdAsync()
+        public async Task<List<AppointmentDto>> GetServicesByClientIdAsync()
         {
             var token = _localStorage.GetItem<string>("jwtToken");
 
@@ -26,7 +26,7 @@ namespace VetSystemWebApplication.Services
                     new AuthenticationHeaderValue("Bearer", token);
             }
 
-            return await _httpClient.GetFromJsonAsync<List<AppointmentDto>>("Client/Appointments") ?? new();
+            return await _httpClient.GetFromJsonAsync<List<AppointmentDto>>("Client/Services") ?? new();
         }
     }
 }

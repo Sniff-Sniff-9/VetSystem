@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using VetSystemWpfDesktop.Services;
 using VetSystemModels.Dto.Service;
+using VetSystemModels.Dto.Employee;
 
 namespace VetSystemWpfDesktop.Pages
 {
@@ -26,7 +27,9 @@ namespace VetSystemWpfDesktop.Pages
         private ClientsService _clientsService;
         private PetsService _petsService;
         private ServicesService _servicesService;
-        //private DoctorsService _doctorsService;
+        private AppointmentsService _appointmentsService;
+        private EmployeesService _employeesService;
+        private TimeOnly _selectedSlot;
 
         private List<ServiceDto> _additionalServices = new();
 
@@ -44,42 +47,98 @@ namespace VetSystemWpfDesktop.Pages
             _clientsService = new ClientsService(client);
             _petsService = new PetsService(client);
             _servicesService = new ServicesService(client);
-            //_doctorsService = new EmployeeService(client);
+            _appointmentsService = new AppointmentsService(client);
+            _employeesService = new EmployeesService(client);
 
-            LoadServices();
+            _ = LoadClientsAsync();
+            _ = LoadServicesAsync();
         }
 
-        private async void LoadServices()
+        private async Task LoadServicesAsync()
         {
             var services = await _servicesService.GetServicesAsync();
             AdditionalServicesListView.ItemsSource = services;
         }
 
+        private async Task LoadClientsAsync()
+        {
+            var clients = await _clientsService.GetClientsAsync();
+            ClientsListBox.ItemsSource = clients;
+
+            await LoadEmployeesAsync();
+        }
+
+        private async Task LoadEmployeesAsync()
+        {
+            var employees = await _employeesService.GetEmployeessAsync();
+            DoctorsListBox.ItemsSource = employees;
+        }
+
+        private async Task ShowAvailableSlots()
+        {
+            var employee = DoctorsListBox.SelectedItem as EmployeeDto ?? new();
+            var date = DatePicker.SelectedDate ?? DateTime.Today;
+            var slots = await _appointmentsService.GetAvailableSlotsAsync(employee.EmployeeId, DateOnly.FromDateTime(date));
+
+            SlotsPanel.Children.Clear();
+
+            if (slots == null || !slots.Any())
+            {
+                var noSlotsText = new TextBlock
+                {
+                    Text = "Нет доступных слотов.",
+                    Foreground = Brushes.Gray,
+                    Margin = new Thickness(4)
+                };
+                SlotsPanel.Children.Add(noSlotsText);
+                return;
+            }
+
+            foreach (var slot in slots)
+            {
+                var btn = new Button
+                {
+                    Content = slot.ToString("HH:mm"),
+                    Tag = slot,
+                    Background = Brushes.LightGray,
+                    Foreground = Brushes.Black,
+                    Margin = new Thickness(4),
+                    Padding = new Thickness(12, 6, 12, 6),
+                    BorderBrush = Brushes.LightGray
+                };
+
+                btn.Click += SlotButton_Click;
+
+                SlotsPanel.Children.Add(btn);
+            }
+        }
+
+        private void SlotButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Сброс всех кнопок в обычное состояние
+            foreach (var child in SlotsPanel.Children.OfType<Button>())
+            {
+                child.Background = Brushes.LightGray;
+                child.Foreground = Brushes.Black;
+                child.BorderBrush = Brushes.LightGray;
+            }
+
+            // Отмечаем выбранный слот
+            var btn = sender as Button;
+            if (btn == null) return;
+
+            _selectedSlot = (TimeOnly)btn.Tag;
+            btn.Background = Brushes.DodgerBlue;
+            btn.Foreground = Brushes.White;
+            btn.BorderBrush = Brushes.DodgerBlue;
+        }
+
         private void ClientSearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            //var text = ClientSearchTextBox.Text;
-
-            //var clients = await _clientsService.Search(text);
-
-            //ClientsListBox.ItemsSource = clients;
+          
         }
 
         private void ClientsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
-
-        private void PetsComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
-
-        private void ServiceComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
-
-        private void DoctorComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
         }
@@ -109,9 +168,9 @@ namespace VetSystemWpfDesktop.Pages
 
         }
 
-        private void DatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        private async void DatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            await ShowAvailableSlots();
         }
 
         private void DoctorSearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -119,9 +178,9 @@ namespace VetSystemWpfDesktop.Pages
 
         }
 
-        private void DoctorsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void DoctorsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            await ShowAvailableSlots();
         }
 
         private void ServicesListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)

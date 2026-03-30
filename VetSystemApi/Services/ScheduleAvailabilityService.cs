@@ -19,9 +19,6 @@ namespace VetSystemApi.Services
             _logger = logger;
         }
 
-        /// <summary>
-        /// Получает список доступных слотов для конкретного врача и услуги на выбранную дату
-        /// </summary>
         public async Task<List<TimeOnly>> GetAvailableSlotsAsync(ScheduleAvailabilityDto scheduleAvailabilityDto)
         {
             var dayOfWeek = scheduleAvailabilityDto.ScheduleAvailabilityDate.DayOfWeek.ToString();
@@ -32,19 +29,19 @@ namespace VetSystemApi.Services
             if (workday == null)
                 return new List<TimeOnly>(); 
 
-            // 3. Формируем все слоты рабочего дня
+
             var slots = new List<TimeOnly>();
             var current = workday.StartTime;
             while (current.Add(TimeSpan.FromMinutes(workday.SlotDuration)) <= workday.EndTime)
             {
-                // исключаем обед
+              
                 if (!(current >= workday.LunchStart && current < workday.LunchEnd))
                     slots.Add(current);
 
                 current = current.AddMinutes(workday.SlotDuration);
             }
 
-            // 4. Исключаем заблокированные периоды (WorkdayOverride)
+  
             var overrides = await _context.WorkdayOverrides
                 .Where(o => o.EmployeeId == scheduleAvailabilityDto.EmployeeId && o.WorkdayOverrideDate == scheduleAvailabilityDto.ScheduleAvailabilityDate)
                 .ToListAsync();
@@ -54,7 +51,7 @@ namespace VetSystemApi.Services
                 slots = slots.Where(s => s < ov.StartTime || s >= ov.EndTime).ToList();
             }
 
-            // 5. Исключаем уже занятые Appointment
+   
             var occupiedSlots = await _context.Appointments
                 .Where(a => a.EmployeeId == scheduleAvailabilityDto.EmployeeId &&
                             a.AppointmentDate == scheduleAvailabilityDto.ScheduleAvailabilityDate &&

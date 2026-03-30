@@ -143,24 +143,26 @@
                     <Grid Margin="8,0,8,6">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="2*"/>
-                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
                             <ColumnDefinition Width="2*"/>
                             <ColumnDefinition Width="2*"/>
                             <ColumnDefinition Width="2*"/>
                             <ColumnDefinition Width="2*"/>
                             <ColumnDefinition Width="3*"/>
                             <ColumnDefinition Width="2*"/>
-                            <ColumnDefinition Width="220"/>
+                            <ColumnDefinition Width="150"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="Дата" FontWeight="SemiBold"/>
                         <TextBlock Text="Начало" Grid.Column="1" FontWeight="SemiBold"/>
                         <TextBlock Text="Конец" Grid.Column="2" FontWeight="SemiBold"/>
                         <TextBlock Text="Услуга" Grid.Column="3" FontWeight="SemiBold"/>
-                        <TextBlock Text="Питомец" Grid.Column="4" FontWeight="SemiBold"/>
-                        <TextBlock Text="Клиент" Grid.Column="5" FontWeight="SemiBold"/>
-                        <TextBlock Text="Статус" Grid.Column="6" FontWeight="SemiBold" Margin="50,0,0,0"/>
-                        <TextBlock Text="Цена" Grid.Column="7" FontWeight="SemiBold"/>
-                        <TextBlock Text="Действия" Grid.Column="8" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Специалист" Grid.Column="4" FontWeight="SemiBold"/>
+                        <TextBlock Text="Питомец" Grid.Column="5" FontWeight="SemiBold"/>
+                        <TextBlock Text="Клиент" Grid.Column="6" FontWeight="SemiBold"/>
+                        <TextBlock Text="Статус" Grid.Column="7" FontWeight="SemiBold" Margin="50,0,0,0"/>
+                        <TextBlock Text="Цена" Grid.Column="8" FontWeight="SemiBold"/>
+                        <TextBlock Text="Действия" Grid.Column="9" FontWeight="SemiBold" HorizontalAlignment="Center"/>
                     </Grid>
 
                     <!-- LIST -->
@@ -244,38 +246,40 @@
                                     <Grid Margin="8,8">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="2*"/>
-                                            <ColumnDefinition Width="2*"/>
+                                            <ColumnDefinition Width="1*"/>
+                                            <ColumnDefinition Width="1*"/>
                                             <ColumnDefinition Width="2*"/>
                                             <ColumnDefinition Width="2*"/>
                                             <ColumnDefinition Width="2*"/>
                                             <ColumnDefinition Width="2*"/>
                                             <ColumnDefinition Width="3*"/>
                                             <ColumnDefinition Width="2*"/>
-                                            <ColumnDefinition Width="220"/>
+                                            <ColumnDefinition Width="150"/>
                                         </Grid.ColumnDefinitions>
 
                                         <StackPanel Orientation="Horizontal">
                                             <materialDesign:PackIcon Kind="CalendarClock" Margin="0,0,6,0" Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
                                             <TextBlock Text="{Binding AppointmentDate, StringFormat=dd.MM.yyyy}" VerticalAlignment="Center" FontWeight="SemiBold"/>
                                         </StackPanel>
-                                        <TextBlock Grid.Column="1" Text="{Binding SсheduleTimeStart, StringFormat=HH:mm}" VerticalAlignment="Center"/>
-                                        <TextBlock Grid.Column="2" Text="{Binding SсheduleTimeEnd, StringFormat=HH:mm}" VerticalAlignment="Center"/>
+                                        <TextBlock Grid.Column="1" Text="{Binding StartTime, StringFormat=HH:mm}" VerticalAlignment="Center"/>
+                                        <TextBlock Grid.Column="2" Text="{Binding EndTime, StringFormat=HH:mm}" VerticalAlignment="Center"/>
                                         <TextBlock Grid.Column="3" Text="{Binding ServiceName}" VerticalAlignment="Center"/>
-                                        <TextBlock Grid.Column="4" Text="{Binding PetName}" VerticalAlignment="Center"/>
-                                        <TextBlock Grid.Column="5" Text="{Binding ClientName}" VerticalAlignment="Center"/>
-                                        <Border Grid.Column="6" 
+                                        <TextBlock Grid.Column="4" Text="{Binding EmployeeName}" VerticalAlignment="Center"/>
+                                        <TextBlock Grid.Column="5" Text="{Binding PetName}" VerticalAlignment="Center"/>
+                                        <TextBlock Grid.Column="6" Text="{Binding ClientName}" VerticalAlignment="Center"/>
+                                        <Border Grid.Column="7" 
                                                 Style="{StaticResource StatusChip}"
-                                                HorizontalAlignment="Left" Height="30" Margin="40,0,0,0">
+                                                HorizontalAlignment="Left" Height="30" Margin="50,0,0,0">
 
                                             <TextBlock Text="{Binding AppointmentStatusName}"
                                                        Margin="4,0"
                                                        VerticalAlignment="Center"
                                                        FontWeight="SemiBold"/>
                                         </Border>
-                                        <TextBlock Grid.Column="7" Text="{Binding TotalPriceAtMoment, StringFormat=C}" VerticalAlignment="Center"/>
+                                        <TextBlock Grid.Column="8" Text="{Binding TotalPriceAtMoment, StringFormat=C}" VerticalAlignment="Center"/>
 
                                         <!-- ACTIONS -->
-                                        <StackPanel Grid.Column="8" Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <StackPanel Grid.Column="9" Orientation="Horizontal" HorizontalAlignment="Center">
                                             <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="Просмотреть">
                                                 <materialDesign:PackIcon Kind="EyeOutline"/>
                                             </Button>

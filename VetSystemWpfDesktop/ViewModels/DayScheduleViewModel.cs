@@ -36,7 +36,6 @@ namespace VetSystemWpfDesktop.ViewModels
             }
         }
 
-        // Основной метод: конвертируем AppointmentDto в наше расписание
         public void LoadAppointments(List<AppointmentDto> appointmentsDto)
         {
             // Очищаем все слоты
@@ -93,7 +92,6 @@ namespace VetSystemWpfDesktop.ViewModels
         public ObservableCollection<AppointmentSlot> Appointments { get; set; } = new();
     }
 
-    // Одна запись в расписании (карточка)
     public class AppointmentSlot
     {
         public int AppointmentId { get; set; }

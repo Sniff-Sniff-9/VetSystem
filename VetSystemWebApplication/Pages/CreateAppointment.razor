@@ -1,3 +1,203 @@
-﻿@page "/appointments/create"
+﻿@page "/appointment/create"
+@using MudBlazor
+@using VetSystemModels.Dto.Pet
+@using VetSystemModels.Dto.Service
+@inject Services.PetsService PetsService
+@inject Services.ServicesService ServicesService
+
+<MudContainer MaxWidth="MaxWidth.False"
+              Class="pt-2 px-3 px-md-6"
+              Style="background: linear-gradient(109.6deg, #E3F2FD 0%, #BBDEFB 100%); min-height:100vh;">
+
+    <MudCard Elevation="2" Class="mt-1" Style="border-radius:16px;">
+
+        <!-- Степпер без дефолтных кнопок -->
+        <MudStepper @bind-ActiveIndex="_step"
+                    Linear="true"
+                    Class="pa-4">
+
+            <!-- ШАГ 1 -->
+            <MudStep Label="Питомец">
+                <MudStack Spacing="3">
+                    <MudText Typo="Typo.h6">Выберите питомца</MudText>
+                    <MudPaper Elevation="0" Style="background:#E3F2FD; border-radius:12px;" Class="pa-2">
+                        @if (isLoading)
+                        {
+                            <MudProgressCircular Indeterminate="true" Color="Color.Primary" Class="mx-auto" />
+                        }
+                        else if (ClientPets.Count == 0)
+                        {
+                            <MudText Typo="Typo.subtitle1" Align="Align.Center" Class="m-4">
+                                Нет питомцев у клиента.
+                            </MudText>
+                        }
+                        else
+                        {
+                            <MudList T="PetDto" Dense="true">
+                                @foreach (var p in ClientPets)
+                                {
+                                    <MudListItem>
+                                        <MudCard Elevation="1" Outlined="false" Class="mb-2 mt-2"
+                                                 Style="border-radius: 12px; overflow: hidden;"
+                                                 OnClick="@(() => SelectPet(p.PetId))">
+                                            <MudCardContent Class="pa-4">
+                                                <MudStack Spacing="2">
+                                                    <div class="d-flex align-center flex-wrap">
+                                                        <MudIcon Icon="@Icons.Material.Filled.Pets"
+                                                                 Size="Size.Small" Color="Color.Primary" Class="mr-2" />
+                                                        <MudText Typo="Typo.h6" Class="fw-semibold">@p.Name</MudText>
+                                                    </div>
+                                                    <div class="d-flex flex-wrap gap-3">
+                                                        <MudText Typo="Typo.subtitle1">Вид: @p.SpeciesName</MudText>
+                                                        <MudText Typo="Typo.subtitle1">Порода: @p.Breed</MudText>
+                                                    </div>
+                                                    <div class="d-flex align-center">
+                                                        <MudIcon Icon="@Icons.Material.Filled.Cake"
+                                                                 Size="Size.Small" Color="Color.Default" Class="mr-2" />
+                                                        <MudText Size="Size.Small">
+                                                            @p.BirthDate.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("ru-RU"))
+                                                        </MudText>
+                                                    </div>
+                                                </MudStack>
+                                            </MudCardContent>
+                                        </MudCard>
+                                    </MudListItem>
+                                    <MudDivider />
+                                }
+                            </MudList>
+                        }
+                    </MudPaper>
+                </MudStack>
+            </MudStep>
+
+            <!-- ШАГ 2 -->
+            <MudStep Label="Услуга">
+                <MudText Typo="Typo.h6" Class="mb-4">Выберите услугу</MudText>
+                <MudPaper Elevation="0" Style="background:#E3F2FD; border-radius:12px;" Class="pa-2">
+                    @if (isLoading)
+                    {
+                        <MudProgressCircular Indeterminate="true" Color="Color.Primary" Class="mx-auto" />
+                    }
+                    else if (ClientPets.Count == 0)
+                    {
+                        <MudText Typo="Typo.subtitle1" Align="Align.Center" Class="m-4">
+                            Нет питомцев у клиента.
+                        </MudText>
+                    }
+                    else
+                    {
+                        <MudList T="ServiceDto" Dense="true">
+                            @foreach (var s in Services)
+                            {
+                                <MudListItem>
+                                    <MudCard Elevation="1" Outlined="false" Class="mb-2 mt-2"
+                                             Style="border-radius: 12px; overflow: hidden;"
+                                             OnClick="@(() => SelectService(s.ServiceId))">
+                                        <MudCardContent Class="pa-4">
+                                            <MudStack Spacing="2">
+                                                <div class="d-flex align-center flex-wrap">
+                                                    <MudIcon Icon="@Icons.Material.Filled.MedicalServices"
+                                                             Size="Size.Small" Color="Color.Primary" Class="mr-2" />
+                                                    <MudText Typo="Typo.h6" Class="fw-semibold">@s.ServiceName</MudText>
+                                                </div>
+                                                <div class="d-flex flex-wrap gap-3">
+                                                    <MudText Typo="Typo.subtitle1">Цена: @s.Price руб.</MudText>
+                                                    <MudText Typo="Typo.subtitle1">Длительность: @s.DurationMinutes мин.</MudText>
+                                                </div> 
+                                            </MudStack>
+                                        </MudCardContent>
+                                    </MudCard>
+                                </MudListItem>
+                                <MudDivider />
+                            }
+                        </MudList>
+                    }
+                </MudPaper>
+            </MudStep>
+
+        </MudStepper>
+
+        <!-- НАШИ КНОПКИ (русский язык) -->
+        <MudStack Row Justify="Justify.SpaceBetween" Class="mt-6 px-4 pb-4">
+            <MudButton Variant="Variant.Text"
+                       Color="Color.Default"
+                       Disabled="@(_step == 0)"
+                       OnClick="PreviousStep">
+                Назад
+            </MudButton>
+
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       OnClick="NextStep">
+                @GetNextButtonText()
+            </MudButton>
+        </MudStack>
+
+    </MudCard>
+</MudContainer>
+
+<!-- Скрываем дефолтные кнопки MudStepper -->
+<style>
+    .mud-stepper-actions {
+        display: none !important;
+    }
+</style>
+
+@code {
+    private int _step = 0;
+    private List<PetDto> ClientPets = new();
+    private List<ServiceDto> Services = new();
+    private int? SelectedPetId;
+    private int? SelectedServiceId;
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            ClientPets = await PetsService.GetPetsAsync();
+            Services = await ServicesService.GetAllServicesAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private void SelectPet(int? id) => SelectedPetId = id;
+
+    private void SelectService(int? id) => SelectedServiceId = id;
+
+    private void PreviousStep()
+    {
+        if (_step > 0) _step--;
+    }
+
+    private async Task NextStep()
+    {
+        if (_step >= 1) // последний шаг
+        {
+            await SaveAppointmentAsync();
+        }
+        else
+        {
+            _step++;
+        }
+    }
 
 
+    private string GetNextButtonText()
+    {
+        return _step >= 1 ? "Сохранить" : "Далее";
+    }
+
+    private async Task SaveAppointmentAsync()
+    {
+        Console.WriteLine("✅ Запись успешно сохранена!");
+        // Здесь будет реальная логика сохранения
+    }
+}

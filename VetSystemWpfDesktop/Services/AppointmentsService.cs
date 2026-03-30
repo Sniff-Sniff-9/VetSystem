@@ -30,6 +30,14 @@ namespace VetSystemWpfDesktop.Services
             return await _httpClient.GetFromJsonAsync<List<AppointmentDto>>($"Employees/{id}/Appointments");
         }
 
+        public async Task<List<TimeOnly>?> GetAvailableSlotsAsync(int id, DateOnly date)
+        {
+            var formattedDate = date.ToString("yyyy-MM-dd");
+
+            return await _httpClient.GetFromJsonAsync<List<TimeOnly>>(
+                $"ScheduleAvailability?EmployeeId={id}&ScheduleAvailabilityDate={formattedDate}");
+        }
+
     }
 }
 

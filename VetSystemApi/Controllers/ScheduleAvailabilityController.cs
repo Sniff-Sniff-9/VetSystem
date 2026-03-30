@@ -17,7 +17,7 @@ namespace VetSystemApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetServicesAsync([FromQuery] ScheduleAvailabilityDto scheduleAvailabilityDto)
+        public async Task<IActionResult> GetAvailableSlotsAsync([FromQuery] ScheduleAvailabilityDto scheduleAvailabilityDto)
         {
             var slots = await _scheduleAvailabilityService.GetAvailableSlotsAsync(scheduleAvailabilityDto);
             return Ok(slots);

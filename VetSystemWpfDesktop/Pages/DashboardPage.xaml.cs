@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -12,6 +13,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using VetSystemWpfDesktop.ViewModels;
+using VetSystemWpfDesktop.Services;
 
 namespace VetSystemWpfDesktop.Pages
 {
@@ -20,9 +23,14 @@ namespace VetSystemWpfDesktop.Pages
     /// </summary>
     public partial class DashboardPage : Page
     {
+        private readonly AppointmentsService _appointmentsService;
         public DashboardPage()
         {
             InitializeComponent();
+            var client = new HttpClient { BaseAddress = new Uri("https://localhost:7146/api/") };
+            _appointmentsService = new AppointmentsService(client);
+            var vm = new DashboardViewModel(_appointmentsService);
+            DataContext = vm;
         }
     }
 }

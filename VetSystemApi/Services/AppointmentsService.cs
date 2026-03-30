@@ -27,36 +27,38 @@ namespace VetSystemApi.Services
 
         public async Task<List<AppointmentDto>> GetAppointmentsAsync()
         {
-            var appointments = await _context.Appointments.Include(a => a.Pet).Include(a => a.Pet.Client)
+            var appointments = await _context.Appointments.Include(a => a.Pet).Include(a => a.Pet.Client).Include(a => a.Employee)
                 .Include(a => a.AppointmentStatus).Include(a => a.AppointmentServices).ThenInclude(aps => aps.Service).ToListAsync();
             return appointments.Select(s => ToAppointmentDto(s)).ToList();
         }
 
         public async Task<List<AppointmentDto>> GetAppointmentsByPetIdAsync(int id)
         {
-            var appointments = await _context.Appointments.Include(a => a.Pet).Include(a => a.Pet.Client)
+            var appointments = await _context.Appointments.Include(a => a.Pet).Include(a => a.Pet.Client).Include(a => a.Employee)
                 .Include(a => a.AppointmentStatus).Include(a => a.AppointmentServices).ThenInclude(aps => aps.Service).ToListAsync();
             return appointments.Select(s => ToAppointmentDto(s)).ToList();
         }
 
         public async Task<List<AppointmentDto>> GetAppointmentsByClientIdAsync(int id)
         {
-            var appointments = await _context.Appointments.Include(a => a.Pet).Include(a => a.Pet.Client)
-                .Include(a => a.AppointmentStatus).Include(a => a.AppointmentServices).ThenInclude(aps => aps.Service).ToListAsync();
+            var appointments = await _context.Appointments.Include(a => a.Pet).Include(a => a.Pet.Client).Include(a => a.Employee)
+                .Include(a => a.AppointmentStatus).Include(a => a.AppointmentServices).ThenInclude(aps => aps.Service)
+                .Where(a => a.Pet.ClientId == id).ToListAsync();
             return appointments.Select(s => ToAppointmentDto(s)).ToList();
         }
 
         public async Task<List<AppointmentDto>> GetAppointmentsByEmployeeIdAsync(int id)
         {
-            var appointments = await _context.Appointments.Include(a => a.Pet).Include(a => a.Pet.Client)
-                .Include(a => a.AppointmentStatus).Include(a => a.AppointmentServices).ThenInclude(aps => aps.Service).ToListAsync();
+            var appointments = await _context.Appointments.Include(a => a.Pet).Include(a => a.Pet.Client).Include(a => a.Employee)
+                .Include(a => a.AppointmentStatus).Include(a => a.AppointmentServices).ThenInclude(aps => aps.Service)
+                 .Where(a => a.EmployeeId == id).ToListAsync();
             return appointments.Select(s => ToAppointmentDto(s)).ToList();
         }
 
 
         public async Task<AppointmentDto?> GetAppointmentByIdAsync(int id)
         {
-            var appointment = await _context.Appointments.Include(a => a.Pet).Include(a => a.Pet.Client)
+            var appointment = await _context.Appointments.Include(a => a.Pet).Include(a => a.Pet.Client).Include(a => a.Employee)
                 .Include(a => a.AppointmentStatus).Include(a => a.AppointmentServices).ThenInclude(aps => aps.Service)
                 .FirstOrDefaultAsync(s => s.AppointmentId == id);
             if (appointment == null)
@@ -117,7 +119,7 @@ namespace VetSystemApi.Services
                 appointment.TotalPriceAtMoment = appointmentService.PriceAtMoment;
 
                 var result = await _context.Appointments.Include(a => a.Pet).Include(a => a.Pet.Client)
-                .Include(a => a.AppointmentStatus).Include(a => a.AppointmentServices)
+                .Include(a => a.AppointmentStatus).Include(a => a.AppointmentServices).Include(a => a.Employee)
                     .FirstAsync(a => a.AppointmentId == appointment.AppointmentId);
                 return ToAppointmentDto(result);
             }
@@ -169,7 +171,7 @@ namespace VetSystemApi.Services
             {
                 await _context.SaveChangesAsync();
                 var result = await _context.Appointments.Include(a => a.Pet).Include(a => a.Pet.Client)
-                .Include(a => a.AppointmentStatus).Include(a => a.AppointmentServices)
+                .Include(a => a.AppointmentStatus).Include(a => a.AppointmentServices).Include(a => a.Employee)
                     .FirstAsync(a => a.AppointmentId == appointment.AppointmentId);
                 return ToAppointmentDto(result);
             }

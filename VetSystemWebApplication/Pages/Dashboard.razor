@@ -2,7 +2,7 @@
 @using MudBlazor
 @using VetSystemModels.Dto.Appointment
 @using VetSystemModels.Dto.Client
-@inject Services.AppointmentsService AppointmentsService
+@inject Services.VetServicesService ServicesService
 @inject Services.ClientsService ClientsService
 @inject NavigationManager NavigationManager
 
@@ -24,6 +24,7 @@
             <MudButton Variant="Variant.Filled"
                        Color="Color.Primary"
                        Size="Size.Medium"
+                       OnClick="@CreateAppointmentClick"
                        StartIcon="@Icons.Material.Filled.Add"
                        Class="mx-4 mt-4">
                 Создать запись на приём
@@ -39,18 +40,18 @@
 
                 @if (isLoading)
                 {
-                    <MudProgressCircular Indeterminate="true" Color="Color.Primary"/>
+                    <MudProgressCircular Indeterminate="true" Color="Color.Primary" Align="Align.Center" Class="m-4" />
                 }
-                else if (Appointments.Count == 0)
+                else if (Services.Count == 0)
                 {
-                    <MudText Typo="Typo.subtitle1" Align="Align.Center" Color="Color.Info">
+                    <MudText Typo="Typo.subtitle1" Align="Align.Center" Class="m-4">
                         Нет записей.
                     </MudText>
                 }
                 else
                 {
                     <MudList T="AppointmentDto" Dense="true">
-                        @foreach (var appointment in Appointments)
+                        @foreach (var appointment in Services)
                         {
                             <MudListItem>
                                 <MudCard Elevation="1"
@@ -112,12 +113,6 @@
                                     </MudCardContent>
 
                                     <MudCardActions Class="px-4 pb-4 pt-0">
-                                        @* <MudButton Variant="Variant.Text"
-                                                   Color="Color.Primary"
-                                                   StartIcon="@Icons.Material.Filled.Visibility">
-                                            Подробнее
-                                        </MudButton>
- *@
                                         @if (appointment.AppointmentDate >= DateOnly.FromDateTime(DateTime.Now))
                                         {
                                             <MudButton Variant="Variant.Text"
@@ -145,7 +140,7 @@
 
 @code {
 
-    private List<AppointmentDto> Appointments = new();
+    private List<AppointmentDto> Services = new();
     private ClientDto Client = new();
     private bool isLoading = true;
 
@@ -166,7 +161,7 @@
     {
         try
         {
-            Appointments = await AppointmentsService.GetAppointmentsByClientIdAsync();
+            Services = await ServicesService.GetServicesByClientIdAsync();
             Client = await ClientsService.GetClientByUserIdAsync() ?? new();
         }
         catch (Exception ex)
@@ -177,4 +172,8 @@
         isLoading = false;
     }
 
+    protected void CreateAppointmentClick()
+    {
+        NavigationManager.NavigateTo("/appointment/create");
+    }
 }

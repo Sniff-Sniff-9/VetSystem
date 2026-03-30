@@ -6,6 +6,7 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 using VetSystemModels.Dto.Employee;
+using VetSystemModels.Dto.Workday;
 
 namespace VetSystemWpfDesktop.Services
 {
@@ -25,6 +26,11 @@ namespace VetSystemWpfDesktop.Services
         public async Task<EmployeeDto?> GetClientAsync(int id)
         {
             return await _httpClient.GetFromJsonAsync<EmployeeDto?>($"Employees/{id}");
+        }
+
+        public async Task<List<WorkdayDto>?> GetWorkdaysByEmployeeIdAsync(int id)
+        {
+            return await _httpClient.GetFromJsonAsync<List<WorkdayDto>>($"Employees/{id}/Workdays");
         }
     }
 }

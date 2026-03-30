@@ -15,7 +15,7 @@
         <!-- HEADER -->
         <StackPanel Orientation="Horizontal" Margin="8,8,8,18">
             <materialDesign:PackIcon Kind="CalendarPlus" Width="40" Height="40" Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
-            <TextBlock Text="Запись" FontSize="30" FontWeight="SemiBold" Margin="10,0,0,0" VerticalAlignment="Center" Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
+            <TextBlock Text="Запись на прием" FontSize="30" FontWeight="SemiBold" Margin="10,0,0,0" VerticalAlignment="Center" Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
         </StackPanel>
 
         <!-- MAIN CARD -->
@@ -26,6 +26,7 @@
                 <Grid>
 
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -51,143 +52,232 @@
                         <!-- КЛИЕНТ -->
                         <materialDesign:Card Grid.Row="0" Grid.Column="0" Margin="8" Padding="16">
                             <StackPanel>
-                                <TextBlock Text="Клиент" FontWeight="SemiBold" Margin="0,0,0,6"/>
-                                <!--<StackPanel Orientation="Horizontal">
-                                    <materialDesign:PackIcon Kind="Search" Width="24" Height="24" Margin="0,0,10,0" VerticalAlignment="Center" Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>-->
-                                    <TextBox x:Name="ClientSearchTextBox" Height="36" materialDesign:HintAssist.Hint="Поиск..." 
+                                <TextBlock Text="Клиент" FontWeight="SemiBold" Margin="0,0,0,6" FontSize="14"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+                                    <materialDesign:PackIcon Kind="Search" Width="24" Height="24" Margin="0,0,10,0" VerticalAlignment="Center" Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
+                                    <TextBox Grid.Column="1" x:Name="ClientSearchTextBox" Height="36" materialDesign:HintAssist.Hint="Поиск..." 
                                              TextChanged="ClientSearchTextBox_TextChanged"/>
-                                <!--</StackPanel>-->
-                                <ListBox x:Name="ClientsListBox" Height="120" SelectionChanged="ClientsListBox_SelectionChanged"/>
+                                </Grid>
+                                <ListBox x:Name="ClientsListBox" Height="120" Margin="0,5,0,0"
+                                         SelectionChanged="ClientsListBox_SelectionChanged">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <materialDesign:PackIcon Kind="Account" Foreground="{StaticResource MaterialDesign.Brush.Primary}"
+                                     Margin="0,0,5,0"></materialDesign:PackIcon>
+                                                <TextBlock Text="{Binding LastName}" Margin="0,0,5,0"/>
+                                                <TextBlock Text="{Binding FirstName}" Margin="0,0,5,0"/>
+                                                <TextBlock Text="{Binding MiddleName}"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
                             </StackPanel>
                         </materialDesign:Card>
 
                         <!-- ПИТОМЕЦ -->
-                        <materialDesign:Card Grid.Row="0" Grid.Column="1" Margin="8" Padding="16" IsEnabled="False" x:Name="PetCard">
+                        <materialDesign:Card Grid.Row="0" Grid.Column="1" Margin="8" Padding="16"  x:Name="PetCard">
                             <StackPanel>
-                                <TextBlock Text="Питомец" FontWeight="SemiBold" Margin="0,0,0,6"/>
-                                <TextBox x:Name="PetSearchTextBox" Height="36" materialDesign:HintAssist.Hint="Поиск..." TextChanged="PetSearchTextBox_TextChanged"/>
-                                <ListBox x:Name="PetsListBox" Height="120" SelectionChanged="PetsListBox_SelectionChanged"/>
+                                <TextBlock Text="Питомец" FontWeight="SemiBold" Margin="0,0,0,6" FontSize="14"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+                                    <materialDesign:PackIcon Kind="Search" Width="24" Height="24" Margin="0,0,10,0" VerticalAlignment="Center" Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
+                                    <TextBox Grid.Column="1" x:Name="PetSearchTextBox" Height="36" materialDesign:HintAssist.Hint="Поиск..." 
+             TextChanged="ClientSearchTextBox_TextChanged"/>
+                                </Grid>
+                                <ListBox x:Name="PetsListBox" Height="120" Margin="0,5,0,0" SelectionChanged="PetsListBox_SelectionChanged">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <materialDesign:PackIcon Kind="Dog" Foreground="{StaticResource MaterialDesign.Brush.Primary}"
+ Margin="0,0,5,0"></materialDesign:PackIcon>
+                                                <TextBlock Text="{Binding Name}"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
                             </StackPanel>
                         </materialDesign:Card>
 
                         <!-- УСЛУГА -->
-                        <materialDesign:Card Grid.Row="1" Grid.Column="0" Margin="8" Padding="16" IsEnabled="False" x:Name="ServiceCard">
+                        <materialDesign:Card Grid.Row="1" Grid.Column="0" Margin="8" Padding="16"  x:Name="ServiceCard">
                             <StackPanel>
-                                <TextBlock Text="Основная услуга" FontWeight="SemiBold" Margin="0,0,0,6"/>
-                                <TextBox x:Name="ServiceSearchTextBox" Height="36" materialDesign:HintAssist.Hint="Поиск..." TextChanged="ServiceSearchTextBox_TextChanged"/>
-                                <ListBox x:Name="ServicesListBox" Height="120" SelectionChanged="ServicesListBox_SelectionChanged"/>
+                                <TextBlock Text="Основная услуга" FontWeight="SemiBold" Margin="0,0,0,6" FontSize="14"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+                                    <materialDesign:PackIcon Kind="Search" Width="24" Height="24" Margin="0,0,10,0" VerticalAlignment="Center" Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
+                                    <TextBox Grid.Column="1" x:Name="ServiceSearchTextBox" Height="36" materialDesign:HintAssist.Hint="Поиск..." 
+TextChanged="ClientSearchTextBox_TextChanged"/>
+                                </Grid>
+                                <ListBox x:Name="ServicesListBox" Height="120" Margin="0,5,0,0" SelectionChanged="ServicesListBox_SelectionChanged">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <materialDesign:PackIcon Kind="Pill" Foreground="{StaticResource MaterialDesign.Brush.Primary}"
+ Margin="0,0,5,0"></materialDesign:PackIcon>
+                                                <TextBlock Text="{Binding ServiceName}" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
                             </StackPanel>
                         </materialDesign:Card>
 
                         <!-- ВРАЧ -->
-                        <materialDesign:Card Grid.Row="1" Grid.Column="1" Margin="8" Padding="16" IsEnabled="False" x:Name="DoctorCard">
+                        <materialDesign:Card Grid.Row="1" Grid.Column="1" Margin="8" Padding="16" x:Name="DoctorCard">
                             <StackPanel>
-                                <TextBlock Text="Врач" FontWeight="SemiBold" Margin="0,0,0,6"/>
-                                <TextBox x:Name="DoctorSearchTextBox" Height="36" materialDesign:HintAssist.Hint="Поиск..." TextChanged="DoctorSearchTextBox_TextChanged"/>
-                                <ListBox x:Name="DoctorsListBox" Height="120" SelectionChanged="DoctorsListBox_SelectionChanged"/>
+                                <TextBlock Text="Врач" FontWeight="SemiBold" Margin="0,0,0,6" FontSize="14"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+                                    <materialDesign:PackIcon Kind="Search" Width="24" Height="24" Margin="0,0,10,0" VerticalAlignment="Center" Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
+                                    <TextBox Grid.Column="1" x:Name="EmployeeSearchTextBox" Height="36" materialDesign:HintAssist.Hint="Поиск..." 
+TextChanged="ClientSearchTextBox_TextChanged"/>
+                                </Grid>
+                                <ListBox x:Name="DoctorsListBox" Height="120" Margin="0,5,0,0" SelectionChanged="DoctorsListBox_SelectionChanged">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <materialDesign:PackIcon Kind="Doctor" Foreground="{StaticResource MaterialDesign.Brush.Primary}"
+ Margin="0,0,5,0"></materialDesign:PackIcon>
+                                                <TextBlock Text="{Binding LastName}" Margin="0,0,5,0"/>
+                                                <TextBlock Text="{Binding FirstName}" Margin="0,0,5,0"/>
+                                                <TextBlock Text="{Binding MiddleName}"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
                             </StackPanel>
                         </materialDesign:Card>
 
                         <!-- ДАТА И ОКНА -->
-                        <materialDesign:Card Grid.Row="2" Grid.ColumnSpan="2" Margin="8" Padding="16" IsEnabled="False" x:Name="DateSlotCard">
+                        <materialDesign:Card Grid.Row="2" Grid.ColumnSpan="2" Margin="8" Padding="16" x:Name="DateSlotCard">
                             <StackPanel>
-                                <TextBlock Text="Дата и время" FontWeight="SemiBold" Margin="0,0,0,6"/>
-                                <DatePicker x:Name="DatePicker" SelectedDateChanged="DatePicker_SelectedDateChanged"/>
-                                <WrapPanel x:Name="SlotsPanel" Margin="0,12,0,0"/>
+                                <TextBlock Text="Дата" FontWeight="SemiBold" Margin="0,0,0,12" FontSize="14"/>
+                                <DatePicker x:Name="DatePicker" SelectedDateChanged="DatePicker_SelectedDateChanged" Margin="4,0,0,30"/>
+                                <TextBlock Text="Время" FontWeight="SemiBold" Margin="0,0,0,6" FontSize="14"/>
+                                    <WrapPanel x:Name="SlotsPanel" Margin="0,6,0,0"/>
                                 <TextBlock x:Name="SelectedSlotText" Margin="12,6,0,0" FontWeight="SemiBold"/>
                             </StackPanel>
                         </materialDesign:Card>
 
                     </Grid>
 
-                    <!-- ДОП УСЛУГИ -->
-                    <TextBlock Grid.Row="2" Text="Дополнительные услуги" FontSize="18" FontWeight="SemiBold" Margin="0,20,0,16"/>
+                    <!-- ДОПОЛНИТЕЛЬНЫЕ УСЛУГИ -->
+                    <TextBlock Text="Дополнительные услуги" 
+                               FontSize="19" 
+                               FontWeight="SemiBold" 
+                               Margin="4,32,0,16" Grid.Row="2"/>
 
-                    <Grid Grid.Row="3">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
+                    <Button Style="{StaticResource MaterialDesignOutlinedButton}" 
+                            HorizontalAlignment="Left" 
+                            Height="40" 
+                            Click="AddServiceButton_Click" Grid.Row="3">
+                        <StackPanel Orientation="Horizontal" >
+                            <materialDesign:PackIcon Kind="Plus" Width="20" Height="20"/>
+                            <TextBlock Text="Добавить услугу" Margin="8,0,0,0"/>
+                        </StackPanel>
+                    </Button>
+                    
+                    <ListView x:Name="AdditionalServicesListView" 
+                              Margin="0,12,0,0" 
+                              BorderThickness="0" 
+                              HorizontalContentAlignment="Stretch" Grid.Row="4">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="Padding" Value="0"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                <!-- Убираем hover через стиль, чтобы не ломать Material Design -->
+                                <!-- Если очень нужен hover — можно добавить Trigger, но лучше без полного Template -->
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="#E0E0E0" 
+                                        BorderThickness="0,0,0,1" 
+                                        Padding="8,12">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="40"/>
+                                            <ColumnDefinition Width="3*"/>
+                                            <ColumnDefinition Width="2*"/>
+                                            <ColumnDefinition Width="70"/>
+                                        </Grid.ColumnDefinitions>
 
-                        <Button Style="{StaticResource MaterialDesignOutlinedButton}" Height="36" HorizontalAlignment="Left" Click="AddServiceButton_Click">
-                            <StackPanel Orientation="Horizontal">
-                                <materialDesign:PackIcon Kind="Plus"/>
-                                <TextBlock Text="Добавить услугу" Margin="6,0,0,0"/>
-                            </StackPanel>
-                        </Button>
+                                        <materialDesign:PackIcon Grid.Column="0" 
+                                                                 Kind="Plus" 
+                                                                 Width="24" Height="24" 
+                                                                 Foreground="{DynamicResource MaterialDesign.Brush.Primary}" 
+                                                                 VerticalAlignment="Center"/>
 
-                        <ListView Grid.Row="1" x:Name="AdditionalServicesListView" BorderThickness="0" HorizontalContentAlignment="Stretch" materialDesign:ElevationAssist.Elevation="Dp0" Margin="0,10,0,0">
-                            <ListView.ItemContainerStyle>
-                                <Style TargetType="ListViewItem">
-                                    <Setter Property="Padding" Value="0"/>
-                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate TargetType="ListViewItem">
-                                                <Border x:Name="Bd" Background="Transparent">
-                                                    <ContentPresenter/>
-                                                </Border>
-                                                <ControlTemplate.Triggers>
-                                                    <Trigger Property="IsMouseOver" Value="True">
-                                                        <Setter TargetName="Bd" Property="Background" Value="#F5F5F5"/>
-                                                    </Trigger>
-                                                </ControlTemplate.Triggers>
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Style>
-                            </ListView.ItemContainerStyle>
+                                        <TextBlock Grid.Column="1" 
+                                                   Text="{Binding ServiceName}" 
+                                                   VerticalAlignment="Center" 
+                                                   FontWeight="SemiBold" FontSize="14.5"/>
 
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <Border BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="6,8">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="40"/>
-                                                <ColumnDefinition Width="3*"/>
-                                                <ColumnDefinition Width="2*"/>
-                                                <ColumnDefinition Width="60"/>
-                                            </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="2" 
+                                                   Text="{Binding Price, StringFormat={}{0:C}}" 
+                                                   VerticalAlignment="Center" 
+                                                   FontWeight="Medium" 
+                                                   Foreground="#FF1976D2"/>
 
-                                            <!-- Иконка -->
-                                            <materialDesign:PackIcon Grid.Column="0" Kind="Plus" Width="24" Height="24" Foreground="{StaticResource MaterialDesign.Brush.Primary}" VerticalAlignment="Center"/>
-
-                                            <!-- Название услуги -->
-                                            <TextBlock Grid.Column="1" Text="{Binding ServiceName}" VerticalAlignment="Center" FontWeight="SemiBold" FontSize="14"/>
-
-                                            <!-- Цена -->
-                                            <TextBlock Grid.Column="2" Text="{Binding Price, StringFormat=C}" VerticalAlignment="Center" FontWeight="Medium" Foreground="#FF1976D2"/>
-
-                                            <!-- Кнопка удалить -->
-                                            <Button Grid.Column="3" Style="{StaticResource MaterialDesignIconButton}" Click="RemoveServiceButton_Click" ToolTip="Удалить">
-                                                <materialDesign:PackIcon Kind="Delete"/>
-                                            </Button>
-                                        </Grid>
-                                    </Border>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
-                    </Grid>
+                                        <Button Grid.Column="3" 
+                                                Style="{StaticResource MaterialDesignIconButton}" 
+                                                Width="32" Height="32"
+                                                Click="RemoveServiceButton_Click" 
+                                                ToolTip="Удалить">
+                                            <materialDesign:PackIcon Kind="Delete"/>
+                                        </Button>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
 
                     <!-- ИТОГ -->
-                    <Border Grid.Row="4" Margin="0,20,0,0" Padding="16" Background="#F5F5F5" CornerRadius="8">
+                    <Border Margin="0,28,0,0" 
+                            Padding="20" 
+                            Background="#F5F5F5" 
+                            CornerRadius="12" Grid.Row="5">
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="40"/>
-                                <ColumnDefinition Width="3*"/>
-                                <ColumnDefinition Width="2*"/>
-                                <ColumnDefinition Width="60"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.ColumnSpan="2" Text="Итоговая стоимость:" FontSize="18" FontWeight="SemiBold" VerticalAlignment="Center"/>
-                            <TextBlock Grid.Column="2" x:Name="TotalPriceText" FontSize="22" FontWeight="Bold"  Text="$1000.0"
+
+                            <TextBlock Text="Итоговая стоимость:" 
+                                       FontSize="18" 
+                                       FontWeight="SemiBold" 
+                                       VerticalAlignment="Center"/>
+
+                            <TextBlock x:Name="TotalPriceText" 
+                                       Grid.Column="2" 
+                                       Text="0 ₽" 
+                                       FontSize="26" 
+                                       FontWeight="Bold" 
                                        VerticalAlignment="Center"/>
                         </Grid>
                     </Border>
 
                     <!-- BUTTONS -->
-                    <StackPanel Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+                    <StackPanel Grid.Row="6" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
                         <Button Style="{StaticResource MaterialDesignOutlinedButton}" Margin="0,0,10,0" Width="120" Click="CancelButton_Click">Отмена</Button>
-                        <Button Style="{StaticResource MaterialDesignRaisedButton}" Foreground="White" Width="160" Name="SaveButton" Click="SaveButton_Click">Сохранить</Button>
+                        <Button Style="{StaticResource MaterialDesignRaisedButton}" Foreground="White" Width="160" 
+                                Name="SaveButton" Click="SaveButton_Click">Сохранить</Button>
                     </StackPanel>
 
                 </Grid>

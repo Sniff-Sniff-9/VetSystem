@@ -14,10 +14,11 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7146/api/") });
 builder.Services.AddLocalStorageServices();
 builder.Services.AddMudServices();
-builder.Services.AddScoped<VetServicesService>();
+builder.Services.AddScoped<AppointmentsService>();
 builder.Services.AddScoped<ClientsService>();
 builder.Services.AddScoped<PetsService>();
 builder.Services.AddScoped<ServicesService>();
+builder.Services.AddScoped<EmployeesService>();
 
 await builder.Build().RunAsync();
 

@@ -25,5 +25,11 @@ namespace VetSystemWebApplication.Services
             return await _httpClient.GetFromJsonAsync<List<PetDto>>($"Clients/{client.ClientId}/Pets") ?? new();
         }
 
+        public async Task<PetDto> GetPetAsync(int id)
+        {
+            var client = await _clientService.GetClientByUserIdAsync() ?? new();      
+            return await _httpClient.GetFromJsonAsync<PetDto>($"Pets/{id}") ?? new();
+        }
+
     }
 }

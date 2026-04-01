@@ -38,6 +38,14 @@ namespace VetSystemWpfDesktop.Services
                 $"ScheduleAvailability?EmployeeId={id}&ScheduleAvailabilityDate={formattedDate}");
         }
 
+        public async Task<List<TimeOnly>?> GetAllSlotsAsync(int id, DateOnly date)
+        {
+            var formattedDate = date.ToString("yyyy-MM-dd");
+
+            return await _httpClient.GetFromJsonAsync<List<TimeOnly>>(
+                $"ScheduleAvailability/All?EmployeeId={id}&ScheduleAvailabilityDate={formattedDate}");
+        }
+
     }
 }
 

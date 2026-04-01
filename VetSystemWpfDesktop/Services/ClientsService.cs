@@ -6,6 +6,7 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 using VetSystemModels.Dto.Client;
+using VetSystemModels.Dto.Pet;
 
 namespace VetSystemWpfDesktop.Services
 {
@@ -22,6 +23,12 @@ namespace VetSystemWpfDesktop.Services
         {
             return await _httpClient.GetFromJsonAsync<List<ClientDto>>("Clients");
         }
+
+        public async Task<List<PetDto>?> GetPetsByClientIdAsync(int id)
+        {
+            return await _httpClient.GetFromJsonAsync<List<PetDto>>($"Clients/{id}/Pets");
+        }
+
         public async Task<ClientDto?> GetClientAsync(int id)
         {
             return await _httpClient.GetFromJsonAsync<ClientDto?>($"Clients/{id}");

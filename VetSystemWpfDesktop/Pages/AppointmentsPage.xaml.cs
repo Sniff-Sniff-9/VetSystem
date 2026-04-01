@@ -33,8 +33,9 @@ namespace VetSystemWpfDesktop.Pages
 
         public async void LoadClientsAsync()
         {
-            var clients = await _appointmentsService.GetAppointmentsAsync();
+            var clients = await _appointmentsService.GetAppointmentsAsync() ?? new();
             AppointmentsListView.ItemsSource = clients;
+            AllAppontmentsTextBlock.Text = NewAppontmentsTextBlock.Text = clients.Count.ToString();
         }
         
 

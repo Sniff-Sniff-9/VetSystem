@@ -51,15 +51,38 @@ namespace VetSystemApi.Services
                 slots = slots.Where(s => s < ov.StartTime || s >= ov.EndTime).ToList();
             }
 
-   
-            var occupiedSlots = await _context.Appointments
-                .Where(a => a.EmployeeId == scheduleAvailabilityDto.EmployeeId &&
-                            a.AppointmentDate == scheduleAvailabilityDto.ScheduleAvailabilityDate &&
-                            !a.IsDeleted)
-                .Select(a => a.StartTime)
-                .ToListAsync();
+
+            var occupiedSlots = await _context.Appointments.
+                Where(a => a.EmployeeId == scheduleAvailabilityDto.EmployeeId && 
+                a.AppointmentDate == scheduleAvailabilityDto.ScheduleAvailabilityDate)
+                .Select(a => a.StartTime).ToListAsync(); 
 
             slots = slots.Where(s => !occupiedSlots.Contains(s)).ToList();
+
+            return slots;
+        }
+
+        public async Task<List<TimeOnly>> GetAllSlotsAsync(ScheduleAvailabilityDto scheduleAvailabilityDto)
+        {
+            var dayOfWeek = scheduleAvailabilityDto.ScheduleAvailabilityDate.DayOfWeek.ToString();
+            var workday = await _context.Workdays
+                .Where(w => w.EmployeeId == scheduleAvailabilityDto.EmployeeId && w.DayOfWeek == dayOfWeek)
+                .FirstOrDefaultAsync();
+
+            if (workday == null)
+                return new List<TimeOnly>(); 
+
+
+            var slots = new List<TimeOnly>();
+            var current = workday.StartTime;
+            while (current.Add(TimeSpan.FromMinutes(workday.SlotDuration)) <= workday.EndTime)
+            {
+              
+                if (!(current >= workday.LunchStart && current < workday.LunchEnd))
+                    slots.Add(current);
+
+                current = current.AddMinutes(workday.SlotDuration);
+            }
 
             return slots;
         }

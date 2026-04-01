@@ -170,9 +170,9 @@
                                     Click="Settings_Click">
 
                                 <StackPanel Orientation="Horizontal">
-                                    <materialDesign:PackIcon Kind="Settings"
+                                    <materialDesign:PackIcon Kind="Logout"
                                                              Margin="0,0,8,0"/>
-                                    <TextBlock Text="Настройки"/>
+                                    <TextBlock Text="Выйти"/>
                                 </StackPanel>
 
                             </Button>
@@ -201,18 +201,6 @@
                                      materialDesign:ElevationAssist.Elevation="Dp2">
 
                     <DockPanel>
-
-                        <Button DockPanel.Dock="Right"
-                                Style="{StaticResource MaterialDesignOutlinedButton}"
-                                Margin="10,0">
-
-                            <StackPanel Orientation="Horizontal">
-                                <materialDesign:PackIcon Kind="Logout"
-                                                         Margin="0,0,6,0"/>
-                                <TextBlock Text="Выйти"/>
-                            </StackPanel>
-
-                        </Button>
 
                         <StackPanel Orientation="Horizontal"
                                     VerticalAlignment="Center">

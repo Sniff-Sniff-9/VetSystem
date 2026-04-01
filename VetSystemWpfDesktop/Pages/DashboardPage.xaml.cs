@@ -24,12 +24,14 @@ namespace VetSystemWpfDesktop.Pages
     public partial class DashboardPage : Page
     {
         private readonly AppointmentsService _appointmentsService;
+        private readonly EmployeesService _employeesService;
         public DashboardPage()
         {
             InitializeComponent();
             var client = new HttpClient { BaseAddress = new Uri("https://localhost:7146/api/") };
             _appointmentsService = new AppointmentsService(client);
-            var vm = new DashboardViewModel(_appointmentsService);
+            _employeesService = new EmployeesService(client);
+            var vm = new DashboardViewModel(_appointmentsService, _employeesService);
             DataContext = vm;
         }
     }

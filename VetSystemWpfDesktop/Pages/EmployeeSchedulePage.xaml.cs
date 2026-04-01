@@ -33,7 +33,7 @@ namespace VetSystemWpfDesktop.Pages
             EmployeeFullName.Text = $"{_employee.LastName} {_employee.FirstName} {_employee.MiddleName}";
 
             // Загружаем записи на сегодня
-            _ = LoadAppointmentsAsync(DateTime.Today);
+            _ = LoadAppointmentsAsync(DateTime.Today); 
         }
 
         private async Task LoadAppointmentsAsync(DateTime date)
@@ -48,7 +48,7 @@ namespace VetSystemWpfDesktop.Pages
                         .FindAll(a => a.AppointmentDate.ToDateTime(new TimeOnly(0, 0, 0)) == date.Date);
 
                     _scheduleVm.LoadAppointments(filtered);
-                    AppointmentsCountTextBlock.Text = $"Итого: {filtered.Count().ToString()} ";
+                    AppointmentsCountTextBlock.Text = $"Записей сегодня: {filtered.Count().ToString()} ";
                 }
             }
             catch (Exception ex)
@@ -58,12 +58,22 @@ namespace VetSystemWpfDesktop.Pages
             }
         }
 
+        private async Task LoadWorkloadPercent()
+        {
+            var date = DateOnly.FromDateTime(ScheduleCalendar.SelectedDate ?? DateTime.Today);
+            var availableSlots = await _appointmentsService.GetAvailableSlotsAsync(_employee.EmployeeId, date) ?? new();
+            var allSlots = await _appointmentsService.GetAllSlotsAsync(_employee.EmployeeId, date) ?? new();
+            var workloadPercent = Math.Round((1 - ((decimal)availableSlots.Count / (decimal)allSlots.Count)) * 100);
+            WorkloadTextBlock.Text = $"Загруженность: {workloadPercent}%";
+        }
+
         // При смене даты в календаре
         private void Calendar_SelectedDatesChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.AddedItems.Count > 0 && e.AddedItems[0] is DateTime selectedDate)
             {
                 _ = LoadAppointmentsAsync(selectedDate);
+                _ = LoadWorkloadPercent();
             }
         }
     }

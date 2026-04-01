@@ -16,7 +16,7 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="ListViewItem">
-                            <Border x:Name="Bd" Background="White" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="8">
+                            <Border x:Name="Bd" Background="White" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="8" CornerRadius="12">
                                 <ContentPresenter/>
                             </Border>
                             <ControlTemplate.Triggers>

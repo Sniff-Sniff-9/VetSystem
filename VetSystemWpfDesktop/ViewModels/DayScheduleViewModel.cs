@@ -38,7 +38,6 @@ namespace VetSystemWpfDesktop.ViewModels
 
         public void LoadAppointments(List<AppointmentDto> appointmentsDto)
         {
-            // Очищаем все слоты
             foreach (var slot in TimeSlots)
                 slot.Appointments.Clear();
 
@@ -47,9 +46,6 @@ namespace VetSystemWpfDesktop.ViewModels
                 var startTime = dto.AppointmentDate.ToDateTime(dto.StartTime);
                 var endTime = dto.AppointmentDate.ToDateTime(dto.EndTime);
 
-                // Защита от некорректного времени
-                if (endTime <= startTime)
-                    endTime = startTime.AddMinutes(30);
 
                 var appointmentSlot = new AppointmentSlot
                 {
@@ -62,15 +58,14 @@ namespace VetSystemWpfDesktop.ViewModels
                     StatusName = dto.AppointmentStatusName
                 };
 
-                // Добавляем запись во все слоты, которые она перекрывает
+               
                 foreach (var slot in TimeSlots)
                 {
                     var slotTime = TimeSpan.Parse(slot.TimeLabel);
                     var slotStart = new DateTime(startTime.Year, startTime.Month, startTime.Day,
                                                  slotTime.Hours, slotTime.Minutes, 0);
-                    var slotEnd = slotStart.AddMinutes(30); // стандартный слот 30 мин
-
-                    // Проверяем, перекрывает ли слот время записи
+                    var slotEnd = slotStart.AddMinutes(30); 
+                    
                     if (startTime < slotEnd && endTime >= slotStart)
                     {
                         slot.Appointments.Add(appointmentSlot);

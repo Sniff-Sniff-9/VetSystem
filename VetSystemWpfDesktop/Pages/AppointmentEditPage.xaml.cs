@@ -16,6 +16,8 @@ using System.Windows.Shapes;
 using VetSystemWpfDesktop.Services;
 using VetSystemModels.Dto.Service;
 using VetSystemModels.Dto.Employee;
+using VetSystemModels.Dto.Pet;
+using VetSystemModels.Dto.Client;
 
 namespace VetSystemWpfDesktop.Pages
 {
@@ -58,20 +60,25 @@ namespace VetSystemWpfDesktop.Pages
         {
             var services = await _servicesService.GetServicesAsync();
             AdditionalServicesListView.ItemsSource = services;
+            ServicesListBox.ItemsSource = services;
         }
 
         private async Task LoadClientsAsync()
         {
             var clients = await _clientsService.GetClientsAsync();
             ClientsListBox.ItemsSource = clients;
-
-            await LoadEmployeesAsync();
         }
 
-        private async Task LoadEmployeesAsync()
+        private async Task LoadEmployeesAsync(ServiceDto serviceDto)
         {
-            var employees = await _employeesService.GetEmployeessAsync();
+            var employees = await _servicesService.GetEmployeesByServiceIdAsync(serviceDto.ServiceId);
             DoctorsListBox.ItemsSource = employees;
+        }
+
+        private async Task LoadPetsAsync(ClientDto clientDto)
+        {
+            var pets = await _clientsService.GetPetsByClientIdAsync(clientDto.ClientId);
+            PetsListBox.ItemsSource = pets;
         }
 
         private async Task ShowAvailableSlots()
@@ -128,9 +135,9 @@ namespace VetSystemWpfDesktop.Pages
             if (btn == null) return;
 
             _selectedSlot = (TimeOnly)btn.Tag;
-            btn.Background = Brushes.DodgerBlue;
+            btn.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#03a9f4"));
             btn.Foreground = Brushes.White;
-            btn.BorderBrush = Brushes.DodgerBlue;
+            btn.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#03a9f4"));
         }
 
         private void ClientSearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -138,9 +145,10 @@ namespace VetSystemWpfDesktop.Pages
           
         }
 
-        private void ClientsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void ClientsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            PetCard.IsEnabled = true;
+            await LoadPetsAsync(ClientsListBox.SelectedItem as ClientDto ?? new());
         }
 
         private void SelectSlotButton_Click(object sender, RoutedEventArgs e)
@@ -183,9 +191,10 @@ namespace VetSystemWpfDesktop.Pages
             await ShowAvailableSlots();
         }
 
-        private void ServicesListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void ServicesListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            DoctorCard.IsEnabled = true;
+            await LoadEmployeesAsync(ServicesListBox.SelectedItem as ServiceDto ?? new());
         }
 
         private void ServiceSearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -193,9 +202,9 @@ namespace VetSystemWpfDesktop.Pages
 
         }
 
-        private void PetsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private  void PetsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            
         }
 
         private void PetSearchTextBox_TextChanged(object sender, TextChangedEventArgs e)

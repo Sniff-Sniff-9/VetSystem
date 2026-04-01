@@ -5,6 +5,7 @@ using VetSystemModels.Dto.Appointment;
 using VetSystemModels.Dto.Service;
 using VetSystemModels.Dto.Employee ;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using VetSystemModels.Dto.Pet;
 
 namespace VetSystemWebApplication.Services
 {
@@ -56,6 +57,48 @@ namespace VetSystemWebApplication.Services
             }
 
             return slots.Distinct().OrderBy(t => t).ToList();
+        }
+
+        public async Task<List<EmployeeDto>> GetEmployeesBySlotAsync(int id, DateOnly date, TimeOnly slot)
+        {
+            var employees = await _servicesService.GetEmployeesByServiceIdAsync(id) ?? new();
+            var availableEmployees = new List<EmployeeDto>();
+
+            var formattedDate = date.ToString("yyyy-MM-dd");
+
+            foreach (var e in employees)
+            {
+                var employeeSlots = await _httpClient.GetFromJsonAsync<List<TimeOnly>>(
+                    $"ScheduleAvailability?EmployeeId={e.EmployeeId}&ScheduleAvailabilityDate={formattedDate}") ?? new();
+
+                if (employeeSlots.Contains(slot))
+                {
+                    availableEmployees.Add(e);
+                }
+            }
+
+            return availableEmployees;
+        }
+
+        public async Task<AppointmentDto> CreateAppointmentAsync(DateOnly date, EmployeeDto employee, ServiceDto service, PetDto pet,
+            TimeOnly slot)
+        {
+            var appointment = new CreateUpdateAppointmentDto
+            {
+                AppointmentDate = date,
+                StartTime = slot,
+                AppointmentStatusId = 1,
+                PetId = pet.PetId,
+                EmployeeId = employee.EmployeeId,
+                ServiceId = service.ServiceId
+            };
+
+            var response = await _httpClient.PostAsJsonAsync("Appointments", appointment);
+
+            response.EnsureSuccessStatusCode();
+
+            return await response.Content.ReadFromJsonAsync<AppointmentDto>() ?? new();
+
         }
 
     }

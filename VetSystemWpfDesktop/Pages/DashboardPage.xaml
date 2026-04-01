@@ -98,7 +98,7 @@
                 <StackPanel HorizontalAlignment="Center">
                     <materialDesign:PackIcon Kind="CurrencyRub" Width="32" Height="32" HorizontalAlignment="Center" Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
                     <TextBlock Text="Доход за месяц" Margin="0,6" FontWeight="SemiBold" HorizontalAlignment="Center"/>
-                    <TextBlock Text="85" FontSize="22" FontWeight="Bold" HorizontalAlignment="Center"/>
+                    <TextBlock Text="{Binding IncomePerMonth, StringFormat='{}{0} ₽'}" FontSize="22" FontWeight="Bold" HorizontalAlignment="Center"/>
                 </StackPanel>
             </materialDesign:Card>
             <materialDesign:Card Margin="4" Padding="16" UniformCornerRadius="12" Grid.Column="1">
@@ -112,7 +112,7 @@
                 <StackPanel HorizontalAlignment="Center">
                     <materialDesign:PackIcon Kind="ChartLine" Width="32" Height="32" HorizontalAlignment="Center" Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
                     <TextBlock Text="Загруженность сегодня" Margin="0,6" FontWeight="SemiBold" HorizontalAlignment="Center"/>
-                    <TextBlock Text="{Binding WorkloadPercent}" FontSize="22" FontWeight="Bold" HorizontalAlignment="Center"/>
+                    <TextBlock Text="{Binding WorkloadPercent, StringFormat='{}{0:P0}'}" FontSize="22" FontWeight="Bold" HorizontalAlignment="Center"/>
                 </StackPanel>
             </materialDesign:Card>
         </Grid>
@@ -182,7 +182,7 @@
 
             <materialDesign:Card Grid.Column="0" Padding="16" UniformCornerRadius="12" Margin="4">
                 <StackPanel>
-                    <TextBlock Text="Ближайшие приёмы" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,20"/>
+                    <TextBlock Text="Ближайшие приемы" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,20"/>
 
                     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                         <Grid>

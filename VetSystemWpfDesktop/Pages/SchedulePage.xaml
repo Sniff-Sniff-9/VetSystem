@@ -87,111 +87,174 @@
 
             <!-- ПРАВАЯ КОЛОНКА -->
 
-            <materialDesign:Card Grid.Column="2"
-                     Padding="24"
-                     UniformCornerRadius="16"
-                     HorizontalAlignment="Stretch">
-
+            <materialDesign:Card Grid.Column="2" Padding="28" UniformCornerRadius="20" HorizontalAlignment="Stretch">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
-                        <!-- Заголовок карточки -->
-                        <RowDefinition Height="Auto"/>
-                        <!-- Заголовки колонок -->
                         <RowDefinition Height="*"/>
-                        <!-- Список -->
                         <RowDefinition Height="Auto"/>
-                        <!-- Кнопки -->
                     </Grid.RowDefinitions>
 
                     <!-- Заголовок -->
-                    <TextBlock Grid.Row="0"
-                   Text="Шаблонное расписание"
-                   FontSize="22"
-                   FontWeight="SemiBold"
-                   Margin="0,0,0,16"/>
+                    <TextBlock Text="Шаблонное расписание" FontSize="24" FontWeight="SemiBold" Margin="0,0,0,20"/>
 
-                    <!-- Заголовки колонок -->
-                    <Grid Grid.Row="1" HorizontalAlignment="Stretch">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="160"/>
-                            <ColumnDefinition Width="90"/>
-                            <ColumnDefinition Width="30"/>
-                            <ColumnDefinition Width="90"/>
-                            <ColumnDefinition Width="90"/>
-                            <ColumnDefinition Width="30"/>
-                            <ColumnDefinition Width="90"/>
-                        </Grid.ColumnDefinitions>
+                    <Grid Grid.Row="1" VerticalAlignment="Center">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="180"/>
+                                <!-- День недели -->
+                                <ColumnDefinition Width="1.5*"/>
+                                <!-- Начало рабочего дня -->
+                                <ColumnDefinition Width="30"/>
+                                <!-- тире -->
+                                <ColumnDefinition Width="1.5*"/>
+                                <!-- Конец рабочего дня -->
+                                <ColumnDefinition Width="40"/>
+                                <!-- отступ между блоками -->
+                                <ColumnDefinition Width="1.5*"/>
+                                <!-- Начало обеда -->
+                                <ColumnDefinition Width="30"/>
+                                <!-- тире -->
+                                <ColumnDefinition Width="1.5*"/>
+                                <!-- Конец обеда -->
+                            </Grid.ColumnDefinitions>
 
-                       
-                        <TextBlock Grid.Column="1" Grid.ColumnSpan="3" Text="Рабочее время"
-                       HorizontalAlignment="Center" FontWeight="SemiBold" FontSize="15"/>
-                        <TextBlock Grid.Column="4" Grid.ColumnSpan="3" Text="Обеденное время"
-                       HorizontalAlignment="Center" FontWeight="SemiBold" FontSize="15"/>
+                            <TextBlock Grid.Column="0" 
+                                       Text="" 
+                                       VerticalAlignment="Center" 
+                                       FontWeight="SemiBold" 
+                                       FontSize="15"/>
+
+                            <StackPanel Grid.Column="1" 
+                            Grid.ColumnSpan="3" 
+                            Orientation="Horizontal" 
+                            HorizontalAlignment="Center" 
+                            VerticalAlignment="Center" Margin="0,0,0,10">
+                                <materialDesign:PackIcon Kind="Clock" 
+                                             Width="20" 
+                                             Height="20" 
+                                             Margin="0,0,8,0"
+                                             Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
+                                <TextBlock Text="Рабочее время" 
+                               FontWeight="SemiBold" 
+                               FontSize="15"/>
+                            </StackPanel>
+
+                            <!-- Обеденное время + иконка слева -->
+                            <StackPanel Grid.Column="5" 
+                            Grid.ColumnSpan="3" 
+                            Orientation="Horizontal" 
+                            HorizontalAlignment="Center" 
+                            VerticalAlignment="Center" Margin="0,0,0,10">
+                                <materialDesign:PackIcon Kind="Restaurant" 
+                                             Width="20" 
+                                             Height="20" 
+                                             Margin="0,0,8,0"
+                                             Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
+                                <TextBlock Text="Обеденное время" 
+                               FontWeight="SemiBold" 
+                               FontSize="15"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- СПИСОК РАСПИСАНИЯ (исправленная сетка в шаблоне) -->
+                        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                            <ItemsControl x:Name="ScheduleList" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Padding="8" Margin="0,4,0,4" Background="Transparent">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="180"/>
+                                                    <!-- День недели -->
+                                                    <ColumnDefinition Width="1.5*"/>
+                                                    <!-- Начало рабочего дня -->
+                                                    <ColumnDefinition Width="30"/>
+                                                    <!-- тире -->
+                                                    <ColumnDefinition Width="1.5*"/>
+                                                    <!-- Конец рабочего дня -->
+                                                    <ColumnDefinition Width="40"/>
+                                                    <!-- отступ -->
+                                                    <ColumnDefinition Width="1.5*"/>
+                                                    <!-- Начало обеда -->
+                                                    <ColumnDefinition Width="30"/>
+                                                    <!-- тире -->
+                                                    <ColumnDefinition Width="1.5*"/>
+                                                    <!-- Конец обеда -->
+                                                </Grid.ColumnDefinitions>
+
+                                                <TextBlock Grid.Column="0" 
+                       Text="{Binding DayOfWeek}" 
+                       VerticalAlignment="Center" 
+                       FontWeight="SemiBold" 
+                       FontSize="15"/>
+
+                                                <TextBox Grid.Column="1" 
+                     Height="36" 
+                     FontSize="14" 
+                     Text="{Binding StartTime, Converter={StaticResource WorkdayTimeConverter}}" 
+                     materialDesign:HintAssist.Hint="08:00" 
+                     IsReadOnly="True"/>
+
+                                                <TextBlock Grid.Column="2" 
+                       Text="-" 
+                       VerticalAlignment="Center" 
+                       HorizontalAlignment="Center" 
+                       FontSize="24"/>
+
+                                                <TextBox Grid.Column="3" 
+                     Height="36" 
+                     FontSize="14" 
+                     Text="{Binding EndTime, Converter={StaticResource WorkdayTimeConverter}}" 
+                     materialDesign:HintAssist.Hint="17:00" 
+                     IsReadOnly="True"/>
+
+                                                <!-- пустая колонка-отступ -->
+
+                                                <TextBox Grid.Column="5" 
+                     Height="36" 
+                     FontSize="14" 
+                     Text="{Binding LunchStart, Converter={StaticResource WorkdayTimeConverter}}" 
+                     materialDesign:HintAssist.Hint="12:00" 
+                     IsReadOnly="True"/>
+
+                                                <TextBlock Grid.Column="6" 
+                       Text="-" 
+                       VerticalAlignment="Center" 
+                       HorizontalAlignment="Center" 
+                       FontSize="24"/>
+
+                                                <TextBox Grid.Column="7" 
+                     Height="36" 
+                     FontSize="14" 
+                     Text="{Binding LunchEnd, Converter={StaticResource WorkdayTimeConverter}}" 
+                     materialDesign:HintAssist.Hint="13:00" 
+                     IsReadOnly="True"/>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
                     </Grid>
 
-                    <!-- Список -->
-                    <ScrollViewer Grid.Row="2"
-                      HorizontalScrollBarVisibility="Auto"
-                      VerticalScrollBarVisibility="Auto"
-                      VerticalAlignment="Stretch">
-                        <ItemsControl x:Name="ScheduleList"
-                          FontSize="15"
-                          HorizontalAlignment="Stretch"
-                          HorizontalContentAlignment="Stretch">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Border Padding="6" Margin="0,4,0,4" Background="Transparent">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="160"/>
-                                                <ColumnDefinition Width="90"/>
-                                                <ColumnDefinition Width="30"/>
-                                                <ColumnDefinition Width="90"/>
-                                                <ColumnDefinition Width="90"/>
-                                                <ColumnDefinition Width="30"/>
-                                                <ColumnDefinition Width="90"/>
-                                            </Grid.ColumnDefinitions>
-
-                                            <TextBlock Text="{Binding DayOfWeek}" VerticalAlignment="Center" FontWeight="SemiBold" FontSize="15"/>
-                                            <TextBox Grid.Column="1" Height="34" Margin="4,0"
-                                         Text="{Binding StartTime, Converter={StaticResource WorkdayTimeConverter}}"
-                                         materialDesign:HintAssist.Hint="08:00" IsReadOnly="True"/>
-                                            <TextBlock Grid.Column="2" Text="-" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="15"/>
-                                            <TextBox Grid.Column="3" Height="34" Margin="4,0"
-                                         Text="{Binding EndTime, Converter={StaticResource WorkdayTimeConverter}}"
-                                         materialDesign:HintAssist.Hint="17:00" IsReadOnly="True"/>
-                                            <TextBox Grid.Column="4" Height="34" Margin="12,0,0,0"
-                                         Text="{Binding LunchStart, Converter={StaticResource WorkdayTimeConverter}}"
-                                         materialDesign:HintAssist.Hint="12:00" IsReadOnly="True"/>
-                                            <TextBlock Grid.Column="5" Text="-" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="15"/>
-                                            <TextBox Grid.Column="6" Height="34" Margin="4,0"
-                                         Text="{Binding LunchEnd, Converter={StaticResource WorkdayTimeConverter}}"
-                                         materialDesign:HintAssist.Hint="13:00" IsReadOnly="True"/>
-                                        </Grid>
-                                    </Border>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </ScrollViewer>
-
-                    <!-- Кнопки -->
-                    <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0,24,0,0" VerticalAlignment="Bottom">
-                        <Button Style="{StaticResource MaterialDesignRaisedButton}" Foreground="White" Margin="0,0,10,0">
+                    <!-- Кнопки (оставлены без изменений) -->
+                    <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,28,0,0">
+                        <Button Style="{StaticResource MaterialDesignRaisedButton}" Foreground="White" Margin="0,0,12,0">
                             <StackPanel Orientation="Horizontal">
-                                <materialDesign:PackIcon Kind="Pencil"/>
-                                <TextBlock Text="Редактировать шаблон" Margin="6,0,0,0"/>
+                                <TextBlock Text="Редактировать шаблон" Margin="8,0,0,0"/>
                             </StackPanel>
                         </Button>
-
                         <Button Style="{StaticResource MaterialDesignOutlinedButton}">
                             <StackPanel Orientation="Horizontal">
-                                <materialDesign:PackIcon Kind="CalendarRemove"/>
-                                <TextBlock Text="Добавить исключение" Margin="6,0,0,0"/>
+                                <TextBlock Text="Добавить исключение" Margin="8,0,0,0"/>
                             </StackPanel>
                         </Button>
                     </StackPanel>
-
                 </Grid>
             </materialDesign:Card>
 

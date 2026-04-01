@@ -8,7 +8,9 @@ namespace VetSystemModels.Dto.Appointment
 {
     public class CreateUpdateAppointmentDto
     {
-        public int EmployeeServiceId { get; set; }
+        public int EmployeeId { get; set; }
+
+        public int ServiceId { get; set; }
 
         public int PetId { get; set; }
 

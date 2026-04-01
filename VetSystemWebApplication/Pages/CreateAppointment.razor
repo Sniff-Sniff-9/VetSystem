@@ -420,16 +420,19 @@
         StateHasChanged();
     }
 
-    // ====================== НАВИГАЦИЯ ======================
     private void PreviousStep()
     {
         if (_step > 0) _step--;
     }
 
-    private void NextStep()
+    private async void NextStep()
     {
         if (!CanGoNext()) return;
         _step++;
+        if (_step == 4) 
+        {
+            await CreateAppointmentAsync();
+        }
     }
 
     private bool CanGoNext()
@@ -447,5 +450,11 @@
     private string GetNextButtonText()
     {
         return _step == 4 ? "Создать запись" : "Далее";
+    }
+
+    private async Task CreateAppointmentAsync()
+    {
+        await AppointmentsService.CreateAppointmentAsync(DateOnly.FromDateTime(SelectedDate ?? new()), SelectedEmployee, SelectedService, SelectedPet,
+            SelectedSlot ?? new());
     }
 }

@@ -74,16 +74,21 @@ namespace VetSystemApi.Services
             if (!petExists)
                 throw new ArgumentException("Pet doesn't exist.");
 
-            var employeeService = await _context.EmployeeServices
-                .Include(es => es.Service)
-                .FirstOrDefaultAsync(es => es.EmployeeServiceId == appointmentDto.EmployeeServiceId);
+            var employee = await _context.Employees
+                .FirstOrDefaultAsync(es => es.EmployeeId == appointmentDto.EmployeeId);
 
-            if (employeeService == null)
-                throw new ArgumentException("Invalid EmployeeService.");
+            if (employee == null)
+                throw new ArgumentException("Invalid Employee.");
+
+            var service = await _context.Services
+                .FirstOrDefaultAsync(es => es.ServiceId == appointmentDto.ServiceId);
+
+            if (service == null)
+                throw new ArgumentException("Invalid Service.");
 
             var scheduleAvailabilityDto = new ScheduleAvailabilityDto
             {
-                EmployeeId = employeeService.EmployeeId,
+                EmployeeId = employee.EmployeeId,
                 ScheduleAvailabilityDate = appointmentDto.AppointmentDate
             };
 
@@ -94,12 +99,12 @@ namespace VetSystemApi.Services
 
             var appointment = new Appointment
             {
-                EmployeeId = employeeService.EmployeeId,
+                EmployeeId = employee.EmployeeId,
                 PetId = appointmentDto.PetId,
                 AppointmentDate = appointmentDto.AppointmentDate,
                 StartTime = appointmentDto.StartTime,
                 EndTime = appointmentDto.StartTime.Add(
-                    TimeSpan.FromMinutes(employeeService.Service.DurationMinutes)),
+                    TimeSpan.FromMinutes(service.DurationMinutes)),
                 AppointmentStatusId = appointmentDto.AppointmentStatusId
             };
 
@@ -111,7 +116,7 @@ namespace VetSystemApi.Services
                 var appointmentServiceDto = new CreateAppointmentServiceDto
                 {
                     AppointmentId = appointment.AppointmentId,
-                    ServiceId = employeeService.ServiceId,
+                    ServiceId = service.ServiceId,
                     IsMain = true
                 };
 
@@ -138,30 +143,35 @@ namespace VetSystemApi.Services
             if (appointment == null)
                 throw new ArgumentException("Appointment not found.");
 
-            var employeeService = await _context.EmployeeServices
-                .Include(es => es.Service)
-                .FirstOrDefaultAsync(es => es.EmployeeServiceId == appointmentDto.EmployeeServiceId);
+            var employee = await _context.Employees
+                .FirstOrDefaultAsync(es => es.EmployeeId == appointmentDto.EmployeeId);
 
-            if (employeeService == null)
-                throw new ArgumentException("Invalid EmployeeService.");
+            if (employee == null)
+                throw new ArgumentException("Invalid Employee.");
+
+            var service = await _context.Services
+                .FirstOrDefaultAsync(es => es.ServiceId == appointmentDto.ServiceId);
+
+            if (service == null)
+                throw new ArgumentException("Invalid Service.");
 
             var scheduleAvailabilityDto = new ScheduleAvailabilityDto
             {
-                EmployeeId = employeeService.EmployeeId,
+                EmployeeId = employee.EmployeeId,
                 ScheduleAvailabilityDate = appointmentDto.AppointmentDate
             };
 
             var availableSlots = await _scheduleAvailabilityService.GetAvailableSlotsAsync(scheduleAvailabilityDto);
 
-            if (!availableSlots.Contains(appointmentDto.StartTime))
+            if (!availableSlots.Contains(appointmentDto.StartTime) || appointment.StartTime != appointmentDto.StartTime)
                 throw new ArgumentException("Selected time is not available.");
 
             appointment.PetId = appointmentDto.PetId;
-            appointment.EmployeeId = employeeService.EmployeeId;
+            appointment.EmployeeId = employee.EmployeeId;
             appointment.AppointmentDate = appointmentDto.AppointmentDate;
             appointment.StartTime = appointmentDto.StartTime;
             appointment.EndTime = appointmentDto.StartTime.Add(
-                TimeSpan.FromMinutes(employeeService.Service.DurationMinutes));
+                TimeSpan.FromMinutes(service.DurationMinutes));
             appointment.AppointmentStatusId = appointmentDto.AppointmentStatusId;
 
             appointment.TotalPriceAtMoment = appointment.AppointmentServices

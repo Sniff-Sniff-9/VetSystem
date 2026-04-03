@@ -6,6 +6,7 @@ using VetSystemModels.Dto.Service;
 using VetSystemModels.Dto.Employee ;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using VetSystemModels.Dto.Pet;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
 namespace VetSystemWebApplication.Services
 {
@@ -34,6 +35,12 @@ namespace VetSystemWebApplication.Services
 
             return await _httpClient.GetFromJsonAsync<List<AppointmentDto>>("Client/Appointments") ?? new();
         }
+
+        public async Task DeleteAppointmentAsync(int id)
+        {
+            await _httpClient.DeleteAsync($"Appointments/{id}");
+        }
+
         public async Task<List<TimeOnly>?> GetAvailableSlotsAsync(int id, DateOnly date)
         {
             var formattedDate = date.ToString("yyyy-MM-dd");

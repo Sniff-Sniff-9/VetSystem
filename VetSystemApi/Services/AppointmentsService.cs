@@ -43,7 +43,7 @@ namespace VetSystemApi.Services
         {
             var appointments = await _context.Appointments.Include(a => a.Pet).Include(a => a.Pet.Client).Include(a => a.Employee)
                 .Include(a => a.AppointmentStatus).Include(a => a.AppointmentServices).ThenInclude(aps => aps.Service)
-                .Where(a => a.Pet.ClientId == id).ToListAsync();
+                .Where(a => a.Pet.Client.UserId == id).ToListAsync();
             return appointments.Select(s => ToAppointmentDto(s)).ToList();
         }
 

@@ -60,7 +60,7 @@
                                                         <MudIcon Icon="@Icons.Material.Filled.Cake"
                                                                  Size="Size.Small" Color="Color.Default" Class="mr-2" />
                                                         <MudText Size="Size.Small">
-                                                            @p.BirthDate.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("ru-RU"))
+                                                            @p.BirthDate.ToString("d MMMM yyyy", new System.Globalization.CultureInfo("ru-RU"))
                                                         </MudText>
                                                     </div>
                                                 </MudStack>
@@ -248,7 +248,7 @@
                                 <div class="d-flex align-center gap-1">
                                     <MudIcon Icon="@Icons.Material.Filled.Cake" Size="Size.Small" Color="Color.Default" />
                                     <MudText Typo="Typo.body2">
-                                        @SelectedPet.BirthDate.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("ru-RU"))
+                                        @SelectedPet.BirthDate.ToString("d MMMM yyyy", new System.Globalization.CultureInfo("ru-RU"))
                                     </MudText>
                                 </div>
                             </MudStack>
@@ -272,7 +272,7 @@
                                 <div class="d-flex flex-wrap gap-2 align-center">
                                     <MudIcon Icon="@Icons.Material.Filled.CalendarToday" Size="Size.Small" Color="Color.Primary" Class="mr-1" />
                                     <MudText Typo="Typo.subtitle1" Class="fw-semibold">
-                                        @SelectedDate?.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("ru-RU"))
+                                        @SelectedDate?.ToString("d MMMM yyyy", new System.Globalization.CultureInfo("ru-RU"))
                                     </MudText>
                                     <MudText Typo="Typo.subtitle1">@SelectedSlot?.ToString("HH:mm")</MudText>
                                 </div>
@@ -310,6 +310,42 @@
 
                 </MudStack>
 
+            </MudStep>
+            
+            <MudStep>
+                <MudStack Spacing="3">
+                    <MudText Typo="Typo.h6" Class="mb-1">Готовность</MudText>
+
+                    <MudPaper Elevation="0" 
+                                  Style="background: #E3F2FD; border-radius: 16px;" 
+                                  Class="pa-6">
+    
+                            <MudCard Elevation="2" 
+                                     Outlined="false"
+                                 Style="border-radius: 16px; max-width: 420px; overflow: hidden;"
+                                 Class="mx-auto my-2 text-center pa-4">
+
+                            <MudIcon Icon="@Icons.Material.Filled.CheckCircle"
+                                     Size="Size.Large"
+                                     Color="Color.Primary"
+                                     Style="font-size: 92px; margin: 24px auto 0 auto; display: block;" />
+        
+                            <MudText Typo="Typo.h5" 
+                                     Class="mt-6 mb-3 font-weight-medium">
+                                Запись создана
+                            </MudText>
+        
+                            <MudText Typo="Typo.body1" 
+                                     Color="Color.Primary" 
+                                     Class="mb-8 px-6">
+                                Ваша запись успешно создана.<br>
+                                Информация о визите доступна в личном кабинете.
+                            </MudText>
+        
+                        </MudCard>
+                    </MudPaper>
+                    
+                </MudStack>
             </MudStep>
 
         </MudStepper>
@@ -429,7 +465,7 @@
     {
         if (!CanGoNext()) return;
         _step++;
-        if (_step == 4) 
+        if (_step == 5) 
         {
             await CreateAppointmentAsync();
         }
@@ -439,7 +475,7 @@
     {
         return _step switch
         {
-            0 => SelectedPet.PetId != 0,           // теперь правильно
+            0 => SelectedPet.PetId != 0,           
             1 => SelectedService.ServiceId != 0,
             2 => SelectedDate.HasValue && SelectedSlot.HasValue,
             3 => SelectedEmployee.EmployeeId != 0,

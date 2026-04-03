@@ -3,6 +3,7 @@
 @using VetSystemModels.Dto.Pet
 @inject Services.PetsService PetsService
 @inject NavigationManager NavigationManager
+@inject IDialogService DialogService
 
 <MudContainer MaxWidth="MaxWidth.False"
               Class="pt-2 px-3 px-md-6"
@@ -15,7 +16,8 @@
                        Color="Color.Primary"
                        Size="Size.Medium"
                        StartIcon="@Icons.Material.Filled.Add"
-                       Class="mx-4 mt-4">
+                       Class="mx-4 mt-4"
+            OnClick="@AddPet">
                 Добавить питомца
             </MudButton>
 
@@ -24,7 +26,7 @@
             </MudText>
 
             <MudPaper Elevation="0"
-                      Class="mx-4 mb-4"
+                      Class="mx-4 mb-4 pa-2"
                       Style="background:#E3F2FD; border-radius:12px;">
 
                 @if (isLoading)
@@ -45,7 +47,7 @@
                             <MudListItem>
                                 <MudCard Elevation="1"
                                          Outlined="false"
-                                         Class="mb-2 mt-2"
+                                      
                                          Style="border-radius: 12px; overflow: hidden;">
 
                                         <MudCardContent Class="pa-4">
@@ -80,7 +82,7 @@
                                                              Color="Color.Default"
                                                              Class="mr-2" />
                                                     <MudText Size="Size.Small">
-                                                        @p.BirthDate.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("ru-RU"))
+                                                        @p.BirthDate.ToString("d MMMM yyyy", new System.Globalization.CultureInfo("ru-RU"))
                                                     </MudText>
                                                 </div>
 
@@ -131,5 +133,28 @@
             Console.WriteLine(ex.Message);
         }
         isLoading = false;
+    }
+
+    async Task AddPet()
+    {
+        var parameters = new DialogParameters
+    {
+        { "IsEdit", false }
+    };
+        parameters.Add("Pet", new CreateUpdatePetDto
+        {
+            BirthDate = DateOnly.FromDateTime(DateTime.Today)
+        });
+
+        var dialog = await DialogService.ShowAsync<AddEditPetDialog>("Добавить питомца", parameters);
+
+        var result = await dialog.Result;
+
+        if (result != null && !result.Canceled && result.Data is CreateUpdatePetDto pet)
+        {
+            await PetsService.CreatePetAsync(pet);
+
+            ClientPets = await PetsService.GetPetsAsync();
+        }
     }
 }

@@ -95,7 +95,7 @@
                                 <StackPanel Orientation="Horizontal">
                                     <materialDesign:PackIcon Kind="Dog"
                                                              Margin="0,0,8,0"/>
-                                    <TextBlock Text="Пациенты"/>
+                                    <TextBlock Text="Питомцы"/>
                                 </StackPanel>
 
                             </Button>

@@ -5,6 +5,8 @@
 @inject Services.AppointmentsService AppointmentsService
 @inject Services.ClientsService ClientsService
 @inject NavigationManager NavigationManager
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
 
 <MudContainer MaxWidth="MaxWidth.False" Class="pt-2 px-4"
               Style="background: linear-gradient(109.6deg, #E3F2FD 0%, #BBDEFB 100%); min-height:100vh;">
@@ -35,7 +37,7 @@
             </MudText>
 
             <MudPaper Elevation="0"
-                      Class="mx-4 mb-4"
+                      Class="mx-4 mb-4 pa-2"
                       Style="background:#E3F2FD; border-radius:12px;">
 
                 @if (isLoading)
@@ -56,13 +58,12 @@
                             <MudListItem>
                                 <MudCard Elevation="1"
                                          Outlined="false"
-                                         Class="mb-2 mt-2"
+                             
                                          Style="border-radius: 12px; overflow: hidden;">
 
                                     <MudCardContent Class="pa-4">
                                         <MudStack Spacing="2">
 
-                                            <!-- Верхняя строка: Питомец + статус (если есть) -->
                                             <div class="d-flex align-center justify-space-between flex-wrap">
                                                 <div class="d-flex align-center flex-wrap">
                                                     <MudIcon Icon="@Icons.Material.Filled.Pets"
@@ -94,7 +95,7 @@
                                                              Color="Color.Default"
                                                              Class="mr-2" />
                                                     <MudText Size="Size.Small">
-                                                        @appointment.AppointmentDate.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("ru-RU"))
+                                                        @appointment.AppointmentDate.ToString("d MMMM yyyy", new System.Globalization.CultureInfo("ru-RU"))
                                                     </MudText>
                                                 </div>
 
@@ -118,7 +119,8 @@
                                             <MudButton Variant="Variant.Text"
                                                        Color="Color.Error"
                                                        StartIcon="@Icons.Material.Filled.EventBusy"
-                                                       Class="ml-auto">
+                                                       Class="ml-auto"
+                                                       OnClick="@(()=> DeleteAppointmentButton(appointment.AppointmentId))">
                                                 Отменить
                                             </MudButton>
                                         }
@@ -176,5 +178,32 @@
     protected void CreateAppointmentClick()
     {
         NavigationManager.NavigateTo("/appointment/create");
+    }
+
+    private async Task DeleteAppointmentButton(int id)
+    {
+        var result = await DialogService.ShowMessageBox(
+            "Отмена записи",
+            "Вы действительно хотите отменить эту запись?",
+            yesText: "Да",
+            cancelText: "Нет",
+            options: new DialogOptions { MaxWidth = MaxWidth.ExtraSmall });
+
+        if (result != true)
+            return;
+
+        try
+        {
+            await AppointmentsService.DeleteAppointmentAsync(id);
+
+            Snackbar.Add("Запись успешно отменена", Severity.Success);
+
+            Appointments = await AppointmentsService.GetAppointmentsByClientIdAsync();
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Ошибка при отмене записи: {ex.Message}", Severity.Error);
+        }
     }
 }

@@ -142,15 +142,15 @@
                     <!-- HEADER -->
                     <Grid Margin="8,0,8,6">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="2*"/>
-                            <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width="2*"/>
-                            <ColumnDefinition Width="2*"/>
-                            <ColumnDefinition Width="2*"/>
-                            <ColumnDefinition Width="2*"/>
-                            <ColumnDefinition Width="3*"/>
-                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="150"/>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition Width="180"/>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition Width="190"/>
+                            <ColumnDefinition Width="100"/>
                             <ColumnDefinition Width="150"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="Дата" FontWeight="SemiBold"/>
@@ -158,9 +158,9 @@
                         <TextBlock Text="Конец" Grid.Column="2" FontWeight="SemiBold"/>
                         <TextBlock Text="Услуга" Grid.Column="3" FontWeight="SemiBold"/>
                         <TextBlock Text="Специалист" Grid.Column="4" FontWeight="SemiBold"/>
-                        <TextBlock Text="Питомец" Grid.Column="5" FontWeight="SemiBold" Margin="20,0,0,0"/>
+                        <TextBlock Text="Питомец" Grid.Column="5" FontWeight="SemiBold"/>
                         <TextBlock Text="Клиент" Grid.Column="6" FontWeight="SemiBold"/>
-                        <TextBlock Text="Статус" Grid.Column="7" FontWeight="SemiBold" Margin="50,0,0,0"/>
+                        <TextBlock Text="Статус" Grid.Column="7" FontWeight="SemiBold"/>
                         <TextBlock Text="Цена" Grid.Column="8" FontWeight="SemiBold"/>
                         <TextBlock Text="Действия" Grid.Column="9" FontWeight="SemiBold" HorizontalAlignment="Center"/>
                     </Grid>
@@ -245,15 +245,15 @@
                                 <Border BorderBrush="#E0E0E0" BorderThickness="0,0,0,1">
                                     <Grid Margin="8,8">
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="2*"/>
-                                            <ColumnDefinition Width="1*"/>
-                                            <ColumnDefinition Width="1*"/>
-                                            <ColumnDefinition Width="2*"/>
-                                            <ColumnDefinition Width="2*"/>
-                                            <ColumnDefinition Width="2*"/>
-                                            <ColumnDefinition Width="2*"/>
-                                            <ColumnDefinition Width="3*"/>
-                                            <ColumnDefinition Width="2*"/>
+                                            <ColumnDefinition Width="150"/>
+                                            <ColumnDefinition Width="100"/>
+                                            <ColumnDefinition Width="100"/>
+                                            <ColumnDefinition Width="200"/>
+                                            <ColumnDefinition Width="180"/>
+                                            <ColumnDefinition Width="100"/>
+                                            <ColumnDefinition Width="200"/>
+                                            <ColumnDefinition Width="190"/>
+                                            <ColumnDefinition Width="100"/>
                                             <ColumnDefinition Width="150"/>
                                         </Grid.ColumnDefinitions>
 
@@ -265,18 +265,18 @@
                                         <TextBlock Grid.Column="2" Text="{Binding EndTime, StringFormat=HH:mm}" VerticalAlignment="Center"/>
                                         <TextBlock Grid.Column="3" Text="{Binding ServiceName}" VerticalAlignment="Center"/>
                                         <TextBlock Grid.Column="4" Text="{Binding EmployeeName}" VerticalAlignment="Center"/>
-                                        <TextBlock Grid.Column="5" Text="{Binding PetName}" VerticalAlignment="Center" Margin="20,0,0,0"/>
+                                        <TextBlock Grid.Column="5" Text="{Binding PetName}" VerticalAlignment="Center"/>
                                         <TextBlock Grid.Column="6" Text="{Binding ClientName}" VerticalAlignment="Center"/>
                                         <Border Grid.Column="7" 
                                                 Style="{StaticResource StatusChip}"
-                                                HorizontalAlignment="Left" Height="30" Margin="50,0,0,0">
+                                                HorizontalAlignment="Left" Height="30">
 
                                             <TextBlock Text="{Binding AppointmentStatusName}"
                                                        Margin="4,0"
                                                        VerticalAlignment="Center"
                                                        FontWeight="SemiBold"/>
                                         </Border>
-                                        <TextBlock Grid.Column="8" Text="{Binding TotalPriceAtMoment, StringFormat=C}" VerticalAlignment="Center"/>
+                                        <TextBlock Grid.Column="8" Text="{Binding TotalPriceAtMoment, StringFormat='{}{0} ₽'}" VerticalAlignment="Center"/>
 
                                         <!-- ACTIONS -->
                                         <StackPanel Grid.Column="9" Orientation="Horizontal" HorizontalAlignment="Center">

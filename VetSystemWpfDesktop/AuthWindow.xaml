@@ -8,7 +8,8 @@
         mc:Ignorable="d"
         Title="Ветеринарная Система" Height="450" Width="800" ResizeMode="NoResize"
         Style="{StaticResource MaterialDesignWindow}"
-        Background="{DynamicResource MaterialDesign.Brush.Background}">
+        Background="White"
+    >
     <Grid>
         <Grid>
 
@@ -47,11 +48,11 @@
             <Grid Grid.Column="1">
                 <materialDesign:Card Width="380"
                                  Padding="36"
-                                 Background="{DynamicResource MaterialDesign.Brush.Surface}"
+                                 
                                  HorizontalAlignment="Center"
                                  VerticalAlignment="Center"
                                  UniformCornerRadius="24"
-                                 materialDesign:ElevationAssist.Elevation="Dp6">
+                                 materialDesign:ElevationAssist.Elevation="Dp0">
 
                     <StackPanel>
 

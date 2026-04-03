@@ -1,0 +1,110 @@
+﻿@using MudBlazor
+@using VetSystemModels.Dto.Pet
+@using VetSystemModels.Entities
+@using VetSystemWebApplication.Services
+@inject PetsService PetsService
+
+<MudDialog>
+
+    <DialogContent>
+
+        <MudText Typo="Typo.h6" Class="mb-3">
+            @(IsEdit ? "Редактирование питомца" : "Новый питомец")
+        </MudText>
+
+        <MudTextField Label="Имя"
+                      @bind-Value="Pet.Name"
+                      Required="true" />
+
+        <MudTextField Label="Порода"
+                      @bind-Value="Pet.Breed" />
+
+        <MudSelect T="int"
+                   Label="Вид"
+                   @bind-Value="Pet.SpeciesId">
+
+            @foreach (var species in Species)
+            {
+                <MudSelectItem Value="@species.SpeciesId">
+                    @species.SpeciesName
+                </MudSelectItem>
+            }
+
+        </MudSelect>
+
+        <MudSelect T="int"
+                   Label="Пол"
+                   @bind-Value="Pet.GenderId">
+
+            @foreach (var gender in Genders)
+            {
+                <MudSelectItem Value="@gender.GenderId">
+                    @gender.GenderName
+                </MudSelectItem>
+            }
+
+        </MudSelect>
+
+        <MudDatePicker Label="Дата рождения"
+                       @bind-Date="BirthDate"
+                       MaxDate="@DateTime.Today.AddDays(1)"/>
+
+    </DialogContent>
+
+    <DialogActions>
+
+        <MudButton Color="Color.Default"
+                   OnClick="Cancel">
+            Отмена
+        </MudButton>
+
+        <MudButton Color="Color.Primary"
+                   Variant="Variant.Filled"
+                   OnClick="Save">
+            @(IsEdit ? "Сохранить" : "Добавить")
+        </MudButton>
+
+    </DialogActions>
+
+</MudDialog>
+
+@code {
+    private DateTime? BirthDate
+    {
+        get => Pet.BirthDate.ToDateTime(TimeOnly.MinValue) ;
+    set
+        {
+            if (value.HasValue)
+                Pet.BirthDate = DateOnly.FromDateTime(value.Value);
+        }
+    }
+
+    [CascadingParameter]
+    public IMudDialogInstance? MudDialog { get; set; }
+
+    [Parameter]
+    public CreateUpdatePetDto Pet { get; set; } = new();
+
+    public List<Species> Species = new();
+
+    public List<Gender> Genders = new();
+
+    [Parameter]
+    public bool IsEdit { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Species = await PetsService.GetSpeciesAsync();
+        Genders = await PetsService.GetGendersAsync();
+    }
+
+    void Cancel()
+    {
+        MudDialog?.Cancel();
+    }
+
+    void Save()
+    {
+        MudDialog?.Close(DialogResult.Ok(Pet));
+    }
+}

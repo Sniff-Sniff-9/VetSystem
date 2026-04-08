@@ -3,7 +3,8 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using VetSystemModels.Dto.Appointment;
 using VetSystemModels.Dto.Service;
-using VetSystemModels.Dto.Employee ;
+using VetSystemModels.Dto.Employee;
+using VetSystemModels.Entities;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using VetSystemModels.Dto.Pet;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
@@ -34,6 +35,12 @@ namespace VetSystemWebApplication.Services
             }
 
             return await _httpClient.GetFromJsonAsync<List<AppointmentDto>>("Client/Appointments") ?? new();
+        }
+
+        public async Task<List<AppointmentStatus>> GetStatusesAsync()
+        {
+
+            return await _httpClient.GetFromJsonAsync<List<AppointmentStatus>>("AppointmentStatuses") ?? new();
         }
 
         public async Task DeleteAppointmentAsync(int id)

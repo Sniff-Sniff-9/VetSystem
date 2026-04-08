@@ -4,6 +4,7 @@
 @inject Services.PetsService PetsService
 @inject NavigationManager NavigationManager
 @inject IDialogService DialogService
+@inject ISnackbar Snackbar
 
 <MudContainer MaxWidth="MaxWidth.False"
               Class="pt-2 px-3 px-md-6"
@@ -92,14 +93,14 @@
                                     <MudCardActions Class="px-3 px-md-4 pb-3 pt-0 d-flex align-center justify-space-between flex-wrap">
                                             <MudButton Variant="Variant.Text"
                                                        Color="Color.Secondary"
-                                                       StartIcon="@Icons.Material.Filled.Edit">
+                                                   StartIcon="@Icons.Material.Filled.Edit" OnClick="@(()=> EditPet(p))">
                                                 Редактировать
                                             </MudButton>
 
                                             <MudButton Variant="Variant.Text"
                                                        Color="Color.Error"
                                                        StartIcon="@Icons.Material.Filled.Delete"
-                                                       Class="mt-sm-0">
+                                                   Class="mt-sm-0" OnClick="@(()=> DeletePetButton(p.PetId))">
                                                 Удалить
                                             </MudButton>
                                         </MudCardActions>
@@ -143,7 +144,9 @@
     };
         parameters.Add("Pet", new CreateUpdatePetDto
         {
-            BirthDate = DateOnly.FromDateTime(DateTime.Today)
+            BirthDate = DateOnly.FromDateTime(DateTime.Today),
+            GenderId = 0,
+            SpeciesId = 0 
         });
 
         var dialog = await DialogService.ShowAsync<AddEditPetDialog>("Добавить питомца", parameters);
@@ -155,6 +158,61 @@
             await PetsService.CreatePetAsync(pet);
 
             ClientPets = await PetsService.GetPetsAsync();
+        }
+    }
+
+    async Task EditPet(PetDto petDto)
+    {
+        var parameters = new DialogParameters
+    {
+        { "IsEdit", true },
+        { "Pet", new CreateUpdatePetDto
+            {
+                Name = petDto.Name,
+                Breed = petDto.Breed,
+                BirthDate = petDto.BirthDate,
+                SpeciesId = petDto.SpeciesId,
+                GenderId = petDto.GenderId
+            }
+        }
+    };
+
+        var dialog = await DialogService.ShowAsync<AddEditPetDialog>("Редактировать питомца", parameters);
+
+        var result = await dialog.Result;
+
+        if (result != null && !result.Canceled && result.Data is CreateUpdatePetDto pet)
+        {
+            await PetsService.UpdatePetAsync(petDto.PetId, pet);
+
+            ClientPets = await PetsService.GetPetsAsync();
+        }
+    }
+
+    private async Task DeletePetButton(int id)
+    {
+        var result = await DialogService.ShowMessageBox(
+            "Удаление питомца",
+            "Вы действительно хотите удалить питомца?",
+            yesText: "Да",
+            cancelText: "Нет",
+            options: new DialogOptions { MaxWidth = MaxWidth.ExtraSmall });
+
+        if (result != true)
+            return;
+
+        try
+        {
+            await PetsService.DeletePetAsync(id);
+
+            Snackbar.Add("Питомец успешно удален", Severity.Success);
+
+            ClientPets = await PetsService.GetPetsAsync();
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Ошибка при отмене записи: {ex.Message}", Severity.Error);
         }
     }
 }

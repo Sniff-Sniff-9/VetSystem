@@ -1,0 +1,281 @@
+﻿@page "/register"
+
+@layout Layout.EmptyLayout
+
+@using System.Text
+@using System.Text.Json
+@using VetSystemModels.Dto.User
+@using VetSystemModels.Dto.Client
+@inject HttpClient Http
+@inject NavigationManager Navigation
+@inject ILocalStorageService LocalStorage
+@inject ISnackbar Snackbar
+
+<PageTitle>Регистрация - Ветеринарная Система</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Small" Class="my-8 mt-md-12">
+    <MudPaper Elevation="3" Class="pa-8 pa-md-12">
+
+        <!-- Заголовок -->
+        <div class="d-flex flex-column align-center mb-8">
+            <MudText Typo="Typo.h4"
+                     Color="Color.Primary"
+                     Style="font-weight:700; text-align:center;">
+                Регистрация
+            </MudText>
+        </div>
+
+        <MudForm @ref="_form" @bind-IsValid="_isValid">
+
+            <!-- Блок: Данные аккаунта -->
+            <MudText Typo="Typo.h6" Class="mb-4">Данные аккаунта</MudText>
+
+            <MudGrid>
+
+                <MudItem xs="12">
+                    <MudTextField T="string"
+                                  Label="Имя пользователя"
+                                  @bind-Value="model.UserName"
+                                  Variant="Variant.Outlined"
+                                  Required="true"
+                                  
+                                  Adornment="Adornment.Start"
+                                  AdornmentIcon="@Icons.Material.Filled.Person"
+                                  Class="mb-4" />
+                </MudItem>
+
+                <MudItem xs="12">
+                    <MudTextField T="string"
+                                  Label="Эл. почта"
+                                  @bind-Value="model.Email"
+                                  Variant="Variant.Outlined"
+                                  Required="true"
+      
+                                  Adornment="Adornment.Start"
+                                  AdornmentIcon="@Icons.Material.Filled.Email"
+                                  Class="mb-4" />
+                </MudItem>
+
+                <MudItem xs="12">
+                    <MudTextField T="string"
+                                  Label="Пароль"
+                                  @bind-Value="model.Password"
+                                  Variant="Variant.Outlined"
+                                  InputType="InputType.Password"
+                                  Required="true"
+                                  RequiredError="Пароль обязателен"
+                                  Adornment="Adornment.Start"
+                                  AdornmentIcon="@Icons.Material.Filled.Lock"
+                                  Class="mb-4" />
+                </MudItem>
+
+            </MudGrid>
+
+            <MudDivider Class="my-6" />
+
+            <!-- Блок: Личная информация -->
+            <MudText Typo="Typo.h6" Class="mb-4">Личная информация</MudText>
+
+            <MudGrid>
+
+                <MudItem xs="12" md="6">
+                    <MudTextField T="string"
+                                  Label="Фамилия"
+                                  @bind-Value="model.LastName"
+                                  Variant="Variant.Outlined"
+                                  Required="true"
+                                  Class="mb-4" />
+                </MudItem>
+
+                <MudItem xs="12" md="6">
+                    <MudTextField T="string"
+                                  Label="Имя"
+                                  @bind-Value="model.FirstName"
+                                  Variant="Variant.Outlined"
+                                  Required="true"
+                                  Class="mb-4" />
+                </MudItem>
+
+                <MudItem xs="12" md="6">
+                    <MudTextField T="string"
+                                  Label="Отчество"
+                                  @bind-Value="model.MiddleName"
+                                  Required="true"
+                                  Variant="Variant.Outlined"
+                                  Class="mb-4" />
+                </MudItem>
+
+                <MudItem xs="12" md="6">
+                    <MudTextField T="string"
+                                  Label="Телефон"
+                                  @bind-Value="model.Phone"
+                                  Variant="Variant.Outlined"
+                                  Adornment="Adornment.Start"
+                                  Required="true"
+                                  AdornmentIcon="@Icons.Material.Filled.Phone"
+                                  Class="mb-4" />
+                </MudItem>
+
+                <MudItem xs="12">
+                    <MudDatePicker Label="Дата рождения"
+                                   @bind-Date="BirthDate"
+                                   Variant="Variant.Outlined"
+                                   Required="true"
+                                   Class="mb-4" />
+                </MudItem>
+
+            </MudGrid>
+
+            <!-- Кнопка -->
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       Size="Size.Large"
+                       FullWidth="true"
+                       Disabled="_isLoading"
+                       OnClick="SubmitForm"
+                       Class="mt-4 mb-3">
+                Зарегистрироваться
+            </MudButton>
+
+        </MudForm>
+
+        <!-- Ошибка -->
+        @if (!string.IsNullOrEmpty(ErrorMessage))
+        {
+            <MudAlert Severity="Severity.Error" Class="mt-4">
+                @ErrorMessage
+            </MudAlert>
+        }
+
+        <!-- Ссылка -->
+        <MudText Align="Align.Center" Class="mt-4">
+            Уже есть аккаунт?
+            <MudLink Href="/">Войти</MudLink>
+        </MudText>
+
+    </MudPaper>
+</MudContainer>
+
+@code {
+
+    private MudForm? _form;
+    private bool _isValid;
+    private bool _isLoading;
+
+    private RegisterModel model = new();
+    private string? ErrorMessage;
+
+    private DateTime? BirthDate
+    {
+        get => string.IsNullOrEmpty(model.BirthDate)
+            ? null
+            : DateTime.Parse(model.BirthDate);
+
+        set
+        {
+            if (value.HasValue)
+                model.BirthDate = value.Value.ToString("yyyy-MM-dd");
+        }
+    }
+
+    private async Task SubmitForm()
+    {
+        if (_form is null) return;
+
+        await _form.Validate();
+
+        if (!_form.IsValid) return;
+
+        await HandleRegister();
+    }
+
+    private async Task HandleRegister()
+    {
+        _isLoading = true;
+        ErrorMessage = null;
+
+        try
+        {
+            // 1. Создание пользователя
+
+            CreateUserDto userData = new CreateUserDto
+            {
+                Username = model.UserName,
+                Email = model.Email,
+                Password = model.Password
+            };
+
+            var userJson = JsonSerializer.Serialize(userData);
+            var userContent = new StringContent(userJson, Encoding.UTF8, "application/json");
+
+            var userResponse = await Http.PostAsync("https://localhost:7146/api/Users", userContent);
+
+            if (!userResponse.IsSuccessStatusCode)
+            {
+                ErrorMessage = "Ошибка регистрации пользователя";
+                _isLoading = false;
+                return;
+            }
+
+            var resultJson = await userResponse.Content.ReadAsStringAsync();
+
+            var userResult = JsonSerializer.Deserialize<UserResponse>(resultJson,
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+            if (userResult == null)
+            {
+                ErrorMessage = "Не удалось получить ID пользователя";
+                _isLoading = false;
+                return;
+            }
+
+
+            CreateClientDto clientData = new CreateClientDto
+            {
+                UserId = userResult.UserId,
+                LastName = model.LastName,
+                FirstName = model.FirstName,
+                MiddleName = model.MiddleName,
+                Phone = model.Phone,
+                BirthDate = DateOnly.FromDateTime(BirthDate ?? DateTime.MinValue)
+            };
+
+            var clientJson = JsonSerializer.Serialize(clientData);
+            var clientContent = new StringContent(clientJson, Encoding.UTF8, "application/json");
+
+            var clientResponse = await Http.PostAsync("https://localhost:7146/api/Clients", clientContent);
+
+            if (!clientResponse.IsSuccessStatusCode)
+            {
+                ErrorMessage = "Ошибка создания клиента";
+                _isLoading = false;
+                return;
+            }
+            Navigation.NavigateTo("/?registered=true", true);
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = "Ошибка сервера: " + ex.Message;
+        }
+
+        _isLoading = false;
+    }
+
+    public class RegisterModel
+    {
+        public string UserName { get; set; } = "";
+        public string Email { get; set; } = "";
+        public string Password { get; set; } = "";
+
+        public string LastName { get; set; } = "";
+        public string FirstName { get; set; } = "";
+        public string MiddleName { get; set; } = "";
+        public string Phone { get; set; } = "";
+        public string BirthDate { get; set; } = "";
+    }
+
+    public class UserResponse
+    {
+        public int UserId { get; set; }
+    }
+}

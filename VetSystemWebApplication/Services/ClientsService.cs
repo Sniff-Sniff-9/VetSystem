@@ -3,7 +3,9 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using VetSystemModels.Dto.Appointment;
 using VetSystemModels.Dto.Client;
+using VetSystemModels.Dto.Pet;
 using VetSystemModels.Dto.User;
+using VetSystemModels.Entities;
 
 namespace VetSystemWebApplication.Services
 {
@@ -42,6 +44,21 @@ namespace VetSystemWebApplication.Services
             }
 
             return await _httpClient.GetFromJsonAsync<UserDto?>("User") ?? new();
+        }
+
+        public async Task<ClientDto?> UpdateClientAsync(UpdateClientDto clientDto)
+        {
+            var client = await _httpClient.GetFromJsonAsync<ClientDto?>("Users/Client") ?? new();
+            var response = await _httpClient.PutAsJsonAsync($"Clients/{client.ClientId}", clientDto);
+
+            response.EnsureSuccessStatusCode();
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new Exception($"API error: {error}");
+            }
+
+            return await response.Content.ReadFromJsonAsync<ClientDto>() ?? new();
         }
 
         

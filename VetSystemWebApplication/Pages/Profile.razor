@@ -4,6 +4,8 @@
 @using VetSystemModels.Dto.Client
 @using VetSystemModels.Dto.User
 @inject Services.ClientsService ClientsService
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
 
 <MudContainer MaxWidth="MaxWidth.False"
               Class="pt-4 px-3 px-md-6"
@@ -29,7 +31,7 @@
             <MudStack Spacing="1" Class="px-2 px-md-4">
 
                 <MudText Typo="Typo.body1">
-                    <b>Email:</b> @User.Email
+                    <b>Эл. почта:</b> @User.Email
                 </MudText>
 
                 <MudText Typo="Typo.body1">
@@ -76,8 +78,30 @@
         }
     }
 
-    private void EditProfile()
+    async Task EditProfile()
     {
-        NavigationManager.NavigateTo("/profile/edit");
+        var parameters = new DialogParameters
+    {
+        { "Client", new UpdateClientDto
+            {
+                FirstName = Client.FirstName,
+                LastName = Client.LastName,
+                MiddleName = Client.MiddleName,
+                BirthDate = Client.BirthDate,
+                Phone = Client.Phone
+            }
+        }
+    };
+
+        var dialog = await DialogService.ShowAsync<EditProfilePage>("Редактировать профиль", parameters);
+
+        var result = await dialog.Result;
+
+        if (result != null && !result.Canceled && result.Data is UpdateClientDto client)
+        {
+            await ClientsService.UpdateClientAsync(client);
+
+            Client = await ClientsService.GetClientByUserIdAsync() ?? new();
+        }
     }
 }

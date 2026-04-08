@@ -1,0 +1,124 @@
+﻿@using MudBlazor
+@using VetSystemModels.Dto.Client
+@using VetSystemModels.Dto.User
+@using VetSystemModels.Entities
+@using VetSystemWebApplication.Services
+@inject ClientsService ClientsService
+@inject ISnackbar Snackbar
+
+<MudDialog Class="pet-dialog">
+    <TitleContent>
+        <MudText Typo="Typo.h6" Class="pb-0">
+            Редактировать профиль
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+
+        <MudForm @ref="form">
+
+            <MudStack Spacing="4" Class="mb-6">
+
+                <MudTextField Label="Фамилия"
+                              @bind-Value="Client.LastName"
+                              Required="true"
+                              RequiredError="Введите фамилию" />
+
+                <MudTextField Label="Имя"
+                              @bind-Value="Client.FirstName"
+                              Required="true"
+                              RequiredError="Введите имя" />
+
+                <MudTextField Label="Отчество"
+                              @bind-Value="Client.MiddleName"
+                              Required="true"
+                              RequiredError="Введите отчество" />
+
+                <MudTextField Label="Телефон"
+                              @bind-Value="Client.Phone"
+                              Required="true"
+                              RequiredError="Введите телефон" />
+
+                <MudDatePicker Label="Дата рождения"
+                               @bind-Date="BirthDate"
+                               MaxDate="@DateTime.Today"
+                               Required="true"
+                               RequiredError="Выберите дату рождения" />
+
+            </MudStack>
+
+        </MudForm>
+
+    </DialogContent>
+
+    <DialogActions>
+
+        <MudButton Color="Color.Default"
+                   OnClick="Cancel">
+            Отмена
+        </MudButton>
+
+        <MudButton Color="Color.Primary"
+                   Variant="Variant.Filled"
+                   OnClick="@Save">
+            Сохранить
+        </MudButton>
+
+    </DialogActions>
+
+</MudDialog>
+
+<style>
+    .pet-dialog .mud-dialog-title {
+        padding-bottom: 8px;
+    }
+
+    .pet-dialog .mud-dialog-actions {
+        padding: 0 24px 16px 24px;
+    }
+</style>
+
+@code {
+
+    MudForm? form;
+
+    private DateTime? BirthDate
+    {
+        get => Client.BirthDate.ToDateTime(TimeOnly.MinValue);
+        set
+        {
+            if (value.HasValue)
+                Client.BirthDate = DateOnly.FromDateTime(value.Value);
+        }
+    }
+
+    [CascadingParameter]
+    public IMudDialogInstance? MudDialog { get; set; }
+    [Parameter]
+    public UpdateClientDto Client { get; set; } = new();
+
+    void Cancel()
+    {
+        MudDialog?.Cancel();
+    }
+
+    async Task Save()
+    {
+        try
+        {
+            await form!.Validate();
+
+            if (!form.IsValid)
+            {
+                Snackbar.Add("Заполните все поля", Severity.Error);
+                return;
+            }
+
+            MudDialog?.Close(DialogResult.Ok(Client));
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+
+}

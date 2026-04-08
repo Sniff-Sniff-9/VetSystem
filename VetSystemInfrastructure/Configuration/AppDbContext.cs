@@ -83,7 +83,7 @@ public partial class AppDbContext : DbContext
 
             entity.HasOne(d => d.User).WithOne(p => p.Client).HasConstraintName("FK__Clients__UserId__440B1D61");
 
-            entity.HasQueryFilter(e => !e.IsDeleted);
+            entity.HasQueryFilter(e => !e.IsDeleted && (e.UserId == null || e.User!.IsActive));
         });
 
         modelBuilder.Entity<Employee>(entity =>

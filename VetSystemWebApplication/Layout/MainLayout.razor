@@ -6,7 +6,7 @@
 
 <MudThemeProvider Theme="@MyTheme" />
 <MudDialogProvider />
-<MudSnackbarProvider Style="@(IsMobile ? "z-index:1600" : "z-index:1600;")" />
+<MudSnackbarProvider Style="@(IsMobile ? "z-index:1600; padding-top: 64px" : "z-index:1600;")" />
 <MudPopoverProvider />
 
 <MudLayout Style="background: linear-gradient(109.6deg, #E3F2FD 0%, #BBDEFB 100%); min-height:100vh;">
@@ -14,7 +14,7 @@
     <!-- AppBar только на мобильном -->
     @if (IsMobile)
     {
-        <MudAppBar Elevation="4" Class="d-flex align-center px-4" Style="background:#03A9F4; color:white; z-index:1500;">
+        <MudAppBar Elevation="4" Class="d-flex align-center px-4" Style="background:#03A9F4; color:white; z-index:1400;">
             <MudIconButton Icon="@Icons.Material.Filled.Menu"
                            Color="Color.Inherit"
                            OnClick="@ToggleDrawer" />

@@ -140,18 +140,18 @@
                     </Grid.RowDefinitions>
 
                     <!-- HEADER -->
-                    <Grid Margin="8,0,8,6">
+                    <Grid Margin="8,8">
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="120"/>
+                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="2*"/>
                             <ColumnDefinition Width="150"/>
-                            <ColumnDefinition Width="100"/>
-                            <ColumnDefinition Width="100"/>
-                            <ColumnDefinition Width="200"/>
-                            <ColumnDefinition Width="180"/>
-                            <ColumnDefinition Width="100"/>
-                            <ColumnDefinition Width="200"/>
-                            <ColumnDefinition Width="190"/>
-                            <ColumnDefinition Width="100"/>
-                            <ColumnDefinition Width="150"/>
+                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="220"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="Дата" FontWeight="SemiBold"/>
                         <TextBlock Text="Начало" Grid.Column="1" FontWeight="SemiBold"/>
@@ -245,16 +245,16 @@
                                 <Border BorderBrush="#E0E0E0" BorderThickness="0,0,0,1">
                                     <Grid Margin="8,8">
                                         <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="120"/>
+                                            <ColumnDefinition Width="80"/>
+                                            <ColumnDefinition Width="80"/>
+                                            <ColumnDefinition Width="2*"/>
+                                            <ColumnDefinition Width="2*"/>
+                                            <ColumnDefinition Width="1*"/>
+                                            <ColumnDefinition Width="2*"/>
                                             <ColumnDefinition Width="150"/>
-                                            <ColumnDefinition Width="100"/>
-                                            <ColumnDefinition Width="100"/>
-                                            <ColumnDefinition Width="200"/>
-                                            <ColumnDefinition Width="180"/>
-                                            <ColumnDefinition Width="100"/>
-                                            <ColumnDefinition Width="200"/>
-                                            <ColumnDefinition Width="190"/>
-                                            <ColumnDefinition Width="100"/>
-                                            <ColumnDefinition Width="150"/>
+                                            <ColumnDefinition Width="80"/>
+                                            <ColumnDefinition Width="220"/>
                                         </Grid.ColumnDefinitions>
 
                                         <StackPanel Orientation="Horizontal">
@@ -263,10 +263,10 @@
                                         </StackPanel>
                                         <TextBlock Grid.Column="1" Text="{Binding StartTime, StringFormat=HH:mm}" VerticalAlignment="Center"/>
                                         <TextBlock Grid.Column="2" Text="{Binding EndTime, StringFormat=HH:mm}" VerticalAlignment="Center"/>
-                                        <TextBlock Grid.Column="3" Text="{Binding ServiceName}" VerticalAlignment="Center"/>
-                                        <TextBlock Grid.Column="4" Text="{Binding EmployeeName}" VerticalAlignment="Center"/>
-                                        <TextBlock Grid.Column="5" Text="{Binding PetName}" VerticalAlignment="Center"/>
-                                        <TextBlock Grid.Column="6" Text="{Binding ClientName}" VerticalAlignment="Center"/>
+                                        <TextBlock Grid.Column="3" Text="{Binding ServiceName}" VerticalAlignment="Center" TextWrapping="Wrap" MaxWidth="200"/>
+                                        <TextBlock Grid.Column="4" Text="{Binding EmployeeName}" VerticalAlignment="Center" TextWrapping="Wrap" MaxWidth="200"/>
+                                        <TextBlock Grid.Column="5" Text="{Binding PetName}" VerticalAlignment="Center" TextWrapping="Wrap" MaxWidth="100"/>
+                                        <TextBlock Grid.Column="6" Text="{Binding ClientName}" VerticalAlignment="Center" TextWrapping="Wrap" MaxWidth="200"/>
                                         <Border Grid.Column="7" 
                                                 Style="{StaticResource StatusChip}"
                                                 HorizontalAlignment="Left" Height="30">
@@ -274,7 +274,7 @@
                                             <TextBlock Text="{Binding AppointmentStatusName}"
                                                        Margin="4,0"
                                                        VerticalAlignment="Center"
-                                                       FontWeight="SemiBold"/>
+                                                       FontWeight="SemiBold" />
                                         </Border>
                                         <TextBlock Grid.Column="8" Text="{Binding TotalPriceAtMoment, StringFormat='{}{0} ₽'}" VerticalAlignment="Center"/>
 

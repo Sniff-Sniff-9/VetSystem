@@ -3,51 +3,68 @@
 @using VetSystemModels.Entities
 @using VetSystemWebApplication.Services
 @inject PetsService PetsService
+@inject ISnackbar Snackbar
 
-<MudDialog>
-
+<MudDialog Class="pet-dialog">
+    <TitleContent>
+        <MudText Typo="Typo.h6" Class="pb-0">
+            @(IsEdit ? "Редактировать питомца" : "Добавить питомца")
+        </MudText>
+    </TitleContent>
     <DialogContent>
 
-        <MudText Typo="Typo.h6" Class="mb-3">
-            @(IsEdit ? "Редактирование питомца" : "Новый питомец")
-        </MudText>
+        <MudForm @ref="form">
+            <MudStack Spacing="4" Class="mb-6">
 
-        <MudTextField Label="Имя"
-                      @bind-Value="Pet.Name"
-                      Required="true" />
+                <MudTextField Label="Имя"
+                              @bind-Value="Pet.Name"
+                              Required="true" />
 
-        <MudTextField Label="Порода"
-                      @bind-Value="Pet.Breed" />
+                <MudTextField Label="Порода" Required="true"
+                              @bind-Value="Pet.Breed" />
 
-        <MudSelect T="int"
-                   Label="Вид"
-                   @bind-Value="Pet.SpeciesId">
+                <MudSelect T="int"
+                           Label="Вид"
+                           @bind-Value="Pet.SpeciesId"
+                           Required="true">
 
-            @foreach (var species in Species)
-            {
-                <MudSelectItem Value="@species.SpeciesId">
-                    @species.SpeciesName
-                </MudSelectItem>
-            }
+                    <MudSelectItem T="int" Value="0" Disabled="true">
+                        Выберите вид
+                    </MudSelectItem>
 
-        </MudSelect>
+                    @foreach (var species in Species)
+                    {
+                        <MudSelectItem T="int" Value="@species.SpeciesId">
+                            @species.SpeciesName
+                        </MudSelectItem>
+                    }
 
-        <MudSelect T="int"
-                   Label="Пол"
-                   @bind-Value="Pet.GenderId">
+                </MudSelect>
 
-            @foreach (var gender in Genders)
-            {
-                <MudSelectItem Value="@gender.GenderId">
-                    @gender.GenderName
-                </MudSelectItem>
-            }
+                <MudSelect T="int"
+                           Label="Пол"
+                           @bind-Value="Pet.GenderId"
+                           Required="true">
 
-        </MudSelect>
+                    <MudSelectItem T="int" Value="0" Disabled="true">
+                        Выберите пол
+                    </MudSelectItem>
 
-        <MudDatePicker Label="Дата рождения"
-                       @bind-Date="BirthDate"
-                       MaxDate="@DateTime.Today.AddDays(1)"/>
+                    @foreach (var gender in Genders)
+                    {
+                        <MudSelectItem T="int" Value="@gender.GenderId">
+                            @gender.GenderName
+                        </MudSelectItem>
+                    }
+
+                </MudSelect>
+
+                <MudDatePicker Label="Дата рождения"
+                               @bind-Date="BirthDate"
+                               MaxDate="@DateTime.Today" />
+
+            </MudStack>
+        </MudForm>
 
     </DialogContent>
 
@@ -60,7 +77,7 @@
 
         <MudButton Color="Color.Primary"
                    Variant="Variant.Filled"
-                   OnClick="Save">
+                   OnClick="@Save">
             @(IsEdit ? "Сохранить" : "Добавить")
         </MudButton>
 
@@ -68,7 +85,19 @@
 
 </MudDialog>
 
+<style>
+    .pet-dialog .mud-dialog-title {
+        padding-bottom: 8px;
+    }
+
+    .pet-dialog .mud-dialog-actions {
+        padding: 0 24px 16px 24px;
+    }
+</style>
+
 @code {
+    MudForm? form;
+
     private DateTime? BirthDate
     {
         get => Pet.BirthDate.ToDateTime(TimeOnly.MinValue) ;
@@ -96,6 +125,7 @@
     {
         Species = await PetsService.GetSpeciesAsync();
         Genders = await PetsService.GetGendersAsync();
+        StateHasChanged();
     }
 
     void Cancel()
@@ -103,8 +133,23 @@
         MudDialog?.Cancel();
     }
 
-    void Save()
+    async Task Save()
     {
-        MudDialog?.Close(DialogResult.Ok(Pet));
+        try
+        {
+            await form!.Validate();
+
+            if (!form.IsValid || Pet.SpeciesId == 0 || Pet.GenderId == 0)
+            {
+                Snackbar.Add("Заполните все поля", Severity.Error);
+                return;
+            }
+
+            MudDialog?.Close(DialogResult.Ok(Pet));
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
     }
 }

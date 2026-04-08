@@ -1,0 +1,276 @@
+﻿@page "/appointments"
+@using MudBlazor
+@using VetSystemModels.Dto.Appointment
+@using VetSystemModels.Dto.Client
+@using VetSystemModels.Entities
+@using VetSystemModels.Dto.Pet
+@inject Services.AppointmentsService AppointmentsService
+@inject Services.PetsService PetsService
+@inject Services.ClientsService ClientsService
+@inject NavigationManager NavigationManager
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+
+<MudContainer MaxWidth="MaxWidth.False" Class="pt-2 px-4"
+              Style="background: linear-gradient(109.6deg, #E3F2FD 0%, #BBDEFB 100%); min-height:100vh;">
+
+    <!-- ВЕРХНИЙ БАР -->
+    <MudCard Elevation="2" Class="p-4 mt-1" Style="border-radius:16px;">
+
+        <MudGrid Spacing="6" AlignItems="AlignItems.Center">
+
+            <!-- Фильтр по питомцу -->
+            <MudItem xs="12" sm="6" md="4">
+                <MudSelect T="int?" Label="Питомец"
+                           @bind-Value="SelectedPetId"
+                           Dense="true"
+                           FullWidth="true">
+                    <MudSelectItem T="int?" Value="0">Все питомцы</MudSelectItem>
+                    @foreach (var pet in Pets)
+                    {
+                        <MudSelectItem T="int?" Value="@pet.PetId">@pet.Name</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+
+            <!-- Фильтр по статусу -->
+            <MudItem xs="12" sm="6" md="4">
+                <MudSelect T="int?" Label="Статус"
+                           @bind-Value="SelectedStatusId"
+                           Dense="true"
+                           FullWidth="true">
+                    <MudSelectItem T="int?" Value="0">Все статусы</MudSelectItem>
+                    @foreach (var status in Statuses)
+                    {
+                        <MudSelectItem T="int?" Value="@status.AppointmentStatusId">
+                            @status.AppointmentStatusName
+                        </MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+
+            <!-- Кнопка -->
+            <MudItem xs="12" sm="12" md="4">
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           FullWidth="true"
+                           OnClick="@ApplyFilters">
+                    Применить
+                </MudButton>
+            </MudItem>
+
+        </MudGrid>
+
+    </MudCard>
+
+    <MudCard Elevation="2" Class="p-6 mt-4" Style="border-radius:16px;">
+        <MudStack Spacing="3">
+
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       Size="Size.Medium"
+                       OnClick="@CreateAppointmentClick"
+                       StartIcon="@Icons.Material.Filled.Add"
+                       Class="mx-4 mt-4">
+                Создать запись на приём
+            </MudButton>
+
+            <MudText Typo="Typo.h6" Class="ml-6">
+                Ваши записи
+            </MudText>
+
+            <MudPaper Elevation="0"
+                      Class="mx-4 mb-4 pa-2"
+                      Style="background:#E3F2FD; border-radius:12px;">
+
+                @if (isLoading)
+                {
+                    <MudProgressCircular Indeterminate="true" Color="Color.Primary" Align="Align.Center" Class="m-4" />
+                }
+                else if (Appointments.Count == 0)
+                {
+                    <MudText Typo="Typo.subtitle1" Align="Align.Center" Class="m-4">
+                        Нет записей.
+                    </MudText>
+                }
+                else
+                {
+                    <MudList T="AppointmentDto" Dense="true">
+                        @foreach (var appointment in Appointments)
+                        {
+                            <MudListItem>
+                                <MudCard Elevation="1"
+                                         Outlined="false"
+                                         Style="border-radius: 12px; overflow: hidden;">
+
+                                    <MudCardContent Class="pa-4">
+                                        <MudStack Spacing="2">
+
+                                            <div class="d-flex align-center justify-space-between flex-wrap">
+                                                <div class="d-flex align-center flex-wrap">
+                                                    <MudIcon Icon="@Icons.Material.Filled.Pets"
+                                                             Size="Size.Small"
+                                                             Color="Color.Primary"
+                                                             Class="mr-3" />
+                                                    <MudText Typo="Typo.h6" Class="fw-semibold mb-0">
+                                                        @appointment.PetName
+                                                    </MudText>
+                                                </div>
+                                                <MudChip Color="@GetStatusColor(appointment.AppointmentStatusName)"
+                                                         Variant="Variant.Filled"
+                                                         Size="Size.Small"
+                                                         Class="fw-semibold">
+                                                    @appointment.AppointmentStatusName
+                                                </MudChip>
+                                            </div>
+
+                                            <!-- Услуга -->
+                                            <MudText Typo="Typo.subtitle1">
+                                                @appointment.ServiceName
+                                            </MudText>
+
+                                            <!-- Дата и время -->
+                                            <div class="d-flex align-center gap-4">
+                                                <div class="d-flex align-center">
+                                                    <MudIcon Icon="@Icons.Material.Filled.CalendarToday"
+                                                             Size="Size.Small"
+                                                             Color="Color.Default"
+                                                             Class="mr-2" />
+                                                    <MudText Size="Size.Small">
+                                                        @appointment.AppointmentDate.ToString("d MMMM yyyy", new System.Globalization.CultureInfo("ru-RU"))
+                                                    </MudText>
+                                                </div>
+
+                                                <div class="d-flex align-center">
+                                                    <MudIcon Icon="@Icons.Material.Filled.AccessTime"
+                                                             Size="Size.Small"
+                                                             Color="Color.Default"
+                                                             Class="mr-2" />
+                                                    <MudText Size="Size.Small">
+                                                        @appointment.StartTime — @appointment.EndTime
+                                                    </MudText>
+                                                </div>
+                                            </div>
+
+                                        </MudStack>
+                                    </MudCardContent>
+
+                                    <MudCardActions Class="px-4 pb-4 pt-0">
+                                        @if (appointment.AppointmentDate >= DateOnly.FromDateTime(DateTime.Now))
+                                        {
+                                            <MudButton Variant="Variant.Text"
+                                                       Color="Color.Error"
+                                                       StartIcon="@Icons.Material.Filled.EventBusy"
+                                                       Class="ml-auto"
+                                                       OnClick="@(()=> DeleteAppointmentButton(appointment.AppointmentId))">
+                                                Отменить
+                                            </MudButton>
+                                        }
+                                    </MudCardActions>
+                                </MudCard>
+                            </MudListItem>
+
+                            <MudDivider />
+                        }
+                    </MudList>
+                }
+
+            </MudPaper>
+
+        </MudStack>
+    </MudCard>
+
+</MudContainer>
+
+@code {
+
+    private List<AppointmentDto> Appointments = new();
+    private ClientDto Client = new();
+    private bool isLoading = true;
+
+    private List<PetDto> Pets = new();
+    private List<AppointmentStatus> Statuses = new();
+
+    private int? SelectedPetId;
+    private int? SelectedStatusId;
+
+
+    private Color GetStatusColor(string status)
+    {
+        return status switch
+        {
+            "Завершен" => Color.Success,
+            "Отменен" => Color.Error,
+            "В процессе" => Color.Info,
+            "Запланирован" => Color.Info,
+            "Ожидает" => Color.Warning,
+            _ => Color.Default
+        };
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            Appointments = await AppointmentsService.GetAppointmentsByClientIdAsync();
+            Client = await ClientsService.GetClientByUserIdAsync() ?? new();
+            Pets = await PetsService.GetPetsAsync();
+            Statuses = await AppointmentsService.GetStatusesAsync();
+
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+
+        isLoading = false;
+    }
+
+    private async Task ApplyFilters()
+    {
+        var query = await AppointmentsService.GetAppointmentsByClientIdAsync();
+
+        if (SelectedPetId > 0)
+            query = query.Where(a => a.PetId == SelectedPetId).ToList();
+
+        if (SelectedStatusId > 0)
+            query = query.Where(a => a.AppointmentStatusId == SelectedStatusId).ToList();
+
+        Appointments = query;
+
+        StateHasChanged();
+    }
+
+    protected void CreateAppointmentClick()
+    {
+        NavigationManager.NavigateTo("/appointment/create");
+    }
+
+    private async Task DeleteAppointmentButton(int id)
+    {
+        var result = await DialogService.ShowMessageBox(
+            "Отмена записи",
+            "Вы действительно хотите отменить эту запись?",
+            yesText: "Да",
+            cancelText: "Нет",
+            options: new DialogOptions { MaxWidth = MaxWidth.ExtraSmall });
+
+        if (result != true)
+            return;
+
+        try
+        {
+            await AppointmentsService.DeleteAppointmentAsync(id);
+
+            Snackbar.Add("Запись успешно отменена", Severity.Success);
+
+            Appointments = await AppointmentsService.GetAppointmentsByClientIdAsync();
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Ошибка при отмене записи: {ex.Message}", Severity.Error);
+        }
+    }
+}

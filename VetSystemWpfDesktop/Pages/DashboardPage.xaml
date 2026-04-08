@@ -313,19 +313,19 @@
                        FontWeight="SemiBold"
                        Margin="0,0,0,20"/>
 
-                        <!-- Header -->
+                        
                         <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
                             <Grid Grid.Row="1">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="*"/>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
-
-                                <!-- HEADER -->
+                                
+                                
                                 <Grid Margin="8,0,8,6">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="2*"/>
-                                        <ColumnDefinition Width="2*"/>
+                                        <ColumnDefinition Width="80"/>
+                                        <ColumnDefinition Width="80"/>
                                         <ColumnDefinition Width="3*"/>
                                         <ColumnDefinition Width="3*"/>
                                         <ColumnDefinition Width="2*"/>
@@ -334,7 +334,7 @@
                                     <TextBlock Text="Дата" FontWeight="SemiBold"/>
                                     <TextBlock Text="Начало" Grid.Column="1" FontWeight="SemiBold"/>
                                     <TextBlock Text="Услуга" Grid.Column="2" FontWeight="SemiBold"/>
-                                    <TextBlock Text="Специалист" Grid.Column="3" FontWeight="SemiBold" Margin="5,0,0,0"/>
+                                    <TextBlock Text="Специалист" Grid.Column="3" FontWeight="SemiBold"/>
                                     <TextBlock Text="Питомец" Grid.Column="4" FontWeight="SemiBold"/>
                                     <TextBlock Text="Действие" Grid.Column="5" FontWeight="SemiBold" HorizontalAlignment="Center"/>
                                 </Grid>
@@ -366,14 +366,13 @@
 
                                                         <ControlTemplate.Triggers>
 
-                                                            <!-- HOVER -->
                                                             <Trigger Property="IsMouseOver" Value="True">
                                                                 <Setter TargetName="RowBorder"
                     Property="Background"
                     Value="#F5F5F5"/>
                                                             </Trigger>
 
-                                                            <!-- CURRENT APPOINTMENT -->
+                                                      
                                                             <DataTrigger Value="True">
 
                                                                 <DataTrigger.Binding>
@@ -414,14 +413,14 @@
 
                                     </ListView.ItemContainerStyle>
 
-                                    <!-- ROW TEMPLATE -->
+                               
                                     <ListView.ItemTemplate>
                                         <DataTemplate>
                                             <Border BorderBrush="#E0E0E0" BorderThickness="0,0,0,1">
                                                 <Grid Margin="8,8">
                                                     <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="2*"/>
-                                                        <ColumnDefinition Width="2*"/>
+                                                        <ColumnDefinition Width="80"/>
+                                                        <ColumnDefinition Width="80"/>
                                                         <ColumnDefinition Width="3*"/>
                                                         <ColumnDefinition Width="3*"/>
                                                         <ColumnDefinition Width="2*"/>
@@ -432,10 +431,11 @@
 
                                                     <TextBlock Grid.Column="1" Text="{Binding StartTime, StringFormat=HH:mm}" VerticalAlignment="Center"/>
 
-                                                    <TextBlock Grid.Column="2" Text="{Binding ServiceName}" VerticalAlignment="Center"/>
-                                                    <TextBlock Grid.Column="3" Text="{Binding EmployeeName}" VerticalAlignment="Center" Margin="5,0,0,0"/>
-                                                    <TextBlock Grid.Column="4" Text="{Binding PetName}" VerticalAlignment="Center"/>
-                                                    <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="Подтвердить" Grid.Column="5"
+                                                    <TextBlock Grid.Column="2" Text="{Binding ServiceName}" VerticalAlignment="Center" TextWrapping="Wrap" HorizontalAlignment="Left"/>
+                                                    <TextBlock Grid.Column="3" Text="{Binding EmployeeName}" VerticalAlignment="Center" TextWrapping="Wrap" HorizontalAlignment="Left"/>
+                                                    <TextBlock Grid.Column="4" Text="{Binding PetName}" VerticalAlignment="Center" TextWrapping="Wrap" HorizontalAlignment="Left"/>
+                                                    <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="Подтвердить" Grid.Column="5" 
+                                                            Name="AcceptButton" Click="AcceptButton_Click"
                                                             HorizontalAlignment="Center">
                                                         <materialDesign:PackIcon Kind="Check"/>
                                                     </Button>

@@ -95,15 +95,15 @@ namespace VetSystemApi.Services
             var genderExists = await _context.Genders.AnyAsync(g => g.GenderId == petDto.GenderId);
             var clientExists = await _context.Clients.AnyAsync(c => c.ClientId == petDto.ClientId);
 
-            if (genderExists)
+            if (!genderExists)
             {
                 throw new ArgumentException("Gender doesn't exist.");
             }
-            if (speciesExists)
+            if (!speciesExists)
             {
                 throw new ArgumentException("Species doesn't exist.");
             }
-            if (clientExists)
+            if (!clientExists)
             {
                 throw new ArgumentException("Client doesn't exist.");
             }

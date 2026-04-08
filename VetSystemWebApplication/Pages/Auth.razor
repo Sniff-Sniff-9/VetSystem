@@ -7,6 +7,7 @@
 @inject HttpClient Http
 @inject NavigationManager Navigation
 @inject ILocalStorageService LocalStorage
+@inject ISnackbar Snackbar
 
 <PageTitle>Вход в систему - Ветеринарная Система</PageTitle>
 
@@ -26,10 +27,9 @@
         <MudForm @ref="_form" @bind-IsValid="_isValid">
             <MudTextField T="string"
                           @bind-Value="model.Email"
-                          Label="Email"
+                          Label="Эл. почта"
                           Variant="Variant.Outlined"
                           Required="true"
-                          RequiredError="Email обязателен"
                           AdornmentIcon="@Icons.Material.Filled.Email"
                           Adornment="Adornment.Start"
                           Class="mb-6" />
@@ -65,14 +65,10 @@
         }
 
         <!-- Ссылка на регистрацию -->
-        <div class="d-flex justify-center mt-6">
-            <MudText Typo="Typo.body2">
-                Нет аккаунта?
-                <MudLink Href="/register" Color="Color.Primary">
-                    Зарегистрироваться
-                </MudLink>
-            </MudText>
-        </div>
+        <MudText Align="Align.Center" Class="mt-4">
+            Нет аккаунта?
+            <MudLink Href="/register">Зарегистрироваться</MudLink>
+        </MudText>
 
     </MudPaper>
 </MudContainer>
@@ -84,6 +80,17 @@
 
     private LoginModel model = new();
     private string? ErrorMessage;
+
+    protected override void OnInitialized()
+    {
+        var uri = Navigation.ToAbsoluteUri(Navigation.Uri);
+        var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+
+        if (query["registered"] == "true")
+        {
+            Snackbar.Add("Профиль успешно создан", Severity.Success);
+        }
+    }
 
     // Обработка клика кнопки "Войти"
     private async Task SubmitForm()

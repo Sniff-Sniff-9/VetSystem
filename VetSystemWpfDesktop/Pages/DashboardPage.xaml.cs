@@ -34,5 +34,10 @@ namespace VetSystemWpfDesktop.Pages
             var vm = new DashboardViewModel(_appointmentsService, _employeesService);
             DataContext = vm;
         }
+
+        private void AcceptButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

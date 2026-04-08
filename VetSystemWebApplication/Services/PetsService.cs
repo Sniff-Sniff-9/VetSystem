@@ -43,6 +43,11 @@ namespace VetSystemWebApplication.Services
             var client = await _clientService.GetClientByUserIdAsync() ?? new();      
             return await _httpClient.GetFromJsonAsync<PetDto>($"Pets/{id}") ?? new();
         }
+        public async Task DeletePetAsync(int id)
+        {
+            await _httpClient.DeleteAsync($"Pets/{id}");
+        }
+
 
         public async Task<PetDto> CreatePetAsync(CreateUpdatePetDto pet)
         {
@@ -51,6 +56,27 @@ namespace VetSystemWebApplication.Services
             var response = await _httpClient.PostAsJsonAsync("Pets", pet);
 
             response.EnsureSuccessStatusCode();
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new Exception($"API error: {error}");
+            }
+
+            return await response.Content.ReadFromJsonAsync<PetDto>() ?? new();
+        }
+
+        public async Task<PetDto> UpdatePetAsync(int id, CreateUpdatePetDto pet)
+        {
+            var client = await _clientService.GetClientByUserIdAsync() ?? new();
+            pet.ClientId = client.ClientId;
+            var response = await _httpClient.PutAsJsonAsync($"Pets/{id}", pet);
+
+            response.EnsureSuccessStatusCode();
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new Exception($"API error: {error}");
+            }
 
             return await response.Content.ReadFromJsonAsync<PetDto>() ?? new();
         }

@@ -45,12 +45,14 @@ namespace VetSystemWpfDesktop
 
         private void Settings_Click(object sender, RoutedEventArgs e)
         {
-           
+            var window = new AuthWindow();
+            window.Show();
+            Close();
         }
 
         private void Services_Click(object sender, RoutedEventArgs e)
         {
-
+            MainFrame.Navigate(new ServicesPage());
         }
 
         private void Clients_Click(object sender, RoutedEventArgs e)

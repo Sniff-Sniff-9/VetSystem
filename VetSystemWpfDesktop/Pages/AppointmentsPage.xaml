@@ -7,10 +7,8 @@
       Title="Записи на приём">
     <Page.Resources>
 
-        <!-- CONVERTER -->
         <local:AppointmentNowConverter x:Key="AppointmentNowConverter"/>
 
-        <!-- STATUS CHIP STYLE -->
         <Style x:Key="StatusChip" TargetType="Border">
 
             <Setter Property="Padding" Value="6,2"/>
@@ -22,35 +20,35 @@
 
             <Style.Triggers>
 
-                <!-- Завершен -->
+           
                 <DataTrigger Binding="{Binding AppointmentStatusName}" Value="Завершен">
                     <Setter Property="Background" Value="#334CAF50"/>
                     <Setter Property="BorderBrush" Value="#4CAF50"/>
                     <Setter Property="TextElement.Foreground" Value="#2E7D32"/>
                 </DataTrigger>
 
-                <!-- Отменен -->
+     
                 <DataTrigger Binding="{Binding AppointmentStatusName}" Value="Отменен">
                     <Setter Property="Background" Value="#33F44336"/>
                     <Setter Property="BorderBrush" Value="#F44336"/>
                     <Setter Property="TextElement.Foreground" Value="#C62828"/>
                 </DataTrigger>
 
-                <!-- В процессе -->
+        
                 <DataTrigger Binding="{Binding AppointmentStatusName}" Value="В процессе">
                     <Setter Property="Background" Value="#332196F3"/>
                     <Setter Property="BorderBrush" Value="#2196F3"/>
                     <Setter Property="TextElement.Foreground" Value="#1565C0"/>
                 </DataTrigger>
 
-                <!-- Запланирован -->
+
                 <DataTrigger Binding="{Binding AppointmentStatusName}" Value="Запланирован">
                     <Setter Property="Background" Value="#332196F3"/>
                     <Setter Property="BorderBrush" Value="#2196F3"/>
                     <Setter Property="TextElement.Foreground" Value="#1565C0"/>
                 </DataTrigger>
 
-                <!-- Ожидает -->
+         
                 <DataTrigger Binding="{Binding AppointmentStatusName}" Value="Ожидает">
                     <Setter Property="Background" Value="#33FFC107"/>
                     <Setter Property="BorderBrush" Value="#FFC107"/>
@@ -69,13 +67,13 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- HEADER -->
+
         <StackPanel Orientation="Horizontal" Margin="8">
             <materialDesign:PackIcon Kind="CalendarClock" Width="40" Height="40" Foreground="#FF03A9F4"/>
             <TextBlock Text="Приемы" FontSize="30" FontWeight="SemiBold" Margin="10,0,0,0" VerticalAlignment="Center" Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
         </StackPanel>
 
-        <!-- STATISTICS -->
+
         <Grid Grid.Row="1" Margin="0,10,0,10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
@@ -97,7 +95,7 @@
             </materialDesign:Card>
         </Grid>
 
-        <!-- MAIN CARD -->
+   
         <materialDesign:Card Grid.Row="2" Padding="18" UniformCornerRadius="16">
             <Grid>
                 <Grid.RowDefinitions>
@@ -105,9 +103,9 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <!-- TOOLBAR -->
+   
                 <DockPanel Margin="0,0,0,14">
-                    <!-- ADD BUTTON -->
+               
                     <Button DockPanel.Dock="Right" Style="{StaticResource MaterialDesignRaisedButton}" 
                             Foreground="White" Height="36" Click="AddAppointmentButton_Click">
                         <StackPanel Orientation="Horizontal">
@@ -116,13 +114,13 @@
                         </StackPanel>
                     </Button>
 
-                    <!-- SEARCH AND FILTERS -->
+            
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <!-- Search -->
-                        <materialDesign:PackIcon Kind="Search" Width="24" Height="24" VerticalAlignment="Center" Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
+           
+                        <materialDesign:PackIcon Kind="Search" Width="24" Height="24" Margin="0,0,10,0" VerticalAlignment="Center" Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
                         <TextBox Width="200" Height="36" materialDesign:HintAssist.Hint="Поиск..."/>
 
-                        <!-- Filters -->
+                 
                         <DatePicker Width="140" Height="36" materialDesign:HintAssist.Hint="С" Margin="10,0,0,0"/>
                         <DatePicker Width="140" Height="36" materialDesign:HintAssist.Hint="По" Margin="10,0,0,0"/>
                         <ComboBox Width="140" Height="36" materialDesign:HintAssist.Hint="Статус" Margin="10,0,0,0"/>
@@ -132,14 +130,14 @@
                     </StackPanel>
                 </DockPanel>
 
-                <!-- TABLE -->
+ 
                 <Grid Grid.Row="1">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <!-- HEADER -->
+       
                     <Grid Margin="8,8">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="120"/>
@@ -165,7 +163,7 @@
                         <TextBlock Text="Действия" Grid.Column="9" FontWeight="SemiBold" HorizontalAlignment="Center"/>
                     </Grid>
 
-                    <!-- LIST -->
+       
                     <ListView Grid.Row="1" x:Name="AppointmentsListView" BorderThickness="0" HorizontalContentAlignment="Stretch" materialDesign:ElevationAssist.Elevation="Dp0">
                         <ListView.ItemContainerStyle>
 
@@ -191,14 +189,13 @@
 
                                             <ControlTemplate.Triggers>
 
-                                                <!-- HOVER -->
                                                 <Trigger Property="IsMouseOver" Value="True">
                                                     <Setter TargetName="RowBorder"
                                                         Property="Background"
                                                         Value="#F5F5F5"/>
                                                 </Trigger>
 
-                                                <!-- CURRENT APPOINTMENT -->
+                                             
                                                 <DataTrigger Value="True">
 
                                                     <DataTrigger.Binding>
@@ -239,7 +236,7 @@
 
                         </ListView.ItemContainerStyle>
 
-                        <!-- ROW TEMPLATE -->
+              
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <Border BorderBrush="#E0E0E0" BorderThickness="0,0,0,1">
@@ -278,13 +275,29 @@
                                         </Border>
                                         <TextBlock Grid.Column="8" Text="{Binding TotalPriceAtMoment, StringFormat='{}{0} ₽'}" VerticalAlignment="Center"/>
 
-                                        <!-- ACTIONS -->
+                                   
                                         <StackPanel Grid.Column="9" Orientation="Horizontal" HorizontalAlignment="Center">
-                                            <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="Просмотреть">
+                                            <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="Просмотреть" Name="CheckAppointmentButton" Click="CheckAppointmentButton_Click">
                                                 <materialDesign:PackIcon Kind="EyeOutline"/>
                                             </Button>
-                                            <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="Редактировать">
+                                            <Button  ToolTip="Редактировать" Name="EditAppointmentButton"
+                                                    Click="EditAppointmentButton_Click">
                                                 <materialDesign:PackIcon Kind="Pencil"/>
+                                                <Button.Style>
+                                                    <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignIconButton}">
+
+
+                                                        <Setter Property="IsEnabled" Value="True"/>
+
+                                                        <Style.Triggers>
+
+                                                            <DataTrigger Binding="{Binding AppointmentStatusId}" Value="5">
+                                                                <Setter Property="IsEnabled" Value="False"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+
+                                                    </Style>
+                                                </Button.Style>
                                             </Button>
                                             <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="Удалить">
                                                 <materialDesign:PackIcon Kind="Delete"/>

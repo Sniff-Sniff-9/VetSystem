@@ -109,35 +109,55 @@ namespace VetSystemWpfDesktop.ViewModels
         {
             var appointments = await _appointmentService.GetAppointmentsAsync() ?? new List<AppointmentDto>();
 
-            IncomePerMonth = appointments.Where(a => a.AppointmentStatusId == 4).Sum(a => a.TotalPriceAtMoment);
-            TodayAppointmentsCount = appointments.Count(a => a.AppointmentDate.ToDateTime(new TimeOnly(0, 0, 0)) == DateTime.Today);
-            AppointmentsNear = appointments.Where(a => a.StartTime.AddHours(2) == TimeOnly.FromDateTime(DateTime.Now)).ToList();
-            AppointmentsExpect = appointments.Where(a => a.AppointmentStatusId == 1).ToList();
+            // Фильтруем отменённые приёмы (статус 5)
+            var activeAppointments = appointments.Where(a => a.AppointmentStatusId != 5).ToList();
 
-            var startOfWeek = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + 1); 
+            // Доход за месяц — только завершённые (статус 4)
+            IncomePerMonth = appointments
+                .Where(a => a.AppointmentStatusId == 4 && a.AppointmentDate.Month == DateTime.Today.Month)
+                .Sum(a => a.TotalPriceAtMoment);
+
+            // Приёмы сегодня — исключаем отменённые
+            TodayAppointmentsCount = activeAppointments
+                .Count(a => a.AppointmentDate.ToDateTime(TimeOnly.MinValue).Date == DateTime.Today.Date);
+
+            // Ближайшие приёмы (можно тоже исключить отменённые)
+            AppointmentsNear = activeAppointments
+                .Where(a => a.AppointmentDate.ToDateTime(TimeOnly.MinValue).Date == DateTime.Today.Date)
+                .OrderBy(a => a.StartTime)
+                .ToList();
+
+            // Ожидают подтверждения (статус 1) — отменённые тоже исключаем
+            AppointmentsExpect = activeAppointments
+                .Where(a => a.AppointmentStatusId == 1)
+                .ToList();
+
+            // ==================== График недельной нагрузки ====================
+            var startOfWeek = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + 1);
             var dailyCounts = new List<double>();
             var labels = new List<string>();
 
             for (int i = 0; i < 7; i++)
             {
                 var day = startOfWeek.AddDays(i);
-                // Считаем количество записей на этот день
-                var count = appointments.Count(a => a.AppointmentDate.ToDateTime(new TimeOnly(0,0,0)) == day.Date);
+
+                var count = activeAppointments.Count(a =>
+                    a.AppointmentDate.ToDateTime(TimeOnly.MinValue).Date == day.Date);
+
                 dailyCounts.Add(count);
+
                 var culture = new CultureInfo("ru-RU");
                 labels.Add(culture.TextInfo.ToTitleCase(day.ToString("dddd", culture)));
             }
 
-            // Обновляем свойства, чтобы UI перерисовал график
             ClinicLoadLabels = labels;
-
             ClinicLoadSeries = new SeriesCollection
             {
                 new ColumnSeries
                 {
-                    Title="Записей",
+                    Title = "Записей",
                     Values = new ChartValues<double>(dailyCounts),
-                    Fill = new SolidColorBrush(Color.FromRgb(3,169,244)) 
+                    Fill = new SolidColorBrush(Color.FromRgb(3, 169, 244))
                 }
             };
         }

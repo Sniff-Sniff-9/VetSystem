@@ -5,6 +5,74 @@
       xmlns:sys="clr-namespace:System;assembly=mscorlib"
       Background="#E3F2FD"
       Title="Запись на прием">
+    <Page.Resources>
+        <Style x:Key="StatusChoiceChip"
+       TargetType="RadioButton"
+       BasedOn="{StaticResource MaterialDesignChoiceChipPrimaryRadioButton}">
+
+            <Setter Property="Foreground" Value="#424242"/>
+
+            <Style.Triggers>
+
+                <!-- Ожидает -->
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="Content" Value="Ожидает"/>
+                        <Condition Property="IsChecked" Value="True"/>
+                    </MultiTrigger.Conditions>
+                    <Setter Property="Background" Value="#FFC107"/>
+                    <Setter Property="BorderBrush" Value="#FFC107"/>
+                    <Setter Property="Foreground" Value="Black"/>
+                </MultiTrigger>
+
+                <!-- Запланирован -->
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="Content" Value="Запланирован"/>
+                        <Condition Property="IsChecked" Value="True"/>
+                    </MultiTrigger.Conditions>
+                    <Setter Property="Background" Value="#2196F3"/>
+                    <Setter Property="BorderBrush" Value="#2196F3"/>
+                    <Setter Property="Foreground" Value="Black"/>
+                </MultiTrigger>
+
+                <!-- В процессе -->
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="Content" Value="В процессе"/>
+                        <Condition Property="IsChecked" Value="True"/>
+                    </MultiTrigger.Conditions>
+                    <Setter Property="Background" Value="#2196F3"/>
+                    <Setter Property="BorderBrush" Value="#2196F3"/>
+                    <Setter Property="Foreground" Value="Black"/>
+                </MultiTrigger>
+
+                <!-- Завершен -->
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="Content" Value="Завершен"/>
+                        <Condition Property="IsChecked" Value="True"/>
+                    </MultiTrigger.Conditions>
+                    <Setter Property="Background" Value="#4CAF50"/>
+                    <Setter Property="BorderBrush" Value="#4CAF50"/>
+                    <Setter Property="Foreground" Value="Black"/>
+                </MultiTrigger>
+
+                <!-- Отменен -->
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="Content" Value="Отменен"/>
+                        <Condition Property="IsChecked" Value="True"/>
+                    </MultiTrigger.Conditions>
+                    <Setter Property="Background" Value="#F44336"/>
+                    <Setter Property="BorderBrush" Value="#F44336"/>
+                    <Setter Property="Foreground" Value="Black"/>
+                </MultiTrigger>
+
+            </Style.Triggers>
+
+        </Style>
+    </Page.Resources>
 
     <Grid Margin="12">
 
@@ -13,16 +81,16 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- HEADER -->
+    
         <StackPanel Orientation="Horizontal" Margin="8,8,8,18">
             <materialDesign:PackIcon Kind="CalendarPlus" Width="40" Height="40" Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
             <TextBlock Text="Запись на прием" FontSize="30" FontWeight="SemiBold" Margin="10,0,0,0" VerticalAlignment="Center" Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
         </StackPanel>
 
-        <!-- MAIN CARD -->
+     
         <ScrollViewer Grid.Row="1">
 
-            <materialDesign:Card Padding="18" Margin="0,0,0,10" UniformCornerRadius="16" materialDesign:ElevationAssist.Elevation="Dp2">
+            <materialDesign:Card Padding="18" Margin="0,0,0,10" UniformCornerRadius="16" materialDesign:ElevationAssist.Elevation="Dp2" Name="MainCard">
 
                 <Grid>
 
@@ -36,7 +104,7 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <!-- ОСНОВНАЯ ИНФОРМАЦИЯ -->
+          
                     <TextBlock Text="Основная информация" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,16"/>
 
                     <Grid Grid.Row="1">
@@ -50,7 +118,7 @@
                             <RowDefinition/>
                         </Grid.RowDefinitions>
 
-                        <!-- КЛИЕНТ -->
+                
                         <materialDesign:Card Grid.Row="0" Grid.Column="0" Margin="8" Padding="16">
                             <StackPanel>
                                 <TextBlock Text="Клиент" FontWeight="SemiBold" Margin="0,0,0,6" FontSize="14"/>
@@ -80,7 +148,7 @@
                             </StackPanel>
                         </materialDesign:Card>
 
-                        <!-- ПИТОМЕЦ -->
+                      
                         <materialDesign:Card Grid.Row="0" Grid.Column="1" IsEnabled="False"
                                              Margin="8" Padding="16"  x:Name="PetCard">
                             <StackPanel>
@@ -108,7 +176,7 @@
                             </StackPanel>
                         </materialDesign:Card>
 
-                        <!-- УСЛУГА -->
+                      
                         <materialDesign:Card Grid.Row="1" Grid.Column="0" Margin="8" Padding="16"  x:Name="ServiceCard">
                             <StackPanel>
                                 <TextBlock Text="Основная услуга" FontWeight="SemiBold" Margin="0,0,0,6" FontSize="14"/>
@@ -135,7 +203,7 @@ TextChanged="ClientSearchTextBox_TextChanged"/>
                             </StackPanel>
                         </materialDesign:Card>
 
-                        <!-- ВРАЧ -->
+                  
                         <materialDesign:Card Grid.Row="1" Grid.Column="1" IsEnabled="False"
                                              Margin="8" Padding="16" x:Name="DoctorCard">
                             <StackPanel>
@@ -165,20 +233,55 @@ TextChanged="ClientSearchTextBox_TextChanged"/>
                             </StackPanel>
                         </materialDesign:Card>
 
-                        <!-- ДАТА И ОКНА -->
                         <materialDesign:Card Grid.Row="2" Grid.ColumnSpan="2" Margin="8" Padding="16" x:Name="DateSlotCard">
                             <StackPanel>
+                                <TextBlock Text="Статус записи"
+                   FontWeight="SemiBold"
+                   Margin="0,0,0,12"
+                   FontSize="14"/>
+
+                                <StackPanel Orientation="Horizontal" Margin="4,0,0,30" Name="StatusButtonStackPanel">
+
+                                    <RadioButton Content="Ожидает"
+                 GroupName="Status"
+                 Style="{StaticResource StatusChoiceChip}" Tag="1"
+                 Margin="0,0,8,0"/>
+
+                                    <RadioButton Content="Запланирован"
+                 GroupName="Status"
+                 Style="{StaticResource StatusChoiceChip}" Tag="2"
+                 Margin="0,0,8,0"/>
+
+                                    <RadioButton Content="В процессе" Tag="3"
+                 GroupName="Status"
+                 Style="{StaticResource StatusChoiceChip}"
+                 Margin="0,0,8,0"/>
+
+                                    <RadioButton Content="Завершен"
+                 GroupName="Status"
+                 Style="{StaticResource StatusChoiceChip}" Tag="4"
+                 Margin="0,0,8,0"/>
+
+                                    <RadioButton Content="Отменен" Tag="5"
+                 GroupName="Status"
+                 Style="{StaticResource StatusChoiceChip}"/>
+
+                                </StackPanel>
+
                                 <TextBlock Text="Дата" FontWeight="SemiBold" Margin="0,0,0,12" FontSize="14"/>
-                                <DatePicker x:Name="DatePicker" SelectedDateChanged="DatePicker_SelectedDateChanged" Margin="4,0,0,30"/>
+                                <DatePicker x:Name="DatePicker" SelectedDateChanged="DatePicker_SelectedDateChanged" Height="36"
+                                            Margin="4,0,0,30" materialDesign:HintAssist.Hint="Выберите дату" />
                                 <TextBlock Text="Время" FontWeight="SemiBold" Margin="0,0,0,6" FontSize="14"/>
-                                    <WrapPanel x:Name="SlotsPanel" Margin="0,6,0,0"/>
-                                <TextBlock x:Name="SelectedSlotText" Margin="12,6,0,0" FontWeight="SemiBold"/>
+                                <WrapPanel x:Name="SlotsPanel" Margin="0,6,0,0"></WrapPanel>
+                                <TextBlock x:Name="SelectedSlotText" Margin="12,6,0,20" Foreground="Gray" Text="Выберите дату или специалиста."
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"/>            
                             </StackPanel>
                         </materialDesign:Card>
 
                     </Grid>
 
-                    <!-- ДОПОЛНИТЕЛЬНЫЕ УСЛУГИ -->
+    
                     <TextBlock Text="Дополнительные услуги" 
                                FontSize="19" 
                                FontWeight="SemiBold" 
@@ -198,17 +301,40 @@ TextChanged="ClientSearchTextBox_TextChanged"/>
                               Margin="0,12,0,0" 
                               BorderThickness="0" 
                               HorizontalContentAlignment="Stretch" Grid.Row="4">
+                        <ListView.Style>
+                            <Style TargetType="ListView">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Items.Count, RelativeSource={RelativeSource Self}}" Value="0">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="ListView">
+                                                    <TextBlock Text="Нет дополнительных услуг."
+                                                                Foreground="Gray"
+                                                                HorizontalAlignment="Center"
+                                                                VerticalAlignment="Center"
+                                                                Margin="0,10,0,20"/>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ListView.Style>
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
                                 <Setter Property="Padding" Value="0"/>
                                 <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                                 <Setter Property="VerticalContentAlignment" Value="Center"/>
-                                <!-- Убираем hover через стиль, чтобы не ломать Material Design -->
-                                <!-- Если очень нужен hover — можно добавить Trigger, но лучше без полного Template -->
+                                
                             </Style>
                         </ListView.ItemContainerStyle>
                         <ListView.ItemTemplate>
                             <DataTemplate>
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding IsMain}" Value="true">
+                                        <Setter Property="IsEnabled" Value="False"></Setter>
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
                                 <Border BorderBrush="#E0E0E0" 
                                         BorderThickness="0,0,0,1" 
                                         Padding="8,12">
@@ -232,7 +358,7 @@ TextChanged="ClientSearchTextBox_TextChanged"/>
                                                    FontWeight="SemiBold" FontSize="14.5"/>
 
                                         <TextBlock Grid.Column="2" 
-                                                   Text="{Binding Price, StringFormat={}{0:C}}" 
+                                                   Text="{Binding PriceAtMoment, StringFormat='{}{0} ₽'}" 
                                                    VerticalAlignment="Center" 
                                                    FontWeight="Medium" 
                                                    Foreground="#FF1976D2"/>
@@ -250,7 +376,7 @@ TextChanged="ClientSearchTextBox_TextChanged"/>
                         </ListView.ItemTemplate>
                     </ListView>
 
-                    <!-- ИТОГ -->
+             
                     <Border Margin="0,28,0,0" 
                             Padding="20" 
                             Background="#F5F5F5" 
@@ -276,7 +402,6 @@ TextChanged="ClientSearchTextBox_TextChanged"/>
                         </Grid>
                     </Border>
 
-                    <!-- BUTTONS -->
                     <StackPanel Grid.Row="6" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
                         <Button Style="{StaticResource MaterialDesignOutlinedButton}" Margin="0,0,10,0" Width="120" Click="CancelButton_Click">Отмена</Button>
                         <Button Style="{StaticResource MaterialDesignRaisedButton}" Foreground="White" Width="160" 

@@ -318,7 +318,7 @@
 
                     <MudPaper Elevation="0" 
                                   Style="background: #E3F2FD; border-radius: 16px;" 
-                                  Class="pa-6">
+                                  Class="pa-6 mb-6">
     
                             <MudCard Elevation="2" 
                                      Outlined="false"
@@ -350,22 +350,24 @@
 
         </MudStepper>
 
-        <!-- НАШИ КНОПКИ (русский язык) -->
-        <MudStack Row Justify="Justify.SpaceBetween" Class="mt-6 px-4 pb-4">
-            <MudButton Variant="Variant.Text"
+        @if (_step < 5)
+        {
+            <MudStack Row Justify="Justify.SpaceBetween" Class="mt-6 px-4 pb-4">
+                <MudButton Variant="Variant.Text"
                        Color="Color.Default"
                        Disabled="@(_step == 0)"
                        OnClick="PreviousStep">
-                Назад
-            </MudButton>
+                    Назад
+                </MudButton>
 
-            <MudButton Variant="Variant.Filled"
-                       Color="Color.Primary"
-                       Disabled="@(!CanGoNext())"
-                       OnClick="NextStep">
-                @GetNextButtonText()
-            </MudButton>
-        </MudStack>
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           Disabled="@(!CanGoNext())"
+                           OnClick="NextStep">
+                    @GetNextButtonText()
+                </MudButton>
+            </MudStack>
+        }
 
     </MudCard>
 </MudContainer>

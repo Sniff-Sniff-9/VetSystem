@@ -11,7 +11,6 @@
     <Page.Resources>
         <local:AppointmentNowConverter x:Key="AppointmentNowConverter"/>
 
-        <!-- STATUS CHIP STYLE -->
         <Style x:Key="StatusChip" TargetType="Border">
 
             <Setter Property="Padding" Value="6,2"/>
@@ -23,35 +22,35 @@
 
             <Style.Triggers>
 
-                <!-- Завершен -->
+          
                 <DataTrigger Binding="{Binding AppointmentStatusName}" Value="Завершен">
                     <Setter Property="Background" Value="#334CAF50"/>
                     <Setter Property="BorderBrush" Value="#4CAF50"/>
                     <Setter Property="TextElement.Foreground" Value="#2E7D32"/>
                 </DataTrigger>
 
-                <!-- Отменен -->
+            
                 <DataTrigger Binding="{Binding AppointmentStatusName}" Value="Отменен">
                     <Setter Property="Background" Value="#33F44336"/>
                     <Setter Property="BorderBrush" Value="#F44336"/>
                     <Setter Property="TextElement.Foreground" Value="#C62828"/>
                 </DataTrigger>
 
-                <!-- В процессе -->
+           
                 <DataTrigger Binding="{Binding AppointmentStatusName}" Value="В процессе">
                     <Setter Property="Background" Value="#332196F3"/>
                     <Setter Property="BorderBrush" Value="#2196F3"/>
                     <Setter Property="TextElement.Foreground" Value="#1565C0"/>
                 </DataTrigger>
 
-                <!-- Запланирован -->
+         
                 <DataTrigger Binding="{Binding AppointmentStatusName}" Value="Запланирован">
                     <Setter Property="Background" Value="#332196F3"/>
                     <Setter Property="BorderBrush" Value="#2196F3"/>
                     <Setter Property="TextElement.Foreground" Value="#1565C0"/>
                 </DataTrigger>
 
-                <!-- Ожидает -->
+          
                 <DataTrigger Binding="{Binding AppointmentStatusName}" Value="Ожидает">
                     <Setter Property="Background" Value="#33FFC107"/>
                     <Setter Property="BorderBrush" Value="#FFC107"/>
@@ -61,7 +60,7 @@
             </Style.Triggers>
 
         </Style>
-        <!-- MD3 KPI Card (Elevated) -->
+ 
         <Style x:Key="KpiCard" TargetType="materialDesign:Card">
             <Setter Property="Padding" Value="24"/>
             <Setter Property="UniformCornerRadius" Value="20"/>
@@ -72,22 +71,22 @@
     <Grid Margin="12">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <!-- Header -->
+
             <RowDefinition Height="Auto"/>
-            <!-- KPI cards -->
+        
             <RowDefinition Height="Auto"/>
             
             <RowDefinition Height="*"/>
-            <!-- Main content -->
+   
         </Grid.RowDefinitions>
 
-        <!-- HEADER -->
+
         <StackPanel Orientation="Horizontal" Margin="8">
             <materialDesign:PackIcon Kind="ViewDashboard" Width="40" Height="40" Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
             <TextBlock Text="Главная" FontSize="30" FontWeight="SemiBold" Margin="10,0,0,0" VerticalAlignment="Center" Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
         </StackPanel>
 
-        <!-- KPI CARDS -->
+       
         <Grid Grid.Row="1" Margin="0,10,0,10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
@@ -132,21 +131,21 @@
                     </Grid.RowDefinitions>
                     <TextBlock Text="Быстрые действия" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,16"/>
                     <StackPanel VerticalAlignment="Center" Grid.Row="1">
-                        <Button Height="52" Margin="0,0,0,12">
+                        <Button Height="52" Margin="0,0,0,12" Name="CreateAppointmentButton" Click="CreateAppointmentButton_Click">
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                 <materialDesign:PackIcon Kind="Plus" Foreground="White"/>
                                 <materialDesign:PackIcon Kind="CalendarClock" Foreground="White"/>
                                 <TextBlock Text="Новая запись" Margin="10,0,0,0" Foreground="White"/>
                             </StackPanel>
                         </Button>
-                        <Button Height="52" Margin="0,0,0,12">
+                        <Button Height="52" Margin="0,0,0,12" Name="CreateClientButton" Click="CreateClientButton_Click">
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                 <materialDesign:PackIcon Kind="Plus" Foreground="White"/>
                                 <materialDesign:PackIcon Kind="Account" Foreground="White"/>
                                 <TextBlock Text="Новый клиент" Margin="10,0,0,0" Foreground="White"/>
                             </StackPanel>
                         </Button>
-                        <Button Height="52">
+                        <Button Height="52" Name="CreatePetButton" Click="CreatePetButton_Click">
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                 <materialDesign:PackIcon Kind="Plus" Foreground="White"/>
                                 <materialDesign:PackIcon Kind="Dog" Foreground="White"/>
@@ -157,7 +156,7 @@
                 </Grid>
             </materialDesign:Card>
 
-            <!-- Clinic Load Chart -->
+     
             <materialDesign:Card Grid.Column="1" Margin="4" Padding="16" UniformCornerRadius="12" materialDesign:ElevationAssist.Elevation="Dp2">
                 <StackPanel>
                     <TextBlock Text="Недельная нагрузка" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,16"/>
@@ -173,7 +172,7 @@
             </materialDesign:Card>
         </Grid>
 
-        <!-- APPOINTMENTS LISTS -->
+
         <Grid Grid.Row="3" Margin="0,10,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" MinWidth="520"/>
@@ -186,32 +185,37 @@
 
                     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                         <Grid>
-                            <!-- HEADER -->
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                           
                             <Grid Margin="8,0,8,6">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="2*"/>
-                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="80"/>
+                                    <ColumnDefinition Width="80"/>
                                     <ColumnDefinition Width="3*"/>
                                     <ColumnDefinition Width="3*"/>
                                     <ColumnDefinition Width="2*"/>
-                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="120"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Text="Дата" FontWeight="SemiBold"/>
                                 <TextBlock Text="Начало" Grid.Column="1" FontWeight="SemiBold"/>
                                 <TextBlock Text="Услуга" Grid.Column="2" FontWeight="SemiBold"/>
                                 <TextBlock Text="Специалист" Grid.Column="3" FontWeight="SemiBold"/>
                                 <TextBlock Text="Питомец" Grid.Column="4" FontWeight="SemiBold"/>
-                                <TextBlock Text="Статус" Grid.Column="5" FontWeight="SemiBold" Margin="10,0,0,0"/>
+                                <TextBlock Text="Статус" Grid.Column="5" FontWeight="SemiBold" />
                             </Grid>
 
-                            <!-- LIST -->
+                          
                             <ListView x:Name="AppointmentsNearListView"
                           BorderThickness="0"
                           HorizontalContentAlignment="Stretch"
-                          materialDesign:ElevationAssist.Elevation="Dp0"
+                          materialDesign:ElevationAssist.Elevation="Dp0" Grid.Row="1"
                           ItemsSource="{Binding AppointmentsNear}">
 
-                                <!-- Показать "Нет записей" если пусто -->
+                              
                                 <ListView.Style>
                                     <Style TargetType="ListView">
                                         <Style.Triggers>
@@ -233,7 +237,6 @@
                                     </Style>
                                 </ListView.Style>
 
-                                <!-- Стили строк оставляем как у тебя -->
                                 <ListView.ItemContainerStyle>
                                     <Style TargetType="ListViewItem">
                                         <Setter Property="Padding" Value="0"/>
@@ -267,18 +270,18 @@
                                     </Style>
                                 </ListView.ItemContainerStyle>
 
-                                <!-- ROW TEMPLATE -->
+                           
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
                                         <Border BorderBrush="#E0E0E0" BorderThickness="0,0,0,1">
                                             <Grid Margin="8,8">
                                                 <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="2*"/>
-                                                    <ColumnDefinition Width="2*"/>
+                                                    <ColumnDefinition Width="80"/>
+                                                    <ColumnDefinition Width="80"/>
                                                     <ColumnDefinition Width="3*"/>
                                                     <ColumnDefinition Width="3*"/>
                                                     <ColumnDefinition Width="2*"/>
-                                                    <ColumnDefinition Width="2*"/>
+                                                    <ColumnDefinition Width="120"/>
                                                 </Grid.ColumnDefinitions>
                                                 <TextBlock Text="{Binding AppointmentDate, StringFormat=dd.MM.yyyy}" FontWeight="SemiBold" VerticalAlignment="Center"/>
                                                 <TextBlock Grid.Column="1" Text="{Binding StartTime, StringFormat=HH:mm}" VerticalAlignment="Center"/>
@@ -304,10 +307,10 @@
                      UniformCornerRadius="12"
                      Margin="4">
 
-                <!-- Горизонтальный ScrollViewer -->
+       
                 <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
                     <StackPanel>
-                        <!-- Заголовок -->
+               
                         <TextBlock Text="Ожидают подтверждения"
                        FontSize="16"
                        FontWeight="SemiBold"
@@ -329,7 +332,7 @@
                                         <ColumnDefinition Width="3*"/>
                                         <ColumnDefinition Width="3*"/>
                                         <ColumnDefinition Width="2*"/>
-                                        <ColumnDefinition Width="80"/>
+                                        <ColumnDefinition Width="100"/>
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Text="Дата" FontWeight="SemiBold"/>
                                     <TextBlock Text="Начало" Grid.Column="1" FontWeight="SemiBold"/>
@@ -339,13 +342,33 @@
                                     <TextBlock Text="Действие" Grid.Column="5" FontWeight="SemiBold" HorizontalAlignment="Center"/>
                                 </Grid>
 
-                                <!-- LIST -->
+                     
                                 <ListView Grid.Row="1" x:Name="AppointmentsExpectListView" BorderThickness="0" HorizontalContentAlignment="Stretch"
                                           materialDesign:ElevationAssist.Elevation="Dp0" ItemsSource="{Binding AppointmentsExpect}">
+                                    <ListView.Style>
+                                        <Style TargetType="ListView">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Items.Count, RelativeSource={RelativeSource Self}}" Value="0">
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="ListView">
+                                                                <TextBlock Text="Нет записей."
+                         
+                           Foreground="Gray"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Margin="0,50,0,0"/>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ListView.Style>
                                     <ListView.ItemContainerStyle>
 
                                         <Style TargetType="ListViewItem">
-
+                                           
                                             <Setter Property="Padding" Value="0"/>
                                             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
 
@@ -388,16 +411,16 @@
                                                                 </DataTrigger.Binding>
 
                                                                 <Setter TargetName="RowBorder"
-                    Property="Background"
-                    Value="#E3F2FD"/>
+                                                                        Property="Background"
+                                                                        Value="#E3F2FD"/>
 
                                                                 <Setter TargetName="RowBorder"
-                    Property="BorderBrush"
-                    Value="#2196F3"/>
+                                                                        Property="BorderBrush"
+                                                                        Value="#2196F3"/>
 
                                                                 <Setter TargetName="RowBorder"
-                    Property="BorderThickness"
-                    Value="2"/>
+                                                                        Property="BorderThickness"
+                                                                        Value="2"/>
 
                                                             </DataTrigger>
 
@@ -424,7 +447,7 @@
                                                         <ColumnDefinition Width="3*"/>
                                                         <ColumnDefinition Width="3*"/>
                                                         <ColumnDefinition Width="2*"/>
-                                                        <ColumnDefinition Width="80"/>
+                                                        <ColumnDefinition Width="100"/>
                                                     </Grid.ColumnDefinitions>
 
                                                     <TextBlock Text="{Binding AppointmentDate, StringFormat=dd.MM.yyyy}" FontWeight="SemiBold" VerticalAlignment="Center"/>
@@ -434,11 +457,19 @@
                                                     <TextBlock Grid.Column="2" Text="{Binding ServiceName}" VerticalAlignment="Center" TextWrapping="Wrap" HorizontalAlignment="Left"/>
                                                     <TextBlock Grid.Column="3" Text="{Binding EmployeeName}" VerticalAlignment="Center" TextWrapping="Wrap" HorizontalAlignment="Left"/>
                                                     <TextBlock Grid.Column="4" Text="{Binding PetName}" VerticalAlignment="Center" TextWrapping="Wrap" HorizontalAlignment="Left"/>
-                                                    <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="Подтвердить" Grid.Column="5" 
+                                                    <StackPanel Orientation="Horizontal" Grid.Column="5">
+                                                         <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="Подтвердить"  
                                                             Name="AcceptButton" Click="AcceptButton_Click"
                                                             HorizontalAlignment="Center">
                                                         <materialDesign:PackIcon Kind="Check"/>
                                                     </Button>
+                                                         <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="Подтвердить"  
+                                                            Name="RejectButton" Click="RejectButton_Click"
+                                                            HorizontalAlignment="Center">
+                                                        <materialDesign:PackIcon Kind="Close"/>
+                                                    </Button>
+                                                    </StackPanel>
+                                                   
                                                 </Grid>
                                             </Border>
                                         </DataTemplate>
@@ -449,6 +480,15 @@
                     </StackPanel>
                 </ScrollViewer>
             </materialDesign:Card>
+            <materialDesign:Snackbar Grid.Row="3" Grid.Column="1" 
+                                 x:Name="MainSnackbar"
+                                 HorizontalAlignment="Stretch"
+                                 VerticalAlignment="Bottom"
+                                 Margin="20"
+                                 CornerRadius="12"
+                                 Background="{StaticResource MaterialDesign.Brush.Primary}"
+                                 MessageQueue="{Binding MainSnackbarMessageQueue}">
+            </materialDesign:Snackbar>
         </Grid>
 
     </Grid>

@@ -37,6 +37,7 @@ namespace VetSystemWpfDesktop.Pages
         {
             var clients = await _employeesService.GetEmployeessAsync();
             ClientsListView.ItemsSource = clients;
+            AllEmployeesTextBlock.Text = clients?.Count.ToString();
         }
 
         private void AddEmployeeButton_Click(object sender, RoutedEventArgs e)

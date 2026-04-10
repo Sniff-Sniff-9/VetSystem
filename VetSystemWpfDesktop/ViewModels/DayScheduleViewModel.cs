@@ -107,7 +107,7 @@ namespace VetSystemWpfDesktop.ViewModels
             {
                 "В процессе" or "Запланирован" => new SolidColorBrush((Color)ColorConverter.ConvertFromString("#81D4FA")), // голубой
                 "Завершен" => new SolidColorBrush((Color)ColorConverter.ConvertFromString("#A5D6A7")), // зелёный
-                "Отменено" => new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFAB91")), // оранжевый
+                "Отменен" => new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFAB91")), // оранжевый
                 "Ожидает" => new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFF59D")), // жёлтый
                 _ => new SolidColorBrush(Colors.LightGray)
             };

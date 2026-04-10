@@ -14,6 +14,10 @@ namespace VetSystemModels.Dto.AppointmentService
 
         public int ServiceId { get; set; }
 
+        public string ServiceName { get; set; } = null!;
+
         public decimal PriceAtMoment { get; set; }
+
+        public bool IsMain { get; set; } = false;
     }
 }

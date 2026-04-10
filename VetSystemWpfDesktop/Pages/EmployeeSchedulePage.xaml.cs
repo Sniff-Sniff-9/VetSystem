@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
@@ -21,19 +22,30 @@ namespace VetSystemWpfDesktop.Pages
 
             _employee = employee;
             DataContext = _employee;
+
             // HTTP клиент
-            var client = new HttpClient { BaseAddress = new Uri("https://localhost:7146/api/") };
+            var client = new HttpClient
+            {
+                BaseAddress = new Uri("https://localhost:7146/api/")
+            };
             _appointmentsService = new AppointmentsService(client);
 
-            // DayScheduleViewModel
+            // ViewModel для расписания
             _scheduleVm = new DayScheduleViewModel();
             ScheduleView.DataContext = _scheduleVm;
 
-            // Карточка сотрудника
+            // ФИО сотрудника
             EmployeeFullName.Text = $"{_employee.LastName} {_employee.FirstName} {_employee.MiddleName}";
 
-            // Загружаем записи на сегодня
-            _ = LoadAppointmentsAsync(DateTime.Today); 
+            // Загружаем данные для сегодняшнего дня
+            _ = LoadDataForDateAsync(DateTime.Today);
+        }
+
+        // Универсальный метод загрузки данных для выбранной даты
+        private async Task LoadDataForDateAsync(DateTime date)
+        {
+            await LoadAppointmentsAsync(date);
+            await LoadWorkloadPercent(date);
         }
 
         private async Task LoadAppointmentsAsync(DateTime date)
@@ -41,40 +53,62 @@ namespace VetSystemWpfDesktop.Pages
             try
             {
                 var allAppointments = await _appointmentsService.GetAppointmentsByEmployeeIdAsync(_employee.EmployeeId);
+
                 if (allAppointments != null)
                 {
-                    // Фильтруем по выбранной дате
                     var filtered = allAppointments
-                        .FindAll(a => a.AppointmentDate.ToDateTime(new TimeOnly(0, 0, 0)) == date.Date);
+                        .FindAll(a => a.AppointmentDate.ToDateTime(TimeOnly.MinValue).Date == date.Date && a.AppointmentStatusId != 5);
 
                     _scheduleVm.LoadAppointments(filtered);
-                    AppointmentsCountTextBlock.Text = $"Записей сегодня: {filtered.Count().ToString()} ";
+
+                    AppointmentsCountTextBlock.Text = $"Записей на день: {filtered.Count}";
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка загрузки расписания: {ex.Message}", "Ошибка",
+                MessageBox.Show($"Ошибка загрузки записей: {ex.Message}", "Ошибка",
                                 MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-        private async Task LoadWorkloadPercent()
+        private async Task LoadWorkloadPercent(DateTime date)
         {
-            var date = DateOnly.FromDateTime(ScheduleCalendar.SelectedDate ?? DateTime.Today);
-            var availableSlots = await _appointmentsService.GetAvailableSlotsAsync(_employee.EmployeeId, date) ?? new();
-            var allSlots = await _appointmentsService.GetAllSlotsAsync(_employee.EmployeeId, date) ?? new();
-            var workloadPercent = Math.Round((1 - ((decimal)availableSlots.Count / (decimal)allSlots.Count)) * 100);
-            WorkloadTextBlock.Text = $"Загруженность: {workloadPercent}%";
+            try
+            {
+                var dateOnly = DateOnly.FromDateTime(date);
+
+                var availableSlots = await _appointmentsService.GetAvailableSlotsAsync(_employee.EmployeeId, dateOnly) ?? new();
+                var allSlots = await _appointmentsService.GetAllSlotsAsync(_employee.EmployeeId, dateOnly) ?? new();
+
+                if (allSlots.Count == 0)
+                {
+                    WorkloadTextBlock.Text = "Загруженность: 0%";
+                    return;
+                }
+
+                decimal workloadPercent = Math.Round((1 - ((decimal)availableSlots.Count / allSlots.Count)) * 100);
+                WorkloadTextBlock.Text = $"Загруженность: {workloadPercent}%";
+            }
+            catch (Exception)
+            {
+                WorkloadTextBlock.Text = "Загруженность: —";
+                // Можно оставить MessageBox, но лучше не показывать при каждой загрузке
+                // MessageBox.Show($"Ошибка расчёта загруженности: {ex.Message}");
+            }
         }
 
-        // При смене даты в календаре
+        // Обработчик смены даты в календаре
         private void Calendar_SelectedDatesChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.AddedItems.Count > 0 && e.AddedItems[0] is DateTime selectedDate)
             {
-                _ = LoadAppointmentsAsync(selectedDate);
-                _ = LoadWorkloadPercent();
+                _ = LoadDataForDateAsync(selectedDate);
             }
+        }
+
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new EmployeesPage());
         }
     }
 }

@@ -112,7 +112,6 @@ namespace VetSystemApi.Services
             {
                 _context.Add(appointment);
                 await _context.SaveChangesAsync();
-
                 var appointmentServiceDto = new CreateAppointmentServiceDto
                 {
                     AppointmentId = appointment.AppointmentId,
@@ -122,7 +121,7 @@ namespace VetSystemApi.Services
 
                 var appointmentService = await _appointmentServicesService.CreateAppointmentServiceAsync(appointmentServiceDto);
                 appointment.TotalPriceAtMoment = appointmentService.PriceAtMoment;
-
+                await _context.SaveChangesAsync();
                 var result = await _context.Appointments.Include(a => a.Pet).Include(a => a.Pet.Client)
                 .Include(a => a.AppointmentStatus).Include(a => a.AppointmentServices).Include(a => a.Employee)
                     .FirstAsync(a => a.AppointmentId == appointment.AppointmentId);
@@ -155,16 +154,22 @@ namespace VetSystemApi.Services
             if (service == null)
                 throw new ArgumentException("Invalid Service.");
 
-            var scheduleAvailabilityDto = new ScheduleAvailabilityDto
+            bool isTimeChanged = appointment.StartTime != appointmentDto.StartTime ||
+                         appointment.AppointmentDate != appointmentDto.AppointmentDate;
+
+            if (isTimeChanged)
             {
-                EmployeeId = employee.EmployeeId,
-                ScheduleAvailabilityDate = appointmentDto.AppointmentDate
-            };
+                var scheduleAvailabilityDto = new ScheduleAvailabilityDto
+                {
+                    EmployeeId = appointmentDto.EmployeeId,
+                    ScheduleAvailabilityDate = appointmentDto.AppointmentDate
+                };
 
-            var availableSlots = await _scheduleAvailabilityService.GetAvailableSlotsAsync(scheduleAvailabilityDto);
+                var availableSlots = await _scheduleAvailabilityService.GetAvailableSlotsAsync(scheduleAvailabilityDto);
 
-            if (!availableSlots.Contains(appointmentDto.StartTime) || appointment.StartTime != appointmentDto.StartTime)
-                throw new ArgumentException("Selected time is not available.");
+                if (!availableSlots.Contains(appointmentDto.StartTime))
+                    throw new ArgumentException("Selected time is not available.");
+            }
 
             appointment.PetId = appointmentDto.PetId;
             appointment.EmployeeId = employee.EmployeeId;
@@ -180,9 +185,11 @@ namespace VetSystemApi.Services
             try
             {
                 await _context.SaveChangesAsync();
+
                 var result = await _context.Appointments.Include(a => a.Pet).Include(a => a.Pet.Client)
                 .Include(a => a.AppointmentStatus).Include(a => a.AppointmentServices).Include(a => a.Employee)
                     .FirstAsync(a => a.AppointmentId == appointment.AppointmentId);
+
                 return ToAppointmentDto(result);
             }
             catch (Exception ex)

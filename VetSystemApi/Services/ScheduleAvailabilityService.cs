@@ -22,28 +22,30 @@ namespace VetSystemApi.Services
         public async Task<List<TimeOnly>> GetAvailableSlotsAsync(ScheduleAvailabilityDto scheduleAvailabilityDto)
         {
             var dayOfWeek = scheduleAvailabilityDto.ScheduleAvailabilityDate.DayOfWeek.ToString();
+
             var workday = await _context.Workdays
                 .Where(w => w.EmployeeId == scheduleAvailabilityDto.EmployeeId && w.DayOfWeek == dayOfWeek)
                 .FirstOrDefaultAsync();
 
             if (workday == null)
-                return new List<TimeOnly>(); 
+                return new List<TimeOnly>();
 
-
+            // Генерируем все возможные слоты без учёта обеда и перерывов
             var slots = new List<TimeOnly>();
             var current = workday.StartTime;
+
             while (current.Add(TimeSpan.FromMinutes(workday.SlotDuration)) <= workday.EndTime)
             {
-              
                 if (!(current >= workday.LunchStart && current < workday.LunchEnd))
                     slots.Add(current);
 
                 current = current.AddMinutes(workday.SlotDuration);
             }
 
-  
+            // Применяем переопределения рабочего дня (отгулы, сокращённый день и т.д.)
             var overrides = await _context.WorkdayOverrides
-                .Where(o => o.EmployeeId == scheduleAvailabilityDto.EmployeeId && o.WorkdayOverrideDate == scheduleAvailabilityDto.ScheduleAvailabilityDate)
+                .Where(o => o.EmployeeId == scheduleAvailabilityDto.EmployeeId &&
+                            o.WorkdayOverrideDate == scheduleAvailabilityDto.ScheduleAvailabilityDate)
                 .ToListAsync();
 
             foreach (var ov in overrides)
@@ -51,12 +53,15 @@ namespace VetSystemApi.Services
                 slots = slots.Where(s => s < ov.StartTime || s >= ov.EndTime).ToList();
             }
 
+            // === ИСПРАВЛЕНИЕ: Исключаем отменённые записи ===
+            var occupiedSlots = await _context.Appointments
+                .Where(a => a.EmployeeId == scheduleAvailabilityDto.EmployeeId &&
+                            a.AppointmentDate == scheduleAvailabilityDto.ScheduleAvailabilityDate &&
+                            a.AppointmentStatusId != 5)        // ←←← Вот главное изменение!
+                .Select(a => a.StartTime)
+                .ToListAsync();
 
-            var occupiedSlots = await _context.Appointments.
-                Where(a => a.EmployeeId == scheduleAvailabilityDto.EmployeeId && 
-                a.AppointmentDate == scheduleAvailabilityDto.ScheduleAvailabilityDate)
-                .Select(a => a.StartTime).ToListAsync(); 
-
+            // Убираем занятые слоты
             slots = slots.Where(s => !occupiedSlots.Contains(s)).ToList();
 
             return slots;

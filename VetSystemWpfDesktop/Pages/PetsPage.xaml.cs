@@ -37,6 +37,7 @@ namespace VetSystemWpfDesktop.Pages
         {
             var pets = await _petsService.GetPetsAsync();
             PetsListView.ItemsSource = pets;
+            AllPetsTextBlock.Text = pets?.Count.ToString();
         }
 
         private void AddPetButton_Click(object sender, RoutedEventArgs e)

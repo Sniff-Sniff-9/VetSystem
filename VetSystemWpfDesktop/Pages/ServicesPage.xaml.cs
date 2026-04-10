@@ -18,29 +18,29 @@ using VetSystemWpfDesktop.Services;
 namespace VetSystemWpfDesktop.Pages
 {
     /// <summary>
-    /// Логика взаимодействия для ClientsPage.xaml
+    /// Логика взаимодействия для ServicesPage.xaml
     /// </summary>
-    public partial class ClientsPage : Page
+    public partial class ServicesPage : Page
     {
-        private readonly ClientsService _clientsService;
-        public ClientsPage()
+        private readonly ServicesService _servicesService;
+        public ServicesPage()
         {
             InitializeComponent();
             var client = new HttpClient() { BaseAddress = new Uri("https://localhost:7146/api/") };
-            _clientsService = new ClientsService(client);
-            LoadClientsAsync();
+            _servicesService = new ServicesService(client);
+            LoadServicesAsync();
         }
 
-        public async void LoadClientsAsync()
+        public async void LoadServicesAsync()
         {
-            var clients = await _clientsService.GetClientsAsync();
-            ClientsListView.ItemsSource = clients;
-            AllClientsTextBlock.Text = clients?.Count.ToString();
+            var services = await _servicesService.GetServicesAsync();
+            ServicesListView.ItemsSource = services;
+            AllServicesTextBlock.Text = services?.Count.ToString();
         }
 
-        private void AddClientButton_Click(object sender, RoutedEventArgs e)
+        private void AddServiceButton_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new ClientEditPage());
+
         }
     }
 }

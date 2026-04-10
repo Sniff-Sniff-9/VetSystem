@@ -13,7 +13,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <!-- HEADER -->
+
         <StackPanel Orientation="Horizontal" Margin="8">
             <materialDesign:PackIcon Kind="Schedule" Width="40" Height="40" Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
             <TextBlock Text="Расписание" FontSize="30" FontWeight="SemiBold" Margin="10,0,0,0" VerticalAlignment="Center" Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
@@ -26,7 +26,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <!-- ЛЕВАЯ КОЛОНКА -->
+        
             <materialDesign:Card Grid.Column="0"
                              Padding="16"
                              UniformCornerRadius="16">
@@ -38,13 +38,12 @@
                         <RowDefinition Height="Auto"></RowDefinition>
                     </Grid.RowDefinitions>
 
-                    <!-- Поиск -->
+                
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="Search" Width="24" Height="24" Margin="0,0,10,0" VerticalAlignment="Center" Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
                         <TextBox Height="36" Width="200" materialDesign:HintAssist.Hint="Поиск..." Margin="0,0,0,10"/>
                     </StackPanel>
 
-                    <!-- Список врачей -->
                     <ListView x:Name="DoctorsList"
                           BorderThickness="0"
                           Grid.Row="1"
@@ -85,7 +84,7 @@
 
             </materialDesign:Card>
 
-            <!-- ПРАВАЯ КОЛОНКА -->
+
 
             <materialDesign:Card Grid.Column="2" Padding="28" UniformCornerRadius="20" HorizontalAlignment="Stretch">
                 <Grid>
@@ -95,7 +94,7 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <!-- Заголовок -->
+               
                     <TextBlock Text="Шаблонное расписание" FontSize="24" FontWeight="SemiBold" Margin="0,0,0,20"/>
 
                     <Grid Grid.Row="1" VerticalAlignment="Center">
@@ -106,21 +105,21 @@
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="180"/>
-                                <!-- День недели -->
+                          
                                 <ColumnDefinition Width="1.5*"/>
-                                <!-- Начало рабочего дня -->
+                         
                                 <ColumnDefinition Width="30"/>
-                                <!-- тире -->
+                           
                                 <ColumnDefinition Width="1.5*"/>
-                                <!-- Конец рабочего дня -->
+                           
                                 <ColumnDefinition Width="40"/>
-                                <!-- отступ между блоками -->
+                      
                                 <ColumnDefinition Width="1.5*"/>
-                                <!-- Начало обеда -->
+                           
                                 <ColumnDefinition Width="30"/>
-                                <!-- тире -->
+                             
                                 <ColumnDefinition Width="1.5*"/>
-                                <!-- Конец обеда -->
+                            
                             </Grid.ColumnDefinitions>
 
                             <TextBlock Grid.Column="0" 
@@ -144,7 +143,7 @@
                                FontSize="15"/>
                             </StackPanel>
 
-                            <!-- Обеденное время + иконка слева -->
+                  
                             <StackPanel Grid.Column="5" 
                             Grid.ColumnSpan="3" 
                             Orientation="Horizontal" 
@@ -161,7 +160,7 @@
                             </StackPanel>
                         </Grid>
 
-                        <!-- СПИСОК РАСПИСАНИЯ (исправленная сетка в шаблоне) -->
+            
                         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                             <ItemsControl x:Name="ScheduleList" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
                                 <ItemsControl.ItemTemplate>
@@ -170,21 +169,21 @@
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="180"/>
-                                                    <!-- День недели -->
+                                                  
                                                     <ColumnDefinition Width="1.5*"/>
-                                                    <!-- Начало рабочего дня -->
+                                           
                                                     <ColumnDefinition Width="30"/>
-                                                    <!-- тире -->
+                             
                                                     <ColumnDefinition Width="1.5*"/>
-                                                    <!-- Конец рабочего дня -->
+                                      
                                                     <ColumnDefinition Width="40"/>
-                                                    <!-- отступ -->
+                                                   
                                                     <ColumnDefinition Width="1.5*"/>
-                                                    <!-- Начало обеда -->
+                                              
                                                     <ColumnDefinition Width="30"/>
-                                                    <!-- тире -->
+                                   
                                                     <ColumnDefinition Width="1.5*"/>
-                                                    <!-- Конец обеда -->
+                                      
                                                 </Grid.ColumnDefinitions>
 
                                                 <TextBlock Grid.Column="0" 
@@ -213,7 +212,7 @@
                      materialDesign:HintAssist.Hint="17:00" 
                      IsReadOnly="True"/>
 
-                                                <!-- пустая колонка-отступ -->
+                                             
 
                                                 <TextBox Grid.Column="5" 
                      Height="36" 
@@ -242,7 +241,7 @@
                         </ScrollViewer>
                     </Grid>
 
-                    <!-- Кнопки (оставлены без изменений) -->
+
                     <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,28,0,0">
                         <Button Style="{StaticResource MaterialDesignRaisedButton}" Foreground="White" Margin="0,0,12,0">
                             <StackPanel Orientation="Horizontal">

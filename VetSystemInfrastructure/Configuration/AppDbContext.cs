@@ -64,7 +64,7 @@ public partial class AppDbContext : DbContext
                 .HasConstraintName("FK__Appointme__PetId__60A75C0F");
 
       
-            entity.HasQueryFilter(a => !a.IsDeleted);
+            entity.HasQueryFilter(a => !a.IsDeleted && !a.Employee.IsDeleted);
         });
 
         modelBuilder.Entity<AppointmentStatus>(entity =>

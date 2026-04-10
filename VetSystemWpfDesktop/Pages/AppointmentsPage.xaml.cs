@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using VetSystemModels.Dto.Appointment;
 using VetSystemWpfDesktop.Services;
 
 namespace VetSystemWpfDesktop.Pages
@@ -35,13 +36,30 @@ namespace VetSystemWpfDesktop.Pages
         {
             var clients = await _appointmentsService.GetAppointmentsAsync() ?? new();
             AppointmentsListView.ItemsSource = clients;
-            AllAppontmentsTextBlock.Text = NewAppontmentsTextBlock.Text = clients.Count.ToString();
+            AllAppontmentsTextBlock.Text = clients.Count.ToString();
+            NewAppontmentsTextBlock.Text = clients.Where(a => a.AppointmentDate.Month == DateTime.Today.Month).ToList().Count.ToString();
         }
         
 
         private void AddAppointmentButton_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new AppointmentEditPage());
+            NavigationService.Navigate(new AppointmentEditPage(null, "create"));
+        }
+
+        private void EditAppointmentButton_Click(object sender, RoutedEventArgs e)
+        {
+            if ((sender as Button)?.DataContext is AppointmentDto appointment)
+            {
+                NavigationService.Navigate(new AppointmentEditPage(appointment, "edit"));
+            }
+        }
+
+        private void CheckAppointmentButton_Click(object sender, RoutedEventArgs e)
+        {
+            if ((sender as Button)?.DataContext is AppointmentDto appointment)
+            {
+                NavigationService.Navigate(new AppointmentEditPage(appointment, "check"));
+            }
         }
     }
 }

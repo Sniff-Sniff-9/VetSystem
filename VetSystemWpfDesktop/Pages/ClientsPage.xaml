@@ -8,40 +8,32 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <!-- HEADER -->
+
         <StackPanel Orientation="Horizontal" Margin="8">
             <materialDesign:PackIcon Kind="Account" Width="40" Height="40" Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
             <TextBlock Text="Клиенты" FontSize="30" FontWeight="SemiBold" Margin="10,0,0,0" VerticalAlignment="Center" Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
         </StackPanel>
-        <!-- STATISTICS -->
+
         <Grid Grid.Row="1" Margin="0,10,0,10">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <materialDesign:Card Margin="4" Padding="16" UniformCornerRadius="12">
                 <StackPanel HorizontalAlignment="Center">
                     <materialDesign:PackIcon Kind="Account" Width="32" Height="32" HorizontalAlignment="Center" Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
                     <TextBlock Text="Всего клиентов" Margin="0,6" FontWeight="SemiBold" HorizontalAlignment="Center"/>
-                    <TextBlock Text="85" FontSize="22" FontWeight="Bold" HorizontalAlignment="Center"/>
-                </StackPanel>
-            </materialDesign:Card>
-            <materialDesign:Card Grid.Column="1" Margin="4" Padding="16" UniformCornerRadius="12">
-                <StackPanel HorizontalAlignment="Center">
-                    <materialDesign:PackIcon Kind="CalendarPlus" Width="32" Height="32" Foreground="Green"  HorizontalAlignment="Center"/>
-                    <TextBlock Text="Новые за месяц" Margin="0,6" FontWeight="SemiBold" HorizontalAlignment="Center"/>
-                    <TextBlock Text="7" FontSize="22" FontWeight="Bold" HorizontalAlignment="Center"/>
+                    <TextBlock Text="0" FontSize="22" FontWeight="Bold" HorizontalAlignment="Center" Name="AllClientsTextBlock"/>
                 </StackPanel>
             </materialDesign:Card>
         </Grid>
-        <!-- MAIN CARD -->
+  
         <materialDesign:Card Grid.Row="2" Padding="18" UniformCornerRadius="16">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <!-- TOOLBAR -->
+    
                 <DockPanel Margin="0,0,0,14">
                     <Button DockPanel.Dock="Right" Style="{StaticResource MaterialDesignRaisedButton}" Foreground="White" Height="36" Click="AddClientButton_Click">
                         <StackPanel Orientation="Horizontal">
@@ -49,20 +41,20 @@
                             <TextBlock Text="Добавить клиента" Margin="6,0,0,0"/>
                         </StackPanel>
                     </Button>
-                    <!-- SEARCH -->
+          
                     <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="Search" Width="24" Height="24" VerticalAlignment="Center" Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
+                        <materialDesign:PackIcon Kind="Search" Width="24" Height="24" Margin="0,0,10,0" VerticalAlignment="Center" Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
                         <TextBox Width="200" Height="36" materialDesign:HintAssist.Hint="Поиск..."/>
                     </StackPanel>
                 </DockPanel>
-                <!-- CLIENT TABLE -->
+          
                 <Grid Grid.Row="1">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <!-- HEADER -->
-                    <Grid Margin="8,0,8,6">
+            
+                    <Grid Margin="8,8">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="2*"/>
                             <ColumnDefinition Width="2*"/>
@@ -78,9 +70,9 @@
                         <TextBlock Text="Телефон" Grid.Column="4" FontWeight="SemiBold" VerticalAlignment="Center"/>
                         <TextBlock Text="Действия" Grid.Column="5" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Grid>
-                    <!-- LIST -->
+                 
                     <ListView Grid.Row="1" x:Name="ClientsListView" BorderThickness="0" HorizontalContentAlignment="Stretch" materialDesign:ElevationAssist.Elevation="Dp0">
-                        <!-- Hover строки -->
+                     
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
                                 <Setter Property="Padding" Value="0"/>
@@ -101,7 +93,7 @@
                                 </Setter>
                             </Style>
                         </ListView.ItemContainerStyle>
-                        <!-- ROW TEMPLATE -->
+                    
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <Border BorderBrush="#E0E0E0" BorderThickness="0,0,0,1">
@@ -128,7 +120,7 @@
                                         <TextBlock Text="{Binding MiddleName}" Grid.Column="2" VerticalAlignment="Center" FontWeight="SemiBold"/>
                                         <TextBlock Text="{Binding BirthDate, StringFormat='dd.MM.yyyy'}" Grid.Column="3" VerticalAlignment="Center"/>
                                         <TextBlock Text="{Binding Phone}" Grid.Column="4" VerticalAlignment="Center"/>
-                                        <!-- ACTIONS -->
+                                 
                                         <StackPanel Grid.Column="5" Orientation="Horizontal" HorizontalAlignment="Center">
                                             <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="Просмотреть">
                                                 <materialDesign:PackIcon Kind="EyeOutline"/>
@@ -138,11 +130,11 @@
                                                 <Button.Style>
                                                     <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignIconButton}">
 
-                                                        <!-- по умолчанию запрещено -->
+                                                    
                                                         <Setter Property="IsEnabled" Value="False"/>
 
                                                         <Style.Triggers>
-                                                            <!-- если питомец создан админом -->
+                                                 
                                                             <DataTrigger Binding="{Binding UserId}" Value="{x:Null}">
                                                                 <Setter Property="IsEnabled" Value="True"/>
                                                             </DataTrigger>

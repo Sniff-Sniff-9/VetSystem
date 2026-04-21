@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using VetSystemModels.Dto.Service;
+using VetSystemWpfDesktop.Services;
 
 namespace VetSystemWpfDesktop.Pages
 {
@@ -37,10 +38,10 @@ namespace VetSystemWpfDesktop.Pages
             SelectedService = ServicesListView.SelectedItem as ServiceDto;
 
             if (SelectedService == null) return;
-
             
             DialogResult = true;
         }
+
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {

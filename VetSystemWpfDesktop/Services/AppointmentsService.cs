@@ -117,6 +117,11 @@ namespace VetSystemWpfDesktop.Services
         {
             return await _httpClient.GetFromJsonAsync<AppointmentStatus>($"AppointmentStatuses/{id}") ?? new();
         }
+
+        public async Task DeleteAppointmentServiceAsync(int id)
+        {
+            await _httpClient.DeleteAsync($"AppointmentServices/{id}");
+        }
     }
 }
 

@@ -119,7 +119,7 @@
                         </Grid.RowDefinitions>
 
                 
-                        <materialDesign:Card Grid.Row="0" Grid.Column="0" Margin="8" Padding="16">
+                        <materialDesign:Card Grid.Row="0" Grid.Column="0" Margin="8" Padding="16" Name="ClientCard">
                             <StackPanel>
                                 <TextBlock Text="Клиент" FontWeight="SemiBold" Margin="0,0,0,6" FontSize="14"/>
                                 <Grid>
@@ -187,7 +187,7 @@
                                     </Grid.ColumnDefinitions>
                                     <materialDesign:PackIcon Kind="Search" Width="24" Height="24" Margin="0,0,10,0" VerticalAlignment="Center" Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
                                     <TextBox Grid.Column="1" x:Name="ServiceSearchTextBox" Height="36" materialDesign:HintAssist.Hint="Поиск..." 
-TextChanged="ClientSearchTextBox_TextChanged"/>
+TextChanged="ServiceSearchTextBox_TextChanged"/>
                                 </Grid>
                                 <ListBox x:Name="ServicesListBox" Height="120" Margin="0,5,0,0" SelectionChanged="ServicesListBox_SelectionChanged">
                                     <ListBox.ItemTemplate>
@@ -215,7 +215,7 @@ TextChanged="ClientSearchTextBox_TextChanged"/>
                                     </Grid.ColumnDefinitions>
                                     <materialDesign:PackIcon Kind="Search" Width="24" Height="24" Margin="0,0,10,0" VerticalAlignment="Center" Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
                                     <TextBox Grid.Column="1" x:Name="EmployeeSearchTextBox" Height="36" materialDesign:HintAssist.Hint="Поиск..." 
-TextChanged="ClientSearchTextBox_TextChanged"/>
+TextChanged="DoctorSearchTextBox_TextChanged"/>
                                 </Grid>
                                 <ListBox x:Name="DoctorsListBox" Height="120" Margin="0,5,0,0" SelectionChanged="DoctorsListBox_SelectionChanged">
                                     <ListBox.ItemTemplate>
@@ -290,7 +290,7 @@ TextChanged="ClientSearchTextBox_TextChanged"/>
                     <Button Style="{StaticResource MaterialDesignOutlinedButton}" 
                             HorizontalAlignment="Left" 
                             Height="40" 
-                            Click="AddServiceButton_Click" Grid.Row="3">
+                            Click="AddServiceButton_Click" Name="AddServiceButton" Grid.Row="3">
                         <StackPanel Orientation="Horizontal" >
                             <materialDesign:PackIcon Kind="Plus" Width="20" Height="20"/>
                             <TextBlock Text="Добавить услугу" Margin="8,0,0,0"/>

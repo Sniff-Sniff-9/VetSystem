@@ -36,7 +36,21 @@ namespace VetSystemWpfDesktop.Pages
         private AppointmentsService _appointmentsService;
         private EmployeesService _employeesService;
         private List<AppointmentServiceDto> _appointmentServices = new();
+
+        private List<ClientDto> _clients = new();
+        private List<ServiceDto> _services = new();
+        private List<EmployeeDto> _employees = new();
+        private List<PetDto> _pets = new();
+
+        private bool _isPageInitializing = true;
+        private bool _isUpdatingSelection;
+
+        private ServiceDto? _previousSelectedService;
+        private EmployeeDto? _initialEmployee;
+        private List<AppointmentServiceDto> _initialAppointmentServices = new();
+
         private TimeOnly _selectedSlot;
+
         private AppointmentDto? _appointment;
         private string _mode;
 
@@ -45,7 +59,7 @@ namespace VetSystemWpfDesktop.Pages
         public AppointmentEditPage(AppointmentDto? appointment, string mode)
         {
             InitializeComponent();
-
+            
             var client = new HttpClient()
             {
                 BaseAddress = new Uri("https://localhost:7146/api/")
@@ -59,67 +73,108 @@ namespace VetSystemWpfDesktop.Pages
             _mode = mode;
             _appointment = appointment;
 
-            _ = LoadClientsAsync();
-            _ = LoadServicesAsync();
-            if (_appointment != null)
-            {
-                _ = LoadAdditionalServicesAsync(_appointment.AppointmentId);
-                _ = LoadAppointmentDataForEditAsync();
-            }
+            InitializeAsync();
+
             if (_mode == "check")
             {
-              
+                SaveButton.Visibility = Visibility.Collapsed;
+                AdditionalServicesListView.IsHitTestVisible = false;
+                AddServiceButton.Visibility = Visibility.Collapsed;
+                DateSlotCard.IsHitTestVisible = false;
+                ClientCard.IsHitTestVisible = false;
+                DoctorCard.IsHitTestVisible = false;
+                PetCard.IsHitTestVisible = false;
+                ServiceCard.IsHitTestVisible = false;
             }
         }
 
         private async Task LoadServicesAsync()
         {
-            var services = await _servicesService.GetServicesAsync() ?? new();
-            ServicesListBox.ItemsSource = services;
+            _services = await _servicesService.GetServicesAsync() ?? new();
+            ServicesListBox.ItemsSource = _services;
+
             if (_appointment != null)
             {
-                ServicesListBox.SelectedItem = services.FirstOrDefault(c => c.ServiceId == _appointment.ServiceId);
+                ServicesListBox.SelectedItem =
+                    _services.FirstOrDefault(c => c.ServiceId == _appointment.ServiceId);
             }
         }
 
         private async Task LoadAdditionalServicesAsync(int id)
         {
             _appointmentServices = await _appointmentsService.GetServicesByAppointmentIdAsync(id) ?? new();
+
+            _initialAppointmentServices = _appointmentServices
+                .Select(s => new AppointmentServiceDto
+                {
+                    AppointmentServiceId = s.AppointmentServiceId,
+                    ServiceId = s.ServiceId,
+                    ServiceName = s.ServiceName,
+                    PriceAtMoment = s.PriceAtMoment,
+                    IsMain = s.IsMain
+                })
+                .ToList();
+
             AdditionalServicesListView.ItemsSource = _appointmentServices.OrderByDescending(aps => aps.IsMain);
-            if (_appointmentServices != null)
-            {
-                TotalPriceText.Text = $"{_appointmentServices.Sum(s => s.PriceAtMoment).ToString()} ₽";
-            }
-            
+
+            TotalPriceText.Text = $"{_appointmentServices.Sum(s => s.PriceAtMoment)} ₽";
         }
 
         private async Task LoadClientsAsync()
         {
-            var clients = await _clientsService.GetClientsAsync() ?? new();
-            ClientsListBox.ItemsSource = clients;
+            _clients = await _clientsService.GetClientsAsync() ?? new();
+            ClientsListBox.ItemsSource = _clients;
+
             if (_appointment != null)
             {
-                ClientsListBox.SelectedItem = clients.FirstOrDefault(c => c.ClientId == _appointment.ClientId);
+                ClientsListBox.SelectedItem =
+                    _clients.FirstOrDefault(c => c.ClientId == _appointment.ClientId);
             }
+
         }
 
         private async Task LoadEmployeesAsync(ServiceDto serviceDto)
         {
-            var employees = await _servicesService.GetEmployeesByServiceIdAsync(serviceDto.ServiceId) ?? new();
-            DoctorsListBox.ItemsSource = employees;
+            _employees = await _servicesService
+        .GetEmployeesByServiceIdAsync(serviceDto.ServiceId) ?? new();
+
             if (_appointment != null)
             {
-                DoctorsListBox.SelectedItem = employees.FirstOrDefault(c => c.EmployeeId == _appointment.EmployeeId);
+                var employeeFromAppointment = _employees
+                    .FirstOrDefault(e => e.EmployeeId == _appointment.EmployeeId);
+
+                if (employeeFromAppointment == null)
+                {
+                    var _oldEmployee = await _employeesService.GetClientAsync(_appointment.EmployeeId) ?? new();
+                    _employees.Add(_oldEmployee);
+                }
+            }
+
+            DoctorsListBox.ItemsSource = _employees;
+
+            if (_appointment != null)
+            {
+                DoctorsListBox.SelectedItem = _employees
+                    .FirstOrDefault(e => e.EmployeeId == _appointment.EmployeeId);
+
+                if (_isPageInitializing)
+                {
+                    _initialEmployee = DoctorsListBox.SelectedItem as EmployeeDto;
+                }
             }
         }
 
         private async Task LoadPetsAsync(ClientDto clientDto)
         {
-            var pets = await _clientsService.GetPetsByClientIdAsync(clientDto.ClientId) ?? new();
-            PetsListBox.ItemsSource = pets;
+            _pets = await _clientsService
+        .GetPetsByClientIdAsync(clientDto.ClientId) ?? new();
+
+            PetsListBox.ItemsSource = _pets;
+
             if (_appointment != null)
             {
-                PetsListBox.SelectedItem = pets.FirstOrDefault(c => c.PetId == _appointment.PetId);
+                PetsListBox.SelectedItem =
+                    _pets.FirstOrDefault(c => c.PetId == _appointment.PetId);
             }
         }
 
@@ -145,9 +200,10 @@ namespace VetSystemWpfDesktop.Pages
             var slots = await _appointmentsService.GetAvailableSlotsAsync(
                 employee.EmployeeId,
                 DateOnly.FromDateTime(date.Value));
+
             if (slots == null) return;
 
-            if (_appointment != null && !slots.Contains(_appointment.StartTime))
+            if (_appointment != null && !slots.Contains(_appointment.StartTime) && DoctorsListBox.SelectedItem == _initialEmployee)
             {
                 slots.Add(_appointment.StartTime);
             }
@@ -230,7 +286,12 @@ namespace VetSystemWpfDesktop.Pages
 
         private void ClientSearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-          
+            ApplySearch(
+                  ClientSearchTextBox,
+                  ClientsListBox,
+                  _clients,
+                  x => $"{x.LastName} {x.FirstName} {x.MiddleName}"
+              );
         }
 
         private async void ClientsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -245,13 +306,15 @@ namespace VetSystemWpfDesktop.Pages
 
             if (doctor == null)
             {
-                MessageBox.Show("Выберите специалиста.");
+                await DialogService.ShowMessage("Выберите специалиста.");
                 return;
             }
 
             var services = await _employeesService.GetServicesByEmployeeIdAsync(doctor.EmployeeId);
 
-            var window = new AddAdditionalServicesWindow(services ?? new());
+            var availableServices = services?.Where(s => !_appointmentServices.Any(a => a.ServiceId == s.ServiceId)).ToList();
+
+            var window = new AddAdditionalServicesWindow(availableServices ?? new());
 
             if (window.ShowDialog() == true)
             {
@@ -260,6 +323,12 @@ namespace VetSystemWpfDesktop.Pages
                 if (service == null) return;
 
                 if (services != null) services.Remove(service);
+
+                if (_appointmentServices.Any(s => s.ServiceId == service.ServiceId))
+                {
+                    await DialogService.ShowMessage("Услуга уже добавлена.");
+                    return;
+                }
 
                 var appointmentService = new AppointmentServiceDto
                 {
@@ -280,7 +349,14 @@ namespace VetSystemWpfDesktop.Pages
 
         private void RemoveServiceButton_Click(object sender, RoutedEventArgs e)
         {
-
+            if ((sender as Button)?.DataContext is AppointmentServiceDto service)
+            {
+                _appointmentServices.Remove(service);
+                AdditionalServicesListView.ItemsSource = null;
+                AdditionalServicesListView.ItemsSource = _appointmentServices;
+                TotalPriceText.Text = $"{_appointmentServices.Sum(s => s.PriceAtMoment)} ₽";
+            }
+           
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
@@ -290,60 +366,108 @@ namespace VetSystemWpfDesktop.Pages
 
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            var date = DatePicker.SelectedDate
-        ?? throw new InvalidOperationException("Не выбрана дата");
+            if (!await ValidateForm())
+                return;
 
-            var doctor = DoctorsListBox.SelectedItem as EmployeeDto
-                ?? throw new InvalidOperationException("Не выбран врач");
+            var date = DatePicker.SelectedDate;
 
-            var pet = PetsListBox.SelectedItem as PetDto
-                ?? throw new InvalidOperationException("Не выбран питомец");
-
-            var service = ServicesListBox.SelectedItem as ServiceDto
-                ?? throw new InvalidOperationException("Не выбрана услуга");
+            var doctor = DoctorsListBox.SelectedItem as EmployeeDto;
+            var pet = PetsListBox.SelectedItem as PetDto;
+            var service = ServicesListBox.SelectedItem as ServiceDto;
 
             var selectedStatus = StatusButtonStackPanel.Children
-    .OfType<RadioButton>()
-    .FirstOrDefault(r => r.IsChecked == true)
-    ?? throw new InvalidOperationException("Не выбран статус");
+                .OfType<RadioButton>()
+                .First(r => r.IsChecked == true);
 
             var statusId = Convert.ToInt32(selectedStatus.Tag);
 
-            var appointment = await _appointmentsService.CreateAppointmentAsync(
-                DateOnly.FromDateTime(date),
-                doctor,
-                service,
-                pet,
-                _selectedSlot, int.Parse(selectedStatus.Tag.ToString() ?? "0")
-            );
-
-            foreach (var s in _appointmentServices)
+            if (statusId == 5)
             {
-                if (s.IsMain == true)
-                {
-                    continue;
-                }
+                var confirm = await DialogService.ShowConfirm(
+                    "После отмены записи редактирование станет недоступным. Продолжить?");
 
-                var tempAppointmentService = new CreateAppointmentServiceDto
+                if (!confirm)
+                    return;
+            }
+
+            AppointmentDto appointment;
+
+            if (_appointment == null)
+            {
+                appointment = await _appointmentsService.CreateAppointmentAsync(
+                    DateOnly.FromDateTime(date ?? DateTime.MinValue),
+                    doctor ?? new(),
+                    service ?? new(),
+                    pet ?? new(),
+                    _selectedSlot,
+                    statusId
+                );
+            }
+            else
+            {
+                appointment = _appointment;
+
+                var updateAppointment = new CreateUpdateAppointmentDto
+                {
+                    AppointmentDate = DateOnly.FromDateTime(date ?? DateTime.MinValue),
+                    AppointmentStatusId = statusId,
+                    EmployeeId = doctor?.EmployeeId ?? 0,
+                    PetId = pet?.PetId ?? 0,
+                    ServiceId = service?.ServiceId ?? 0,
+                    StartTime = _selectedSlot,
+                };
+
+                await _appointmentsService.UpdateAppointmentAsync(
+                    appointment.AppointmentId,
+                    updateAppointment);
+            }
+
+            var initial = _initialAppointmentServices ?? new List<AppointmentServiceDto>();
+            var current = _appointmentServices ?? new List<AppointmentServiceDto>();
+
+            var removedServices = initial
+                .Where(db => !current.Any(ui => ui.AppointmentServiceId == db.AppointmentServiceId))
+                .ToList();
+
+            foreach (var removed in removedServices)
+            {
+                if (removed.AppointmentServiceId > 0)
+                {
+                    await _appointmentsService.DeleteAppointmentServiceAsync(removed.AppointmentServiceId);
+                }
+            }
+
+            foreach (var s in current)
+            {
+                if (s.IsMain)
+                    continue;
+
+                if (s.AppointmentServiceId != 0)
+                    continue;
+
+                var temp = new CreateAppointmentServiceDto
                 {
                     AppointmentId = appointment.AppointmentId,
                     ServiceId = s.ServiceId,
                     IsMain = false
                 };
-                await _appointmentsService.CreateAppointmentServiceAsync(tempAppointmentService);
+
+                await _appointmentsService.CreateAppointmentServiceAsync(temp);
             }
 
-            var updateAppointment = new CreateUpdateAppointmentDto
+            var finalUpdate = new CreateUpdateAppointmentDto
             {
                 AppointmentDate = appointment.AppointmentDate,
-                AppointmentStatusId = appointment.AppointmentStatusId,
+                AppointmentStatusId = statusId,
                 EmployeeId = appointment.EmployeeId,
                 PetId = appointment.PetId,
                 ServiceId = appointment.ServiceId,
                 StartTime = appointment.StartTime,
             };
 
-            await _appointmentsService.UpdateAppointmentAsync(appointment.AppointmentId, updateAppointment);
+            await _appointmentsService.UpdateAppointmentAsync(
+                appointment.AppointmentId,
+                finalUpdate);
 
             NavigationService.Navigate(new AppointmentsPage());
         }
@@ -355,7 +479,12 @@ namespace VetSystemWpfDesktop.Pages
 
         private void DoctorSearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-
+            ApplySearch(
+                EmployeeSearchTextBox,
+                DoctorsListBox,
+                _employees,
+                x => $"{x.LastName} {x.FirstName} {x.MiddleName}"
+            );
         }
 
         private async void DoctorsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -365,9 +494,28 @@ namespace VetSystemWpfDesktop.Pages
 
         private async void ServicesListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (_isUpdatingSelection)
+                return;
+
             DoctorCard.IsEnabled = true;
+
             var selectedService = ServicesListBox.SelectedItem as ServiceDto;
-            if (selectedService == null) return;
+
+            if (selectedService == null)
+                return;
+
+            if (_appointmentServices.Any(s => s.ServiceId == selectedService.ServiceId))
+            {
+                await DialogService.ShowMessage("Услуга уже добавлена как дополнительная.");
+
+                _isUpdatingSelection = true;
+                ServicesListBox.SelectedItem = _previousSelectedService;
+                _isUpdatingSelection = false;
+
+                return;
+            }
+
+            _previousSelectedService = selectedService;
 
             var appointmentService = new AppointmentServiceDto
             {
@@ -378,24 +526,28 @@ namespace VetSystemWpfDesktop.Pages
             };
 
             if (_appointmentServices.Count == 0)
-            {
                 _appointmentServices.Add(appointmentService);
-            }
             else
-            {
                 _appointmentServices[0] = appointmentService;
-            }
 
             AdditionalServicesListView.ItemsSource = null;
             AdditionalServicesListView.ItemsSource = _appointmentServices;
-            TotalPriceText.Text = $"{_appointmentServices.Sum(s => s.PriceAtMoment).ToString()} ₽";
 
-            await LoadEmployeesAsync(ServicesListBox.SelectedItem as ServiceDto ?? new());
+            TotalPriceText.Text = $"{_appointmentServices.Sum(s => s.PriceAtMoment)} ₽";
+
+            await LoadEmployeesAsync(selectedService);
+
+
         }
 
         private void ServiceSearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-
+            ApplySearch(
+                ServiceSearchTextBox,
+                ServicesListBox,
+                _services,
+                x => x.ServiceName
+            );
         }
 
         private  void PetsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -405,7 +557,100 @@ namespace VetSystemWpfDesktop.Pages
 
         private void PetSearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
+            ApplySearch(
+                PetSearchTextBox,
+                PetsListBox,
+                _pets,
+                x => x.Name
+            );
+        }
 
+        private void ApplySearch<T>(
+                        TextBox searchBox,
+                        ListBox listBox,
+                        IEnumerable<T> source,
+                        Func<T, string> selector)
+        {
+            var text = searchBox.Text?.ToLower() ?? "";
+
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                listBox.ItemsSource = source;
+                return;
+            }
+
+            listBox.ItemsSource = source
+                .Where(x => selector(x)
+                .ToLower()
+                .Contains(text))
+                .ToList();
+        }
+
+        private async Task<bool> ValidateForm()
+        {
+            if (ClientsListBox.SelectedItem == null)
+            {
+                await DialogService.ShowMessage("Выберите клиента.");
+                return false;
+            }
+
+            if (PetsListBox.SelectedItem == null)
+            {
+                await DialogService.ShowMessage("Выберите питомца.");
+                return false;
+            }
+
+            if (ServicesListBox.SelectedItem == null)
+            {
+                await DialogService.ShowMessage("Выберите услугу.");
+                return false;
+            }
+
+            if (DoctorsListBox.SelectedItem == null)
+            {
+                await DialogService.ShowMessage("Выберите врача.");
+                return false;
+            }
+
+            if (DatePicker.SelectedDate == null)
+            {
+                await DialogService.ShowMessage("Выберите дату приема.");
+                return false;
+            }
+
+            if (_selectedSlot == default)
+            {
+                await DialogService.ShowMessage("Выберите временной слот.");
+                return false;
+            }
+
+            var status = StatusButtonStackPanel.Children
+                .OfType<RadioButton>()
+                .FirstOrDefault(r => r.IsChecked == true);
+
+            if (status == null)
+            {
+                await DialogService.ShowMessage("Выберите статус записи.");
+                return false;
+            }
+
+            return true;
+        }
+
+        private async void InitializeAsync()
+        {
+            _isPageInitializing = true;
+
+            await LoadClientsAsync();
+            await LoadServicesAsync();
+
+            if (_appointment != null)
+            {
+                await LoadAdditionalServicesAsync(_appointment.AppointmentId);
+                await LoadAppointmentDataForEditAsync();
+            }
+
+            _isPageInitializing = false;
         }
     }
 }

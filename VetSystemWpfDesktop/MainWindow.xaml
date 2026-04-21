@@ -236,10 +236,11 @@
                          Background="#E3F2FD"
                          materialDesign:ElevationAssist.Elevation="Dp0">
 
-                        <Frame x:Name="MainFrame"
+                        <materialDesign:DialogHost Identifier="RootDialog">
+                            <Frame x:Name="MainFrame"
                NavigationUIVisibility="Hidden"
                Background="{DynamicResource MaterialDesign.Brush.Background}"/>
-
+                        </materialDesign:DialogHost>
                     </materialDesign:Card>
                 </materialDesign:Card>
 

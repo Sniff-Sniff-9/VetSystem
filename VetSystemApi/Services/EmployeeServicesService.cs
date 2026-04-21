@@ -27,13 +27,13 @@ namespace VetSystemApi.Services
 
         public async Task<List<ServiceDto>> GetServicesByEmployeeIdAsync(int id)
         {
-            var services = await _context.EmployeeServices.Where(es => es.EmployeeId == id).Select(es => es.Service).ToListAsync();
+            var services = await _context.EmployeeServices.Where(es => es.EmployeeId == id).Include(es => es.Service).Select(es => es.Service).ToListAsync();
             return services.Select(s => ToServiceDto(s)).ToList();
         }
 
         public async Task<List<EmployeeDto>> GetEmployeesByServiceIdAsync(int id)
         {
-            var employees = await _context.EmployeeServices.Where(es => es.ServiceId == id).Select(es => es.Employee).ToListAsync();
+            var employees = await _context.EmployeeServices.Where(es => es.ServiceId == id).Include(es => es.Employee).Include(es => es.Employee.Specialization).Select(es => es.Employee).ToListAsync();
             return employees.Select(e => ToEmployeeDto(e)).ToList();
         }
 

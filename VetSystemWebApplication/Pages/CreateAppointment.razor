@@ -16,12 +16,11 @@
 
     <MudCard Elevation="2" Class="mt-1" Style="border-radius:16px;">
 
-        <!-- Степпер без дефолтных кнопок -->
+      
         <MudStepper @bind-ActiveIndex="_step"
                     Linear="true"
                     Class="pa-4">
 
-            <!-- ШАГ 1 -->
             <MudStep Label="Питомец">
                 <MudStack Spacing="3">
                     <MudText Typo="Typo.h6">Выберите питомца</MudText>
@@ -75,7 +74,7 @@
                 </MudStack>
             </MudStep>
 
-            <!-- ШАГ 2 -->
+
             <MudStep Label="Услуга">
                 <MudText Typo="Typo.h6" Class="mb-4">Выберите услугу</MudText>
                 <MudPaper Elevation="0" Style="background:#E3F2FD; border-radius:12px;" Class="pa-2">
@@ -120,7 +119,7 @@
                 </MudPaper>
             </MudStep>
 
-            <!-- ШАГ 3 -->
+      
             <MudStep Label="Дата и время">
 
                 <MudStack Spacing="3">
@@ -234,7 +233,7 @@
                                              Style="border-radius: 12px; overflow: hidden;" Class="mx-4 my-2">
                         <MudStack Spacing="3" Class="pa-6">
 
-                            <!-- Питомец -->
+                          
                             <MudStack Spacing="1">
                                 <MudText Typo="Typo.h6" Color="Color.Default">Питомец</MudText>
                                 <div class="d-flex align-center flex-wrap gap-1">
@@ -253,7 +252,7 @@
                                 </div>
                             </MudStack>
 
-                            <!-- Услуга -->
+                       
                             <MudStack Spacing="1">
                                     <MudText Typo="Typo.h6" Color="Color.Default">Услуга</MudText>
                                 <div class="d-flex align-center flex-wrap gap-1">
@@ -266,7 +265,6 @@
                                 </div>
                             </MudStack>
 
-                            <!-- Дата и время -->
                             <MudStack Spacing="1">
                                 <MudText Typo="Typo.h6" Color="Color.Default">Дата и время</MudText>
                                 <div class="d-flex flex-wrap gap-2 align-center">
@@ -278,7 +276,7 @@
                                 </div>
                             </MudStack>
 
-                            <!-- Специалист -->
+                          
                             <MudStack Spacing="1">
                                     <MudText Typo="Typo.h6" Color="Color.Default">Специалист</MudText>
                                 <div class="d-flex align-center flex-wrap gap-1">
@@ -389,7 +387,7 @@
     private PetDto SelectedPet = new();     
     private ServiceDto SelectedService = new();  
     private EmployeeDto SelectedEmployee = new();  
-    private DateTime? SelectedDate;
+    private DateTime? SelectedDate = DateTime.Today;
     private List<TimeOnly> TimeSlots = new();
     private TimeOnly? SelectedSlot;
 
@@ -402,8 +400,7 @@
         {
             ClientPets = await PetsService.GetPetsAsync();
             Services = await ServicesService.GetAllServicesAsync();
-            Client = await ClientsService.GetClientByUserIdAsync() ?? new();
-            Employees = await EmployeesService.GetEmployeessAsync() ?? new();
+            Client = await ClientsService.GetClientByUserIdAsync() ?? new();    
         }
         catch (Exception ex)
         {
@@ -430,6 +427,8 @@
     private async void SelectService(int id)
     {
         SelectedService = await ServicesService.GetServiceAsync(id);
+        Employees = await ServicesService.GetEmployeesByServiceIdAsync(id) ?? new();
+        await OnDateChanged(SelectedDate);
         StateHasChanged();
     }
 

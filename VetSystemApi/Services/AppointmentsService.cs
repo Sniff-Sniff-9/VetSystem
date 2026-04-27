@@ -112,6 +112,7 @@ namespace VetSystemApi.Services
             {
                 _context.Add(appointment);
                 await _context.SaveChangesAsync();
+
                 var appointmentServiceDto = new CreateAppointmentServiceDto
                 {
                     AppointmentId = appointment.AppointmentId,
@@ -120,11 +121,14 @@ namespace VetSystemApi.Services
                 };
 
                 var appointmentService = await _appointmentServicesService.CreateAppointmentServiceAsync(appointmentServiceDto);
+
                 appointment.TotalPriceAtMoment = appointmentService.PriceAtMoment;
                 await _context.SaveChangesAsync();
+
                 var result = await _context.Appointments.Include(a => a.Pet).Include(a => a.Pet.Client)
                 .Include(a => a.AppointmentStatus).Include(a => a.AppointmentServices).Include(a => a.Employee)
                     .FirstAsync(a => a.AppointmentId == appointment.AppointmentId);
+
                 return ToAppointmentDto(result);
             }
             catch (Exception ex)

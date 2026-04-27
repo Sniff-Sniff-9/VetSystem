@@ -180,126 +180,163 @@
             </Grid.ColumnDefinitions>
 
             <materialDesign:Card Grid.Column="0" Padding="16" UniformCornerRadius="12" Margin="4">
-                <StackPanel>
-                    <TextBlock Text="Ближайшие приемы" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,20"/>
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                    <StackPanel>
+                        <TextBlock Text="Ближайшие приемы" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,20"/>
 
-                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
+                        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
 
-                           
-                            <Grid Margin="8,0,8,6">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="80"/>
-                                    <ColumnDefinition Width="80"/>
-                                    <ColumnDefinition Width="3*"/>
-                                    <ColumnDefinition Width="3*"/>
-                                    <ColumnDefinition Width="2*"/>
-                                    <ColumnDefinition Width="120"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Text="Дата" FontWeight="SemiBold"/>
-                                <TextBlock Text="Начало" Grid.Column="1" FontWeight="SemiBold"/>
-                                <TextBlock Text="Услуга" Grid.Column="2" FontWeight="SemiBold"/>
-                                <TextBlock Text="Специалист" Grid.Column="3" FontWeight="SemiBold"/>
-                                <TextBlock Text="Питомец" Grid.Column="4" FontWeight="SemiBold"/>
-                                <TextBlock Text="Статус" Grid.Column="5" FontWeight="SemiBold" />
-                            </Grid>
 
-                          
-                            <ListView x:Name="AppointmentsNearListView"
-                          BorderThickness="0"
-                          HorizontalContentAlignment="Stretch"
-                          materialDesign:ElevationAssist.Elevation="Dp0" Grid.Row="1"
-                          ItemsSource="{Binding AppointmentsNear}">
+                                <Grid Margin="8,0,8,6">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="80"/>
+                                        <ColumnDefinition Width="80"/>
+                                        <ColumnDefinition Width="3*"/>
+                                        <ColumnDefinition Width="3*"/>
+                                        <ColumnDefinition Width="2*"/>
+                                        <ColumnDefinition Width="100"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="Дата" FontWeight="SemiBold"/>
+                                    <TextBlock Text="Начало" Grid.Column="1" FontWeight="SemiBold"/>
+                                    <TextBlock Text="Услуга" Grid.Column="2" FontWeight="SemiBold"/>
+                                    <TextBlock Text="Специалист" Grid.Column="3" FontWeight="SemiBold"/>
+                                    <TextBlock Text="Питомец" Grid.Column="4" FontWeight="SemiBold"/>
+                                    <TextBlock Text="Статус" Grid.Column="5" FontWeight="SemiBold" HorizontalAlignment="Center" />
+                                </Grid>
 
-                              
-                                <ListView.Style>
-                                    <Style TargetType="ListView">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Items.Count, RelativeSource={RelativeSource Self}}" Value="0">
-                                                <Setter Property="Template">
-                                                    <Setter.Value>
-                                                        <ControlTemplate TargetType="ListView">
-                                                            <TextBlock Text="Нет записей."
-                                                         
-                                                           Foreground="Gray"
-                                                           HorizontalAlignment="Center"
-                                                           VerticalAlignment="Center"
-                                                           Margin="0,50,0,0"/>
-                                                        </ControlTemplate>
-                                                    </Setter.Value>
-                                                </Setter>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </ListView.Style>
+                                <ListView Grid.Row="1" x:Name="AppointmentsNearListView" BorderThickness="0" HorizontalContentAlignment="Stretch"
+                              materialDesign:ElevationAssist.Elevation="Dp0" ItemsSource="{Binding AppointmentNear}">
+                                    <ListView.Style>
+                                        <Style TargetType="ListView">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Items.Count, RelativeSource={RelativeSource Self}}" Value="0">
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="ListView">
+                                                                <TextBlock Text="Нет записей."
+             
+               Foreground="Gray"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center"
+               Margin="0,50,0,0"/>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ListView.Style>
+                                    <ListView.ItemContainerStyle>
 
-                                <ListView.ItemContainerStyle>
-                                    <Style TargetType="ListViewItem">
-                                        <Setter Property="Padding" Value="0"/>
-                                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                        <Setter Property="Template">
-                                            <Setter.Value>
-                                                <ControlTemplate TargetType="ListViewItem">
-                                                    <Border x:Name="RowBorder" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Background="Transparent">
-                                                        <ContentPresenter/>
+                                        <Style TargetType="ListViewItem">
+
+                                            <Setter Property="Padding" Value="0"/>
+                                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+
+                                            <Setter Property="Template">
+
+                                                <Setter.Value>
+
+                                                    <ControlTemplate TargetType="ListViewItem">
+
+                                                        <Border x:Name="RowBorder"
+BorderBrush="#E0E0E0"
+BorderThickness="0,0,0,1"
+Background="Transparent">
+
+                                                            <ContentPresenter/>
+
+                                                        </Border>
+
+                                                        <ControlTemplate.Triggers>
+
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter TargetName="RowBorder"
+        Property="Background"
+        Value="#F5F5F5"/>
+                                                            </Trigger>
+
+
+                                                            <DataTrigger Value="True">
+
+                                                                <DataTrigger.Binding>
+
+                                                                    <MultiBinding Converter="{StaticResource AppointmentNowConverter}">
+
+                                                                        <Binding Path="AppointmentDate"/>
+                                                                        <Binding Path="SсheduleTimeStart"/>
+                                                                        <Binding Path="SсheduleTimeEnd"/>
+
+                                                                    </MultiBinding>
+
+                                                                </DataTrigger.Binding>
+
+                                                                <Setter TargetName="RowBorder"
+                                                            Property="Background"
+                                                            Value="#E3F2FD"/>
+
+                                                                <Setter TargetName="RowBorder"
+                                                            Property="BorderBrush"
+                                                            Value="#2196F3"/>
+
+                                                                <Setter TargetName="RowBorder"
+                                                            Property="BorderThickness"
+                                                            Value="2"/>
+
+                                                            </DataTrigger>
+
+                                                        </ControlTemplate.Triggers>
+
+                                                    </ControlTemplate>
+
+                                                </Setter.Value>
+
+                                            </Setter>
+
+                                        </Style>
+
+                                    </ListView.ItemContainerStyle>
+
+
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BorderBrush="#E0E0E0" BorderThickness="0,0,0,1">
+                                                <Grid Margin="8,8">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="80"/>
+                                                        <ColumnDefinition Width="80"/>
+                                                        <ColumnDefinition Width="3*"/>
+                                                        <ColumnDefinition Width="3*"/>
+                                                        <ColumnDefinition Width="2*"/>
+                                                        <ColumnDefinition Width="100"/>
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <TextBlock Text="{Binding AppointmentDate, StringFormat=dd.MM.yyyy}" FontWeight="SemiBold" VerticalAlignment="Center"/>
+
+                                                    <TextBlock Grid.Column="1" Text="{Binding StartTime, StringFormat=HH:mm}" VerticalAlignment="Center"/>
+
+                                                    <TextBlock Grid.Column="2" Text="{Binding ServiceName}" VerticalAlignment="Center" TextWrapping="Wrap" HorizontalAlignment="Left"/>
+                                                    <TextBlock Grid.Column="3" Text="{Binding EmployeeName}" VerticalAlignment="Center" TextWrapping="Wrap" HorizontalAlignment="Left"/>
+                                                    <TextBlock Grid.Column="4" Text="{Binding PetName}" VerticalAlignment="Center" TextWrapping="Wrap" HorizontalAlignment="Left"/>
+                                                    <Border Grid.Column="5" Style="{StaticResource StatusChip}" HorizontalAlignment="Center" Height="30">
+                                                        <TextBlock Text="{Binding AppointmentStatusName}" VerticalAlignment="Center" FontWeight="SemiBold"/>
                                                     </Border>
-                                                    <ControlTemplate.Triggers>
-                                                        <Trigger Property="IsMouseOver" Value="True">
-                                                            <Setter TargetName="RowBorder" Property="Background" Value="#F5F5F5"/>
-                                                        </Trigger>
-                                                        <DataTrigger Value="True">
-                                                            <DataTrigger.Binding>
-                                                                <MultiBinding Converter="{StaticResource AppointmentNowConverter}">
-                                                                    <Binding Path="AppointmentDate"/>
-                                                                    <Binding Path="SсheduleTimeStart"/>
-                                                                    <Binding Path="SсheduleTimeEnd"/>
-                                                                </MultiBinding>
-                                                            </DataTrigger.Binding>
-                                                            <Setter TargetName="RowBorder" Property="Background" Value="#E3F2FD"/>
-                                                            <Setter TargetName="RowBorder" Property="BorderBrush" Value="#2196F3"/>
-                                                            <Setter TargetName="RowBorder" Property="BorderThickness" Value="2"/>
-                                                        </DataTrigger>
-                                                    </ControlTemplate.Triggers>
-                                                </ControlTemplate>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </Style>
-                                </ListView.ItemContainerStyle>
 
-                           
-                                <ListView.ItemTemplate>
-                                    <DataTemplate>
-                                        <Border BorderBrush="#E0E0E0" BorderThickness="0,0,0,1">
-                                            <Grid Margin="8,8">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="80"/>
-                                                    <ColumnDefinition Width="80"/>
-                                                    <ColumnDefinition Width="3*"/>
-                                                    <ColumnDefinition Width="3*"/>
-                                                    <ColumnDefinition Width="2*"/>
-                                                    <ColumnDefinition Width="120"/>
-                                                </Grid.ColumnDefinitions>
-                                                <TextBlock Text="{Binding AppointmentDate, StringFormat=dd.MM.yyyy}" FontWeight="SemiBold" VerticalAlignment="Center"/>
-                                                <TextBlock Grid.Column="1" Text="{Binding StartTime, StringFormat=HH:mm}" VerticalAlignment="Center"/>
-                                                <TextBlock Grid.Column="2" Text="{Binding ServiceName}" VerticalAlignment="Center"/>
-                                                <TextBlock Grid.Column="3" Text="{Binding EmployeeName}" VerticalAlignment="Center"/>
-                                                <TextBlock Grid.Column="4" Text="{Binding PetName}" VerticalAlignment="Center"/>
-                                                <Border Grid.Column="5" Style="{StaticResource StatusChip}" HorizontalAlignment="Left" Height="30">
-                                                    <TextBlock Text="{Binding AppointmentStatusName}" VerticalAlignment="Center" FontWeight="SemiBold"/>
-                                                </Border>
-                                            </Grid>
-                                        </Border>
-                                    </DataTemplate>
-                                </ListView.ItemTemplate>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
 
-                            </ListView>
-                        </Grid>
-                    </ScrollViewer>
-                </StackPanel>
+                            </Grid>
+                        </ScrollViewer>
+                    </StackPanel>
+                </ScrollViewer>
             </materialDesign:Card>
 
             <materialDesign:Card Grid.Column="1"

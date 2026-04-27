@@ -159,10 +159,9 @@
                                         <ColumnDefinition Width="*"></ColumnDefinition>
                                     </Grid.ColumnDefinitions>
                                     <materialDesign:PackIcon Kind="Search" Width="24" Height="24" Margin="0,0,10,0" VerticalAlignment="Center" Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
-                                    <TextBox Grid.Column="1" x:Name="PetSearchTextBox" Height="36" materialDesign:HintAssist.Hint="Поиск..." 
-             TextChanged="ClientSearchTextBox_TextChanged"/>
+                                    <TextBox Grid.Column="1" x:Name="PetSearchTextBox" Height="36" materialDesign:HintAssist.Hint="Поиск..." TextChanged="PetSearchTextBox_TextChanged"/>
                                 </Grid>
-                                <ListBox x:Name="PetsListBox" Height="120" Margin="0,5,0,0" SelectionChanged="PetsListBox_SelectionChanged">
+                                <ListBox x:Name="PetsListBox" Height="120" Margin="0,5,0,0">
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal">

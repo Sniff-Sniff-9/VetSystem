@@ -29,9 +29,9 @@ namespace VetSystemWpfDesktop.Services
             return await _httpClient.GetFromJsonAsync<List<AppointmentDto>>("Appointments");
         }
 
-        public async Task<List<AppointmentDto>?> GetAppointmentByIdAsync(int id)
+        public async Task<AppointmentDto?> GetAppointmentByIdAsync(int id)
         {
-            return await _httpClient.GetFromJsonAsync<List<AppointmentDto>>($"Appointments/{id}");
+            return await _httpClient.GetFromJsonAsync<AppointmentDto>($"Appointments/{id}");
         }
 
         public async Task<List<AppointmentServiceDto>?> GetServicesByAppointmentIdAsync(int id)

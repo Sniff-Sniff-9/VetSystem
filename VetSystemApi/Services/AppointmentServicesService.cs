@@ -3,6 +3,7 @@ using VetSystemApi.Services.Interfaces;
 using VetSystemInfrastructure.Configuration;
 using VetSystemModels.Dto.Appointment;
 using VetSystemModels.Dto.AppointmentService;
+using VetSystemModels.Dto.ScheduleAvailability;
 using VetSystemModels.Dto.Service;
 using VetSystemModels.Entities;
 

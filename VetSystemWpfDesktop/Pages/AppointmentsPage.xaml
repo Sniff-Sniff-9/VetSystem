@@ -118,15 +118,29 @@
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
            
                         <materialDesign:PackIcon Kind="Search" Width="24" Height="24" Margin="0,0,10,0" VerticalAlignment="Center" Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
-                        <TextBox Width="200" Height="36" materialDesign:HintAssist.Hint="Поиск..."/>
+                        <TextBox Width="200" Height="36" materialDesign:HintAssist.Hint="Поиск..." Name="SearchTextBox"/>
 
                  
-                        <DatePicker Width="140" Height="36" materialDesign:HintAssist.Hint="С" Margin="10,0,0,0"/>
-                        <DatePicker Width="140" Height="36" materialDesign:HintAssist.Hint="По" Margin="10,0,0,0"/>
-                        <ComboBox Width="140" Height="36" materialDesign:HintAssist.Hint="Статус" Margin="10,0,0,0"/>
-                        <ComboBox Width="140" Height="36" materialDesign:HintAssist.Hint="Врач" Margin="10,0,0,0"/>
-                        <ComboBox Width="140" Height="36" materialDesign:HintAssist.Hint="Клиент" Margin="10,0,0,0"/>
-                        <ComboBox Width="140" Height="36" materialDesign:HintAssist.Hint="Питомец" Margin="10,0,0,0"/>
+                        <DatePicker Width="140" Height="36" materialDesign:HintAssist.Hint="С" Margin="10,0,0,0" Name="FromDatePicker"/>
+                        <DatePicker Width="140" Height="36" materialDesign:HintAssist.Hint="По" Margin="10,0,0,0" Name="ToDatePicker"/>
+                        <ComboBox Width="140" Height="36" materialDesign:HintAssist.Hint="Статус" Margin="10,0,0,0" Name="StatusComboBox"/>
+                        <ComboBox Width="140" Height="36" materialDesign:HintAssist.Hint="Врач" Margin="10,0,0,0" Name="DoctorComboBox"/>
+                        <ComboBox Width="140" Height="36" materialDesign:HintAssist.Hint="Клиент" Margin="10,0,0,0" Name="ClientComboBox"/>
+                        <ComboBox Width="140" Height="36" materialDesign:HintAssist.Hint="Питомец" Margin="10,0,0,0" Name="PetComboBox"/>
+
+                        <Button Click="DropFilterButton_Click"
+        Height="36"
+        Margin="20,0,0,0"
+        Style="{StaticResource MaterialDesignOutlinedButton}">
+
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <materialDesign:PackIcon Kind="FilterRemoveOutline"
+                                 Width="18"
+                                 Height="18"
+                                 Margin="0,0,6,0"/>
+                                <TextBlock Text="Сбросить"/>
+                            </StackPanel>
+                        </Button>
                     </StackPanel>
                 </DockPanel>
 
@@ -165,6 +179,26 @@
 
        
                     <ListView Grid.Row="1" x:Name="AppointmentsListView" BorderThickness="0" HorizontalContentAlignment="Stretch" materialDesign:ElevationAssist.Elevation="Dp0">
+                        <ListView.Style>
+                            <Style TargetType="ListView">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Items.Count, RelativeSource={RelativeSource Self}}" Value="0">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="ListView">
+                                                    <TextBlock Text="Нет записей."
+                         
+Foreground="Gray"
+HorizontalAlignment="Center"
+VerticalAlignment="Center"
+Margin="0,0,0,0"/>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ListView.Style>
                         <ListView.ItemContainerStyle>
 
                             <Style TargetType="ListViewItem">
@@ -299,7 +333,7 @@
                                                     </Style>
                                                 </Button.Style>
                                             </Button>
-                                            <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="Удалить">
+                                            <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="Удалить" Name="DeleteAppointemntButton" Click="DeleteAppointemntButton_Click">
                                                 <materialDesign:PackIcon Kind="Delete"/>
                                             </Button>
                                         </StackPanel>

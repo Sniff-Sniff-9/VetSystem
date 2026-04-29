@@ -53,8 +53,9 @@ namespace VetSystemWpfDesktop.Pages
 
         private AppointmentDto? _appointment;
         private string _mode;
+        private string _initialPage;
 
-        public AppointmentEditPage(AppointmentDto? appointment, string mode)
+        public AppointmentEditPage(AppointmentDto? appointment, string mode, string initialPage)
         {
             InitializeComponent();
 
@@ -70,9 +71,10 @@ namespace VetSystemWpfDesktop.Pages
             _employeesService = new EmployeesService(client);
 
             _mode = mode;
+            _initialPage = initialPage;
             _appointment = appointment;
 
-            _ = InitializeAsync(); // FIX: безопасный запуск async
+            _ = InitializeAsync(); 
 
             if (_mode == "check")
             {
@@ -85,6 +87,7 @@ namespace VetSystemWpfDesktop.Pages
                 PetCard.IsHitTestVisible = false;
                 ServiceCard.IsHitTestVisible = false;
             }
+
         }
 
         private async Task LoadServicesAsync()
@@ -379,7 +382,15 @@ namespace VetSystemWpfDesktop.Pages
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new AppointmentsPage());
+            if (_initialPage == "dashboardPage")
+            {
+                NavigationService.Navigate(new DashboardPage());
+            }
+            else
+            {
+                NavigationService.Navigate(new AppointmentsPage());
+            }
+            
         }
 
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
@@ -474,13 +485,20 @@ namespace VetSystemWpfDesktop.Pages
                         {
                             AppointmentDate = appointment.AppointmentDate,
                             AppointmentStatusId = statusId,
-                            EmployeeId = appointment.EmployeeId, // или вообще убрать
+                            EmployeeId = appointment.EmployeeId,
                             PetId = appointment.PetId,
                             ServiceId = appointment.ServiceId,
                             StartTime = appointment.StartTime,
                         });
 
-            NavigationService.Navigate(new AppointmentsPage());
+            if (_initialPage == "dashboardPage")
+            {
+                NavigationService.Navigate(new DashboardPage());
+            }
+            else
+            {
+                NavigationService.Navigate(new AppointmentsPage());
+            }
         }
 
         private async void DatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)

@@ -95,12 +95,12 @@ namespace VetSystemWpfDesktop.Pages
 
         private void CreateAppointmentButton_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new AppointmentEditPage(null, "create"));
+            NavigationService.Navigate(new AppointmentEditPage(null, "create", "dashboardPage"));
         }
 
         private void CreateClientButton_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new ClientEditPage());
+            NavigationService.Navigate(new ClientEditPage("dashboardPage"));
         }
 
         private void CreatePetButton_Click(object sender, RoutedEventArgs e)

@@ -33,5 +33,39 @@ namespace VetSystemWpfDesktop.Services
         {
             return await _httpClient.GetFromJsonAsync<ClientDto?>($"Clients/{id}");
         }
+
+        public async Task<ClientDto?> UpdateClientAsync(UpdateClientDto clientDto, int id)
+        {
+            var client = await _httpClient.GetFromJsonAsync<ClientDto?>($"Clients/{id}") ?? new();
+            var response = await _httpClient.PutAsJsonAsync($"Clients/{client.ClientId}", clientDto);
+
+            response.EnsureSuccessStatusCode();
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new Exception($"API error: {error}");
+            }
+
+            return await response.Content.ReadFromJsonAsync<ClientDto>() ?? new();
+        }
+
+        public async Task<ClientDto> CreateClientAsync(CreateClientDto client)
+        {
+            var response = await _httpClient.PostAsJsonAsync("Clients", client);
+
+            response.EnsureSuccessStatusCode();
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new Exception($"API error: {error}");
+            }
+
+            return await response.Content.ReadFromJsonAsync<ClientDto>() ?? new();
+        }
+
+        public async Task DeleteClientAsync(int id)
+        {
+            await _httpClient.DeleteAsync($"Clients/{id}");
+        }
     }
 }

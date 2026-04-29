@@ -94,7 +94,7 @@
 
                                 <TextBox
                                     Height="36"
-                                    materialDesign:HintAssist.Hint="Введите фамилию"
+                                    materialDesign:HintAssist.Hint="Введите фамилию" Name="LastNameTextBox"
                                     Text="{Binding LastName}"/>
 
                             </StackPanel>
@@ -121,7 +121,7 @@
 
                                 <TextBox
                                     Height="36"
-                                    materialDesign:HintAssist.Hint="Введите имя"
+                                    materialDesign:HintAssist.Hint="Введите имя" Name="FirstNameTextBox"
                                     Text="{Binding FirstName}"/>
 
                             </StackPanel>
@@ -148,7 +148,7 @@
 
                                 <TextBox
                                     Height="36"
-                                    materialDesign:HintAssist.Hint="Введите отчество"
+                                    materialDesign:HintAssist.Hint="Введите отчество" Name="MiddleNameTextBox"
                                     Text="{Binding MiddleName}"/>
 
                             </StackPanel>
@@ -175,8 +175,31 @@
 
                                 <TextBox
                                     Height="36"
-                                    materialDesign:HintAssist.Hint="Введите телефон"
+                                    materialDesign:HintAssist.Hint="Введите телефон" Name="PhoneTextBox"
                                     Text="{Binding Phone}"/>
+
+                            </StackPanel>
+
+                        </materialDesign:Card>
+
+                        <materialDesign:Card
+                                            Grid.Row="2"
+                                            Grid.ColumnSpan="2"
+                                            Margin="8"
+                                            Padding="16"
+                                            UniformCornerRadius="10"
+                                            materialDesign:ElevationAssist.Elevation="Dp0">
+
+                            <StackPanel>
+
+                                <TextBlock
+                                            Text="Дата рождения"
+                                            FontWeight="SemiBold"
+                                            Margin="0,0,0,6"/>
+
+                                <DatePicker
+                                            Height="36"
+                                            materialDesign:HintAssist.Hint="Выберите дату" Name="BirthDateDatePicker"/>
 
                             </StackPanel>
 
@@ -218,13 +241,13 @@
                             <StackPanel>
 
                                 <TextBlock
-                Text="Имя питомца"
-                FontWeight="SemiBold"
-                Margin="0,0,0,6"/>
+                                            Text="Имя питомца"
+                                            FontWeight="SemiBold"
+                                            Margin="0,0,0,6"/>
 
                                 <TextBox
                 Height="36"
-                materialDesign:HintAssist.Hint="Введите имя"/>
+                materialDesign:HintAssist.Hint="Введите имя" Name="PetNameTextBox"/>
 
                             </StackPanel>
 
@@ -250,7 +273,7 @@
 
                                 <ComboBox
                 Height="36"
-                materialDesign:HintAssist.Hint="Выберите вид"/>
+                materialDesign:HintAssist.Hint="Выберите вид" Name="SpeciesComboBox"/>
 
                             </StackPanel>
 
@@ -276,7 +299,7 @@
 
                                 <TextBox
                 Height="36"
-                materialDesign:HintAssist.Hint="Введите породу"/>
+                materialDesign:HintAssist.Hint="Введите породу" Name="BreedTextBox"/>
 
                             </StackPanel>
 
@@ -301,7 +324,7 @@
 
                                 <ComboBox
                                         Height="36"
-                                        materialDesign:HintAssist.Hint="Выберите пол"/>         
+                                        materialDesign:HintAssist.Hint="Выберите пол" Name="GenderComboBox"/>         
 
                             </StackPanel>
 
@@ -327,7 +350,7 @@
 
                                 <DatePicker
                                         Height="36"
-                                        materialDesign:HintAssist.Hint="Выберите дату"/>
+                                        materialDesign:HintAssist.Hint="Выберите дату" Name="PetBirthDatePicker"/>
 
                             </StackPanel>
 

@@ -44,7 +44,7 @@
           
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="Search" Width="24" Height="24" Margin="0,0,10,0" VerticalAlignment="Center" Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
-                        <TextBox Width="200" Height="36" materialDesign:HintAssist.Hint="Поиск..."/>
+                        <TextBox Width="200" Height="36" materialDesign:HintAssist.Hint="Поиск..." Name="SearchTextBox"/>
                     </StackPanel>
                 </DockPanel>
           
@@ -122,10 +122,10 @@
                                         <TextBlock Text="{Binding Phone}" Grid.Column="4" VerticalAlignment="Center"/>
                                  
                                         <StackPanel Grid.Column="5" Orientation="Horizontal" HorizontalAlignment="Center">
-                                            <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="Просмотреть">
+                                            <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="Просмотреть" Name="CheckClientButton" Click="CheckClientButton_Click">
                                                 <materialDesign:PackIcon Kind="EyeOutline"/>
                                             </Button>
-                                            <Button>
+                                            <Button x:Name="EditClientButton" ToolTip="Редактировать" Click="EditClientButton_Click">
 
                                                 <Button.Style>
                                                     <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignIconButton}">
@@ -146,7 +146,7 @@
                                                 <materialDesign:PackIcon Kind="Pencil"/>
 
                                             </Button>
-                                            <Button>
+                                            <Button Name="DeleteClientButton" ToolTip="Удалить" Click="DeleteClientButton_Click">
 
                                                 <Button.Style>
                                                     <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignIconButton}">
@@ -165,12 +165,6 @@
 
                                                 <materialDesign:PackIcon Kind="Delete"/>
 
-                                            </Button>
-                                            <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="Питомцы">
-                                                <materialDesign:PackIcon Kind="Dog"/>
-                                            </Button>
-                                            <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="История">
-                                                <materialDesign:PackIcon Kind="History"/>
                                             </Button>
                                         </StackPanel>
                                     </Grid>

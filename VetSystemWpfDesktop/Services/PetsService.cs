@@ -34,6 +34,32 @@ namespace VetSystemWpfDesktop.Services
             return await _httpClient.GetFromJsonAsync<List<Gender>>("Genders");
         }
 
+        public async Task<PetDto> CreatePetAsync(CreateUpdatePetDto pet)
+        {
+            var response = await _httpClient.PostAsJsonAsync("Pets", pet);
 
+            response.EnsureSuccessStatusCode();
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new Exception($"API error: {error}");
+            }
+
+            return await response.Content.ReadFromJsonAsync<PetDto>() ?? new();
+        }
+
+        public async Task<PetDto> UpdatePetAsync(int id, CreateUpdatePetDto pet)
+        {
+            var response = await _httpClient.PutAsJsonAsync($"Pets/{id}", pet);
+
+            response.EnsureSuccessStatusCode();
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new Exception($"API error: {error}");
+            }
+
+            return await response.Content.ReadFromJsonAsync<PetDto>() ?? new();
+        }
     }
 }

@@ -164,9 +164,6 @@
                                                 <materialDesign:PackIcon Kind="Delete"/>
 
                                             </Button>
-                                            <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="История">
-                                                <materialDesign:PackIcon Kind="History"/>
-                                            </Button>
                                         </StackPanel>
                                     </Grid>
                                 </Border>

@@ -122,6 +122,10 @@ namespace VetSystemWpfDesktop.Services
         {
             await _httpClient.DeleteAsync($"AppointmentServices/{id}");
         }
+        public async Task DeleteAppointmentAsync(int id)
+        {
+            await _httpClient.DeleteAsync($"Appointments/{id}");
+        }
     }
 }
 
